@@ -19,8 +19,8 @@ jobs:
       run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD      
 
     - name: Build the Docker image
-      run: docker build -t BE_co-KKIRI .
+      run: docker build -t be_co-kkiri .
     - name: taging
-      run: docker tag BE_co-KKIRI:latest co-KKIRI/BE_co-KKIRI:latest
+      run: docker tag be_co-kkiri:latest co-kkiri/be_co-kkiri:latest
     - name: Push to Dockerhub
-      run: docker push co-KKIRI/BE_co-KKIRI:latest
+      run: docker push co-kkiri/be_co-kkiri:latest

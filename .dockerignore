@@ -1,0 +1,6 @@
+Dockerfile
+node_modules
+dist
+npm-debug.log
+.dockerignore
+!/target/*.jar
