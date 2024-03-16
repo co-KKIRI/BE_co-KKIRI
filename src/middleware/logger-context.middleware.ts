@@ -13,12 +13,10 @@ export class LoggerContextMiddleware implements NestMiddleware {
 
     // @ts-ignore
     res.send = function (body: any) {
-      // 응답 본문이 문자열 형식인 경우 로깅합니다.
       if (typeof body === 'string') {
         that.logger.log(`Response Body: ${body}`);
       }
 
-      // 원래 send 메서드를 호출합니다.
       originalSend.apply(res, arguments);
     };
 
