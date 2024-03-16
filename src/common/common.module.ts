@@ -1,9 +1,9 @@
 import { Global, Logger, MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 
-import { LoggerContextMiddleware } from '../middleware/logger-context.middleware';
+import { LoggerContextMiddleware } from './logger/logger-context.middleware';
 import { WinstonModule } from 'nest-winston';
 import { ClsModule, ClsService } from 'nestjs-cls';
-import { winstonLoggerTransport } from '../logger/logger.config';
+import { winstonLoggerTransport } from './logger/logger.config';
 import { v4 as uuidv4 } from 'uuid';
 
 const services = [Logger];
