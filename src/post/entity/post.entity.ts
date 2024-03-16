@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Status, Type } from "./common/Enums";
 
 @Entity()
@@ -51,6 +51,6 @@ export class post {
 	@CreateDateColumn({ type: 'timestamp', name: 'created_at' })
 	createdAt: Date;
 
-	@CreateDateColumn({ type: 'timestamp', name: 'updated_at' })
+	@UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
 	updatedAt: Date;
 }
