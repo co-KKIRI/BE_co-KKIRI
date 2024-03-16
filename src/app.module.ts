@@ -12,9 +12,11 @@ import { CommentController } from './controller/comment.controller';
 import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    CommonModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
