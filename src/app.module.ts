@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeORMConfigService } from 'src/database.config';
+import { CommentModule } from './comment/comment.module';
+import { MemberModule } from './member/member.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -14,6 +17,9 @@ import { TypeORMConfigService } from 'src/database.config';
       useClass: TypeORMConfigService,
     }),
     TestModule,
+    CommentModule,
+    MemberModule,
+    PostModule,
   ],
   controllers: [AppController],
   providers: [AppService],
