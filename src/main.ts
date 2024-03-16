@@ -1,14 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { WinstonModule } from 'nest-winston';
-import { getLoggerInstance } from './logger/logger.config';
+import { winstonLogger } from './logger/logger.config';
 
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    logger: WinstonModule.createLogger({ instance: getLoggerInstance() }),
+    logger: winstonLogger,
   });
 
   app.enableCors({
