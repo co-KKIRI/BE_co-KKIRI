@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
-import { Status, Type } from './common/Enums';
+import { PostStatus, Type } from './common/Enums';
 
 @Entity({
   name: 'post',
@@ -20,7 +20,7 @@ export class Post {
   @Column({ type: 'enum', enum: Type })
   type: string;
 
-  @Column({ type: 'enum', enum: Status })
+  @Column({ type: 'enum', enum: PostStatus })
   status: string;
 
   @Column({ name: 'recruit_start_at' })
@@ -50,9 +50,9 @@ export class Post {
   @Column()
   capacity: number;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at' })
+  @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
+  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
 }

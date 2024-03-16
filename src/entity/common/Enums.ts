@@ -3,9 +3,20 @@ export enum Type {
 	PROJECT,
 }
 
-export enum Status {
+export enum PostStatus {
 	READY,
 	PROGRESS,
 	PROGRESS_END,
 	DONE,
+}
+
+export enum TeamMemberStatus {
+  READY,
+  REJECT,
+  ACCEPT,
+}
+
+export enum TeamInviteType {
+  SELF,
+  OTHER,
 }
