@@ -18,6 +18,7 @@ export class TypeORMConfigService implements TypeOrmOptionsFactory {
       entities: ['dist/**/*.entity.js'],
       migrations: ['src/database/migrations/*.ts'],
       synchronize: false,
+      logging: true,
     };
   }
 }

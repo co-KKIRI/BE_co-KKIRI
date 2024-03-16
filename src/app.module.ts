@@ -1,13 +1,17 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './controller/app.controller';
+import { AppService } from './service/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
-import { TypeORMConfigService } from 'src/database.config';
-import { CommentModule } from './comment/comment.module';
-import { MemberModule } from './member/member.module';
-import { PostModule } from './post/post.module';
+import { TypeORMConfigService } from 'src/database/database.config';
+import { CommentService } from './service/comment.service';
+import { PostService } from './service/post.service';
+import { MemberService } from './service/member.service';
+import { CommentController } from './controller/comment.controller';
+import { PostController } from './controller/post.controller';
+import { MemberController } from './controller/member.controller';
+import { Post } from './entity/post.entity';
 
 @Module({
   imports: [
@@ -16,12 +20,10 @@ import { PostModule } from './post/post.module';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
+    TypeOrmModule.forFeature([Post]),
     TestModule,
-    CommentModule,
-    MemberModule,
-    PostModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, CommentController, PostController, MemberController],
+  providers: [AppService, CommentService, PostService, MemberService],
 })
 export class AppModule {}
