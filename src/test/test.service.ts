@@ -7,8 +7,10 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class TestService {
-  constructor(@InjectRepository(Test)
-  private testRepository: Repository<Test>) { }
+  constructor(
+    @InjectRepository(Test)
+    private testRepository: Repository<Test>,
+  ) {}
 
   async create(test: Test): Promise<Test> {
     const newTest = this.testRepository.create(test);
@@ -22,19 +24,18 @@ export class TestService {
   async findOne(id: number): Promise<Test> {
     return await this.testRepository.findOne({
       where: {
-        id
-      }
+        id,
+      },
     });
   }
 
-  async update(id: number, test: Test):
-    Promise<number> {
+  async update(id: number, test: Test): Promise<number> {
     await this.testRepository.update(id, test);
     return id;
   }
 
   async remove(id: number): Promise<number> {
     await this.testRepository.delete(id);
-    return id
+    return id;
   }
 }

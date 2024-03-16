@@ -10,7 +10,7 @@ import { TypeORMConfigService } from 'src/database.config';
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      imports:[ConfigModule],
+      imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
     TestModule,
@@ -18,4 +18,4 @@ import { TypeORMConfigService } from 'src/database.config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
