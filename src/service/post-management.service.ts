@@ -2,19 +2,19 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
-import { GetStudyManagementDto } from '../dto/get-study-management.dto';
-import { GetStudyApplyDto } from '../dto/get-study-apply.dto';
+import { GetPostManagementDto } from '../dto/get-post-management.dto';
+import { GetPostApplyDto } from '../dto/get-post-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
 import { PostStatus, TeamMemberStatus } from '../entity/common/Enums';
 
 @Injectable()
-export class StudyManagementService {
+export class PostManagementService {
   constructor(
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
   ) {}
 
-  async getStudyManagement(postId: number): Promise<GetStudyManagementDto> {
+  async getPostManagement(postId: number): Promise<GetPostManagementDto> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
@@ -24,13 +24,13 @@ export class StudyManagementService {
     const currentMemberId = post.memberId;
     const isLeader = post.memberId == currentMemberId;
 
-    return new GetStudyManagementDto({ post, isLeader: isLeader });
+    return new GetPostManagementDto({ post, isLeader: isLeader });
   }
 
-  async getStudyApply(postId: number): Promise<GetStudyApplyDto> {
+  async getPostApply(postId: number): Promise<GetPostApplyDto> {
     const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.READY);
 
-    return new GetStudyApplyDto(teamMembersTuples);
+    return new GetPostApplyDto(teamMembersTuples);
   }
 
   async recruitEnd(postId: number): Promise<void> {
