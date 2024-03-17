@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { TeamInviteType, TeamMemberStatus } from "./common/Enums";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { TeamInviteType, TeamMemberStatus } from './common/Enums';
 
 @Entity({
   name: 'team_member',
@@ -18,10 +18,10 @@ export class TeamMember {
   teamInviteId: number;
 
   @Column({ type: 'enum', enum: TeamMemberStatus })
-  status: string;
+  status: TeamMemberStatus;
 
-  @Column({type:'enum', name:'invite_type', enum: TeamInviteType})
-  inviteType: string;
+  @Column({ type: 'enum', name: 'invite_type', enum: TeamInviteType })
+  inviteType: TeamInviteType;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;
