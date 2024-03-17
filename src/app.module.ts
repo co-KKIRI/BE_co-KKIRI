@@ -17,6 +17,8 @@ import { StudyManagementController } from './controller/study-management.control
 import { StudyManagementService } from './service/study-management.service';
 import { TeamMemberQueryRepository } from './repository/team-member.query-repository';
 import { TeamMember } from './entity/team-member.entity';
+import { StudyTeamMemberController } from './controller/study-team-member.controller';
+import { StudyTeamMemberService } from './service/study-team-member.service';
 
 @Module({
   imports: [
@@ -29,7 +31,14 @@ import { TeamMember } from './entity/team-member.entity';
     TypeOrmModule.forFeature([Post, TeamMember]),
     TestModule,
   ],
-  controllers: [AppController, CommentController, PostController, MemberController, StudyManagementController],
+  controllers: [
+    AppController,
+    CommentController,
+    PostController,
+    MemberController,
+    StudyManagementController,
+    StudyTeamMemberController,
+  ],
   providers: [
     Logger,
     AppService,
@@ -38,6 +47,7 @@ import { TeamMember } from './entity/team-member.entity';
     MemberService,
     StudyManagementService,
     TeamMemberQueryRepository,
+    StudyTeamMemberService,
   ],
 })
 export class AppModule {}

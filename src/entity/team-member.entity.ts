@@ -28,4 +28,8 @@ export class TeamMember {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
+
+  setStatus(status: TeamMemberStatus): void {
+    this.status = status;
+  }
 }
