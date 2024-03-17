@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { SocialProvider } from './common/SocialProvider';
 
 @Entity({
   name: 'member',
@@ -30,6 +31,12 @@ export class Member {
 
   @Column({ name: 'is_visible_profile' })
   isVisibleProfile: boolean;
+
+  @Column({ name: 'social_provider', nullable: false })
+  socialProvider: string;
+
+  @Column({ name: 'external_id', nullable: false })
+  externalId: string;
 
   @Column({ name: 'deleted_at' })
   deletedAt: Date;

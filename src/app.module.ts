@@ -12,6 +12,7 @@ import { CommentController } from './controller/comment.controller';
 import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
+
 import { CommonModule } from './common/common.module';
 import { StudyManagementController } from './controller/study-management.controller';
 import { StudyManagementService } from './service/study-management.service';
@@ -19,6 +20,14 @@ import { TeamMemberQueryRepository } from './repository/team-member.query-reposi
 import { TeamMember } from './entity/team-member.entity';
 import { StudyTeamMemberController } from './controller/study-team-member.controller';
 import { StudyTeamMemberService } from './service/study-team-member.service';
+
+import { PassportModule } from '@nestjs/passport';
+import { SessionSerializerService } from './service/session-serializer.service';
+import { GoogleAuthenticationService } from './service/google-authentication.service';
+import { GoogleAuthenticationController } from './controller/google-auth.controller';
+import { GoogleStrategy } from './strategy/google-strategy';
+import { GoogleAuthGuard } from './guard/google-auth.guard';
+import { Member } from './entity/member.entity';
 
 @Module({
   imports: [
@@ -28,8 +37,11 @@ import { StudyTeamMemberService } from './service/study-team-member.service';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member]),
     TestModule,
+    PassportModule.register({
+      session: true,
+    }),
   ],
   controllers: [
     AppController,
@@ -38,6 +50,7 @@ import { StudyTeamMemberService } from './service/study-team-member.service';
     MemberController,
     StudyManagementController,
     StudyTeamMemberController,
+    GoogleAuthenticationController,
   ],
   providers: [
     Logger,
@@ -48,6 +61,10 @@ import { StudyTeamMemberService } from './service/study-team-member.service';
     StudyManagementService,
     TeamMemberQueryRepository,
     StudyTeamMemberService,
+    GoogleAuthenticationService,
+    SessionSerializerService,
+    GoogleStrategy,
+    GoogleAuthGuard,
   ],
 })
 export class AppModule {}
