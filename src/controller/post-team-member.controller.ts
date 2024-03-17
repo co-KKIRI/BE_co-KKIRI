@@ -29,7 +29,7 @@ export class PostTeamMemberController {
   }
 
   @ApiOperation({ summary: '스터디/프로젝트 현재 팀원 삭제' })
-  @Delete('/post/team-member/:teamMemberId/out')
+  @Delete('/post/team-member/:teamMemberId')
   async deleteTeamMember(@Param('teamMemberId', ParseIntPipe) teamMemberId: number): Promise<void> {
     await this.postTeamMemberService.deleteTeamMember(teamMemberId);
   }
