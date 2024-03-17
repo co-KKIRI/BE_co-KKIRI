@@ -20,8 +20,8 @@ export class StudyManagementController {
   }
 
   @Patch(':postId/recruit-end')
-  recruitEnd(@Param('postId', ParseIntPipe) postId: number): void {
-    return;
+  async recruitEnd(@Param('postId', ParseIntPipe) postId: number) {
+    await this.studyManagementService.recruitEnd(postId);
   }
 
   @Patch(':postId/recruit-start')

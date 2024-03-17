@@ -55,4 +55,12 @@ export class Post {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
+
+  setRecruitStatus(status: PostStatus) {
+    this.status = status;
+  }
+
+  checkChangeRecruitEnd() {
+    return [PostStatus.READY, PostStatus.PROGRESS, PostStatus.PROGRESS_END].includes(this.status);
+  }
 }

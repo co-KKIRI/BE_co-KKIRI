@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
 import { GetStudyManagementDto } from '../dto/get-study-management.dto';
 import { GetStudyApplyDto } from '../dto/get-study-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
+import { PostStatus } from '../entity/common/Enums';
 
 @Injectable()
 export class StudyManagementService {
@@ -30,5 +31,18 @@ export class StudyManagementService {
     const teamMembersTuples = await this.teamMemberQueryRepository.getAllReadyTeamMembers(postId);
 
     return new GetStudyApplyDto(teamMembersTuples);
+  }
+
+  async recruitEnd(postId: number): Promise<void> {
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
+    }
+    if (!post.checkChangeRecruitEnd()) {
+      throw new BadRequestException('마감이 불가능한 상태입니다.');
+    }
+
+    if (post.status) post.setRecruitStatus(PostStatus.PROGRESS_END);
+    await this.postRepository.save(post);
   }
 }
