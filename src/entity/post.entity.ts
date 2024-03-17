@@ -60,7 +60,15 @@ export class Post {
     this.status = status;
   }
 
-  checkChangeRecruitEnd() {
+  isModifiableRecruitEnd() {
     return [PostStatus.READY, PostStatus.PROGRESS, PostStatus.PROGRESS_END].includes(this.status);
+  }
+
+  isModifiableRecruitStart() {
+    return [PostStatus.READY].includes(this.status);
+  }
+
+  isModifiableRecruitComplete() {
+    return [PostStatus.READY, PostStatus.PROGRESS].includes(this.status);
   }
 }

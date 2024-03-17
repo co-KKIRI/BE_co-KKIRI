@@ -34,15 +34,40 @@ export class StudyManagementService {
   }
 
   async recruitEnd(postId: number): Promise<void> {
-    const post = await this.postRepository.findOneBy({ id: postId });
-    if (post === null) {
-      throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
-    }
-    if (!post.checkChangeRecruitEnd()) {
+    const post = await this.getPost(postId);
+    if (!post.isModifiableRecruitEnd()) {
       throw new BadRequestException('마감이 불가능한 상태입니다.');
     }
 
     if (post.status) post.setRecruitStatus(PostStatus.PROGRESS_END);
     await this.postRepository.save(post);
+  }
+
+  async recruitStart(postId: number): Promise<void> {
+    const post = await this.getPost(postId);
+    if (!post.isModifiableRecruitStart()) {
+      throw new BadRequestException('모집 시작이 불가능한 상태입니다.');
+    }
+
+    if (post.status) post.setRecruitStatus(PostStatus.PROGRESS);
+    await this.postRepository.save(post);
+  }
+
+  async recruitComplete(postId: number): Promise<void> {
+    const post = await this.getPost(postId);
+    if (!post.isModifiableRecruitComplete()) {
+      throw new BadRequestException('모집 완료가 불가능한 상태입니다.');
+    }
+
+    if (post.status) post.setRecruitStatus(PostStatus.DONE);
+    await this.postRepository.save(post);
+  }
+
+  private async getPost(postId: number): Promise<Post> {
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
+    }
+    return post;
   }
 }

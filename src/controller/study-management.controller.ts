@@ -20,17 +20,17 @@ export class StudyManagementController {
   }
 
   @Patch(':postId/recruit-end')
-  async recruitEnd(@Param('postId', ParseIntPipe) postId: number) {
+  async recruitEnd(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
     await this.studyManagementService.recruitEnd(postId);
   }
 
   @Patch(':postId/recruit-start')
-  recruitStart(@Param('postId', ParseIntPipe) postId: number): void {
-    return;
+  async recruitStart(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
+    await this.studyManagementService.recruitStart(postId);
   }
 
   @Patch(':postId/recruit-complete')
-  recruitComplete(@Param('postId', ParseIntPipe) postId: number): void {
-    return;
+  async recruitComplete(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
+    await this.studyManagementService.recruitComplete(postId);
   }
 }
