@@ -11,7 +11,7 @@ export class TypeORMConfigService implements TypeOrmOptionsFactory {
       autoLoadEntities: true,
       type: 'mysql',
       host: this.configService.get<string>('DB_HOST'),
-      port: +this.configService.get<number>('DB_PORT'),
+      port: +(this.configService.get<number>('DB_PORT') || 3306),
       username: this.configService.get<string>('DB_USER'),
       password: this.configService.get<string>('DB_PASSWORD'),
       database: this.configService.get<string>('DB_NAME'),

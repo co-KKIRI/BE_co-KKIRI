@@ -21,7 +21,7 @@ export class TestService {
     return await this.testRepository.find();
   }
 
-  async findOne(id: number): Promise<Test> {
+  async findOne(id: number): Promise<Test | null> {
     return await this.testRepository.findOne({
       where: {
         id,
