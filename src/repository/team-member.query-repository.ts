@@ -10,13 +10,13 @@ import { Member } from '../entity/member.entity';
 export class TeamMemberQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async getAllReadyTeamMembers(postId: number) {
+  async getAllTeamMembers(postId: number, status: TeamMemberStatus) {
     const teamMembers = await this.dataSource
       .createQueryBuilder()
       .from(TeamMember, 'team_member')
       .innerJoin(Member, 'member', 'team_member.memberId = member.id')
       .where('team_member.postId = :postId', { postId })
-      .andWhere('team_member.status = :status', { status: TeamMemberStatus.READY })
+      .andWhere('team_member.status = :status', { status })
       .select([
         'team_member.id as teamMemberId',
         'team_member.memberId as memberId',
@@ -24,11 +24,11 @@ export class TeamMemberQueryRepository {
         'member.profileImageUrl as profileImageUrl',
       ])
       .getRawMany();
-    return plainToInstance(GetAllReadyTeamMembersTuple, teamMembers);
+    return plainToInstance(GetAllTeamMembersTuple, teamMembers);
   }
 }
 
-export class GetAllReadyTeamMembersTuple {
+export class GetAllTeamMembersTuple {
   teamMemberId!: number;
   memberId!: number;
   nickname?: string;

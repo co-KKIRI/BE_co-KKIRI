@@ -17,8 +17,9 @@ export class StudyTeamMemberController {
   }
 
   @Get('/study/:postId/team-member')
-  getStudyTeamMember(@Param('postId', ParseIntPipe) postId: number): StudyTeamMemberResponse {
-    return {} as StudyTeamMemberResponse;
+  async getAllStudyTeamMember(@Param('postId', ParseIntPipe) postId: number): Promise<StudyTeamMemberResponse> {
+    const getStudyTeamMemberDto = await this.studyTeamMemberService.getAllStudyTeamMember(postId);
+    return StudyTeamMemberResponse.from(getStudyTeamMemberDto);
   }
 
   @Delete('/study/team-member/:teamMemberId/out')

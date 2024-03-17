@@ -3,10 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeamMember } from '../entity/team-member.entity';
 import { TeamMemberStatus } from '../entity/common/Enums';
+import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
+import { GetStudyTeamMemberDto } from '../dto/get-study-team-member.dto';
+import { Post } from '../entity/post.entity';
 
 @Injectable()
 export class StudyTeamMemberService {
-  constructor(@InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>) {}
+  constructor(
+    @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
+    private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
+  ) {}
 
   async acceptTeamMember(teamMemberId: number): Promise<void> {
     const teamMember = await this.getTeamMember(teamMemberId);
@@ -41,5 +48,14 @@ export class StudyTeamMemberService {
     if (teamMember.status === TeamMemberStatus.REJECT) {
       throw new BadRequestException('이미 거절된 신청입니다.');
     }
+  }
+
+  async getAllStudyTeamMember(postId: number): Promise<GetStudyTeamMemberDto> {
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
+    }
+    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.ACCEPT);
+    return GetStudyTeamMemberDto.from(teamMembersTuples, post.memberId);
   }
 }

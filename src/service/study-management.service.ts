@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { GetStudyManagementDto } from '../dto/get-study-management.dto';
 import { GetStudyApplyDto } from '../dto/get-study-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
-import { PostStatus } from '../entity/common/Enums';
+import { PostStatus, TeamMemberStatus } from '../entity/common/Enums';
 
 @Injectable()
 export class StudyManagementService {
@@ -28,7 +28,7 @@ export class StudyManagementService {
   }
 
   async getStudyApply(postId: number): Promise<GetStudyApplyDto> {
-    const teamMembersTuples = await this.teamMemberQueryRepository.getAllReadyTeamMembers(postId);
+    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.READY);
 
     return new GetStudyApplyDto(teamMembersTuples);
   }

@@ -1,4 +1,4 @@
-import { GetAllReadyTeamMembersTuple } from '../repository/team-member.query-repository';
+import { GetAllTeamMembersTuple } from '../repository/team-member.query-repository';
 
 export class GetStudyApplyDto {
   appliedStudyMemberList!: GetAppliedStudyMember[];
@@ -7,7 +7,7 @@ export class GetStudyApplyDto {
     this.appliedStudyMemberList = appliedStudyMemberList;
   }
 
-  static from(tuples: GetAllReadyTeamMembersTuple[]) {
+  static from(tuples: GetAllTeamMembersTuple[]) {
     const appliedStudyMemberList = tuples.map((tuple) => {
       return new GetAppliedStudyMember(tuple.teamMemberId, tuple.memberId, tuple.nickname, tuple.profileImageUrl);
     });
