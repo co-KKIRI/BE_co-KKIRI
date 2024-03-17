@@ -14,7 +14,7 @@ export class TeamMember {
   @Column({ name: 'member_id', nullable: false })
   memberId: number;
 
-  @Column({ name: 'team_invite_id', nullable: false })
+  @Column({ name: 'team_invite_id', nullable: true })
   teamInviteId: number;
 
   @Column({ type: 'enum', enum: TeamMemberStatus })
