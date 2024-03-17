@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { TestService } from './test.service';
 import { CreateTestDto } from './dto/create-test.dto';
 import { UpdateTestDto } from './dto/update-test.dto';
@@ -27,15 +19,12 @@ export class TestController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<Test> {
+  async findOne(@Param('id') id: string): Promise<Test | null> {
     return this.testService.findOne(+id);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() newTest: Test,
-  ): Promise<number> {
+  async update(@Param('id') id: string, @Body() newTest: Test): Promise<number> {
     return this.testService.update(+id, newTest);
   }
 
