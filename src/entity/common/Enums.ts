@@ -1,22 +1,22 @@
 export enum Type {
-	STUDY,
-	PROJECT,
+  STUDY = 'STUDY',
+  PROJECT = 'PROJECT',
 }
 
 export enum PostStatus {
-	READY,
-	PROGRESS,
-	PROGRESS_END,
-	DONE,
+  READY = 'READY',
+  PROGRESS = 'PROGRESS',
+  PROGRESS_END = 'PROGRESS_END',
+  DONE = 'DONE',
 }
 
 export enum TeamMemberStatus {
-  READY,
-  REJECT,
-  ACCEPT,
+  READY = 'READY',
+  REJECT = 'REJECT',
+  ACCEPT = 'ACCEPT',
 }
 
 export enum TeamInviteType {
-  SELF,
-  OTHER,
+  SELF = 'SELF',
+  OTHER = 'OTHER',
 }
