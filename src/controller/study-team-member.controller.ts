@@ -23,5 +23,7 @@ export class StudyTeamMemberController {
   }
 
   @Delete('/study/team-member/:teamMemberId/out')
-  deleteTeamMember(@Param('teamMemberId', ParseIntPipe) teamMemberId: number): void {}
+  async deleteTeamMember(@Param('teamMemberId', ParseIntPipe) teamMemberId: number): Promise<void> {
+    await this.studyTeamMemberService.deleteTeamMember(teamMemberId);
+  }
 }

@@ -58,4 +58,14 @@ export class StudyTeamMemberService {
     const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.ACCEPT);
     return GetStudyTeamMemberDto.from(teamMembersTuples, post.memberId);
   }
+
+  async deleteTeamMember(teamMemberId: number): Promise<void> {
+    const teamMember = await this.teamMemberRepository.findOneBy({ id: teamMemberId, status: TeamMemberStatus.ACCEPT });
+    if (teamMember === null) {
+      throw new NotFoundException('해당 팀원을 찾을 수 없습니다.');
+    }
+
+    teamMember.setStatus(TeamMemberStatus.READY);
+    await this.teamMemberRepository.save(teamMember);
+  }
 }
