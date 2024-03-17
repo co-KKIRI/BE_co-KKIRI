@@ -1,4 +1,5 @@
 import { GoogleLogin, useGoogleLogin } from '@react-oauth/google';
+import axios from 'axios';
 import Link from 'next/link';
 
 export default function Home() {
@@ -6,6 +7,19 @@ export default function Home() {
     onSuccess: (codeResponse) => console.log(codeResponse),
     flow: 'auth-code',
   });
+
+  const getTest = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
 
   return (
     <>
@@ -19,6 +33,7 @@ export default function Home() {
           console.log('Login Failed');
         }}
       />
+      <button onClick={() => getTest()}>쿠키 테스트</button>
     </>
   );
 }

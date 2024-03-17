@@ -11,18 +11,23 @@ export class SessionSerializerService extends PassportSerializer {
     super();
   }
 
-  async serializeUser(member: Member, done: (err: any, user?: any) => void): Promise<any> {
+  // async serializeUser(member: Member, done: (err: any, user?: any) => void): Promise<any> {
+  async serializeUser(member: { id: string }, done: (err: any, user?: any) => void): Promise<any> {
     console.log(member, 'serializeUser'); // 테스트 시 확인
     done(null, member);
   }
 
   async deserializeUser(payload: any, done: (err: any, user?: any) => void): Promise<any> {
-    const member = await this.memberRepository.findOne({
-      where: {
-        id: payload.id,
-      },
-    });
-    console.log(member, 'deserializeUser'); // 테스트 시 확인
-    return member ? done(null, member) : done(null, null);
+    // const member = await this.memberRepository.findOne({
+    //   where: {
+    //     id: payload.id,
+    //   },
+    // });
+    const member = { id: '105010871829392943664' };
+
+    // console.log(member, 'deserializeUser'); // 테스트 시 확인
+    // return member ? done(null, member) : done(null, null);
+    console.log(member, 'deserializeUser');
+    return done(null, member);
   }
 }

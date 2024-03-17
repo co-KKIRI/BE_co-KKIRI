@@ -6,7 +6,9 @@ const AuthGoogleCallback = () => {
   const router = useRouter();
 
   const getFetch = async (code: string) => {
-    const response = await axios.get(`http://localhost:8080/auth/google/redirect?code=${code}`);
+    const response = await axios.get(`http://localhost:8080/auth/google/redirect?code=${code}`, {
+      withCredentials: true,
+    });
 
     const { data } = response;
 
@@ -14,7 +16,25 @@ const AuthGoogleCallback = () => {
   };
 
   const getStatus = async () => {
-    const response = await axios.get(`http://localhost:8080/auth/google/status`, { withCredentials: true });
+    const response = await axios.get(`http://localhost:8080/auth/google/status`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
+
+  const getTest = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     const { data } = response;
 
@@ -31,6 +51,7 @@ const AuthGoogleCallback = () => {
   return (
     <>
       <button onClick={() => getStatus()}>유저 상태 확인</button>
+      <button onClick={() => getTest()}>쿠키 테스트</button>
     </>
   );
 };

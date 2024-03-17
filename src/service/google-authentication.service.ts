@@ -34,18 +34,17 @@ export class GoogleAuthenticationService {
     // const newUser = await this.userService.createSocialUser(socialLoginInfoDto);
     // const updateUser = await this.userService.updateSocialUserInfo(newUser.id);
     // return updateUser;
-    return { id: 1 };
+    return { id: socialLoginDto.externalId };
   }
 }
-
 
 /**
  * 프론트에 요청할 일
  * 1. 버튼 눌렀을떄, http://localhost:8080/auth/google/login으로 요청을 보낸다.
  * 2. redirect로 http://localhost/auth/google/redirect 페이지를 만든다. (주소는 변경 가능)
  * 3. 만든 페이지에서 로그인 성공시, http://localhost:8080/auth/google/redirect?code=${code} 로 요청을 보낸다.
- * 
+ *
  * 서버에서
  * 4. 서버에서는 3번에서 온 요청을 바탕으로 검증해서 디비에 유저 정보가 있으면 그냥 반환하고, 없으면 저장하고 반환하는데, 이때, cookie가 내려간다.
- * 5. 
+ * 5.
  */

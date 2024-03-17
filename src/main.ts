@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as session from 'express-session';
 import * as passport from 'passport';
+
 declare const module: any;
 
 async function bootstrap() {
@@ -20,8 +21,10 @@ async function bootstrap() {
       saveUninitialized: false,
       // 세션 쿠키에 대한 설정을 나타낸다.
       cookie: {
-        maxAge: 60000, // 1 minute
+        // maxAge: 60000, // 1 minute
         httpOnly: true,
+        // domain:'localhost',
+        domain: ['localhost', 'localhost:8080'],
       },
     }),
   );

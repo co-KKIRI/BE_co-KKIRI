@@ -42,9 +42,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     console.log(profile);
 
     try {
-      const user = await this.googleAuthService.validateAndSaveUser(socialLoginInfo);
-      // console.log(user, 'strategy');
-      done(null, user, accessToken);
+      const member = await this.googleAuthService.validateAndSaveUser(socialLoginInfo);
+      console.log(member, 'strategy');
+      done(null, member, accessToken);
     } catch (err) {
       done(err, false);
     }
