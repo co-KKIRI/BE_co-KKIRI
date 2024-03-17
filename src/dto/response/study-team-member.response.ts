@@ -1,28 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GetStudyTeamMemberDto } from '../get-study-team-member.dto';
 
-export class StudyTeamMemberResponse {
-  @ApiProperty()
-  studyTeamMemberList!: StudyTeamMember[];
-
-  constructor(studyTeamMemberList: StudyTeamMember[]) {
-    this.studyTeamMemberList = studyTeamMemberList;
-  }
-
-  static from(getStudyTeamMemberDto: GetStudyTeamMemberDto) {
-    const studyTeamMemberList = getStudyTeamMemberDto.appliedStudyMemberList.map((appliedStudyMember) => {
-      return new StudyTeamMember(
-        appliedStudyMember.isLeader,
-        appliedStudyMember.teamMemberId,
-        appliedStudyMember.memberId,
-        appliedStudyMember.nickname,
-        appliedStudyMember.profileImageUrl,
-      );
-    });
-    return new StudyTeamMemberResponse(studyTeamMemberList);
-  }
-}
-
 export class StudyTeamMember {
   @ApiProperty()
   teamMemberId!: number;
@@ -41,5 +19,27 @@ export class StudyTeamMember {
     this.memberId = memberId;
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
+  }
+}
+
+export class StudyTeamMemberResponse {
+  @ApiProperty({ type: [StudyTeamMember] })
+  studyTeamMemberList!: StudyTeamMember[];
+
+  constructor(studyTeamMemberList: StudyTeamMember[]) {
+    this.studyTeamMemberList = studyTeamMemberList;
+  }
+
+  static from(getStudyTeamMemberDto: GetStudyTeamMemberDto) {
+    const studyTeamMemberList = getStudyTeamMemberDto.appliedStudyMemberList.map((appliedStudyMember) => {
+      return new StudyTeamMember(
+        appliedStudyMember.isLeader,
+        appliedStudyMember.teamMemberId,
+        appliedStudyMember.memberId,
+        appliedStudyMember.nickname,
+        appliedStudyMember.profileImageUrl,
+      );
+    });
+    return new StudyTeamMemberResponse(studyTeamMemberList);
   }
 }

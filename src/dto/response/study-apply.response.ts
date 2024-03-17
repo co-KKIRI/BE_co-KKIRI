@@ -1,8 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { GetStudyApplyDto } from '../get-study-apply.dto';
 
-export class StudyApplyResponse {
+export class AppliedStudyMember {
   @ApiProperty()
+  teamMemberId!: number;
+  @ApiProperty()
+  memberId!: number;
+  @ApiProperty()
+  nickname?: string;
+  @ApiProperty()
+  profileImageUrl?: string;
+
+  constructor(teamMemberId: number, memberId: number, nickname?: string, profileImageUrl?: string) {
+    this.teamMemberId = teamMemberId;
+    this.memberId = memberId;
+    this.nickname = nickname;
+    this.profileImageUrl = profileImageUrl;
+  }
+}
+
+export class StudyApplyResponse {
+  @ApiProperty({ type: [AppliedStudyMember] })
   appliedStudyMemberList!: AppliedStudyMember[];
 
   constructor(appliedStudyMemberList: AppliedStudyMember[]) {
@@ -19,23 +37,5 @@ export class StudyApplyResponse {
       );
     });
     return new StudyApplyResponse(appliedStudyMemberList);
-  }
-}
-
-export class AppliedStudyMember {
-  @ApiProperty()
-  teamMemberId!: number;
-  @ApiProperty()
-  memberId!: number;
-  @ApiProperty()
-  nickname?: string;
-  @ApiProperty()
-  profileImageUrl?: string;
-
-  constructor(teamMemberId: number, memberId: number, nickname?: string, profileImageUrl?: string) {
-    this.teamMemberId = teamMemberId;
-    this.memberId = memberId;
-    this.nickname = nickname;
-    this.profileImageUrl = profileImageUrl;
   }
 }
