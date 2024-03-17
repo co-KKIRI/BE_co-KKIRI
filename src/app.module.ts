@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { AppController } from './controller/app.controller';
 import { AppService } from './service/app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -12,9 +12,11 @@ import { CommentController } from './controller/comment.controller';
 import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
+import { CommonModule } from './common/common.module';
 
 @Module({
   imports: [
+    CommonModule,
     ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -24,6 +26,6 @@ import { Post } from './entity/post.entity';
     TestModule,
   ],
   controllers: [AppController, CommentController, PostController, MemberController],
-  providers: [AppService, CommentService, PostService, MemberService],
+  providers: [Logger, AppService, CommentService, PostService, MemberService],
 })
 export class AppModule {}
