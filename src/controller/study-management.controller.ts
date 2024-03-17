@@ -14,8 +14,9 @@ export class StudyManagementController {
   }
 
   @Get(':postId/apply')
-  getStudyApply(@Param('postId', ParseIntPipe) postId: number): StudyApplyResponse {
-    return {} as StudyApplyResponse;
+  async getStudyApply(@Param('postId', ParseIntPipe) postId: number): Promise<StudyApplyResponse> {
+    const studyApply = await this.studyManagementService.getStudyApply(postId);
+    return StudyApplyResponse.from(studyApply);
   }
 
   @Patch(':postId/recruit-end')
