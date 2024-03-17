@@ -1,23 +1,24 @@
 import { PostStatus, Type } from '../../entity/common/Enums';
 import { ApiProperty } from '@nestjs/swagger';
+import { GetStudyManagementDto } from '../get-study-management.dto';
 
 export class StudyManagementResponse {
   @ApiProperty()
   postId!: number;
   @ApiProperty()
-  postTitle!: string;
+  postTitle: string;
   @ApiProperty()
   type!: Type;
   @ApiProperty()
-  progressWay!: string;
+  progressWay: string;
   @ApiProperty()
   status!: PostStatus;
   @ApiProperty()
-  contactWay!: string;
+  contactWay: string;
   @ApiProperty()
-  capacity!: number;
+  capacity: number;
   @ApiProperty()
-  positions!: string[];
+  positions: string[];
   @ApiProperty()
   isLeader!: boolean;
 
@@ -41,5 +42,19 @@ export class StudyManagementResponse {
     this.capacity = capacity;
     this.positions = positions;
     this.isLeader = isLeader;
+  }
+
+  static from(dto: GetStudyManagementDto) {
+    return new StudyManagementResponse(
+      dto.postId,
+      dto.postTitle,
+      dto.type,
+      dto.progressWay,
+      dto.status,
+      dto.contactWay,
+      dto.capacity,
+      dto.positions,
+      dto.isLeader,
+    );
   }
 }

@@ -17,7 +17,7 @@ export class StudyTeamMemberController {
 
   @Get('/study/:postId/team-member')
   getStudyTeamMember(@Param('postId', ParseIntPipe) postId: number): StudyTeamMemberResponse {
-    return;
+    return {} as StudyTeamMemberResponse;
   }
 
   @Delete('/study/team-member/:teamMemberId/out')

@@ -12,6 +12,8 @@ import { CommentController } from './controller/comment.controller';
 import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
+import { StudyManagementController } from './controller/study-management.controller';
+import { StudyManagementService } from './service/study-management.service';
 
 @Module({
   imports: [
@@ -23,7 +25,7 @@ import { Post } from './entity/post.entity';
     TypeOrmModule.forFeature([Post]),
     TestModule,
   ],
-  controllers: [AppController, CommentController, PostController, MemberController],
-  providers: [AppService, CommentService, PostService, MemberService],
+  controllers: [AppController, CommentController, PostController, MemberController, StudyManagementController],
+  providers: [AppService, CommentService, PostService, MemberService, StudyManagementService],
 })
 export class AppModule {}
