@@ -1,5 +1,5 @@
 import { Controller, Delete, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
-import { StudyTeamMemberResponse } from '../dto/study-team-member.response';
+import { StudyTeamMemberResponse } from '../dto/response/study-team-member.response';
 
 @Controller()
 export class StudyTeamMemberController {

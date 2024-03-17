@@ -1,4 +1,4 @@
-import { PostStatus, Type } from '../entity/common/Enums';
+import { PostStatus, Type } from '../../entity/common/Enums';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class StudyManagementResponse {

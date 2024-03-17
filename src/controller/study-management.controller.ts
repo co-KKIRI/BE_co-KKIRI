@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
-import { StudyManagementResponse } from '../dto/study-management.response';
-import { StudyApplyResponse } from '../dto/study-apply.response';
+import { StudyManagementResponse } from '../dto/response/study-management.response';
+import { StudyApplyResponse } from '../dto/response/study-apply.response';
 
 @Controller()
 export class StudyManagementController {
