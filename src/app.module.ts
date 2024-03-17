@@ -13,6 +13,12 @@ import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
 import { CommonModule } from './common/common.module';
+import { StudyManagementController } from './controller/study-management.controller';
+import { StudyManagementService } from './service/study-management.service';
+import { TeamMemberQueryRepository } from './repository/team-member.query-repository';
+import { TeamMember } from './entity/team-member.entity';
+import { StudyTeamMemberController } from './controller/study-team-member.controller';
+import { StudyTeamMemberService } from './service/study-team-member.service';
 
 @Module({
   imports: [
@@ -22,10 +28,26 @@ import { CommonModule } from './common/common.module';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post]),
+    TypeOrmModule.forFeature([Post, TeamMember]),
     TestModule,
   ],
-  controllers: [AppController, CommentController, PostController, MemberController],
-  providers: [Logger, AppService, CommentService, PostService, MemberService],
+  controllers: [
+    AppController,
+    CommentController,
+    PostController,
+    MemberController,
+    StudyManagementController,
+    StudyTeamMemberController,
+  ],
+  providers: [
+    Logger,
+    AppService,
+    CommentService,
+    PostService,
+    MemberService,
+    StudyManagementService,
+    TeamMemberQueryRepository,
+    StudyTeamMemberService,
+  ],
 })
 export class AppModule {}

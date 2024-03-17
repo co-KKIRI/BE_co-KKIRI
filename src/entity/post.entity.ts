@@ -18,10 +18,10 @@ export class Post {
   content: string;
 
   @Column({ type: 'enum', enum: Type })
-  type: string;
+  type: Type;
 
   @Column({ type: 'enum', enum: PostStatus })
-  status: string;
+  status: PostStatus;
 
   @Column({ name: 'recruit_start_at' })
   recruitStartAt: Date;
@@ -42,7 +42,7 @@ export class Post {
   stack: string;
 
   @Column({ length: 45 })
-  position: string;
+  position?: string;
 
   @Column({ name: 'image_url', length: 200 })
   imageUrl: string;
@@ -55,4 +55,20 @@ export class Post {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
+
+  setRecruitStatus(status: PostStatus) {
+    this.status = status;
+  }
+
+  isModifiableRecruitEnd() {
+    return [PostStatus.READY, PostStatus.PROGRESS, PostStatus.PROGRESS_END].includes(this.status);
+  }
+
+  isModifiableRecruitStart() {
+    return [PostStatus.READY].includes(this.status);
+  }
+
+  isModifiableRecruitComplete() {
+    return [PostStatus.READY, PostStatus.PROGRESS].includes(this.status);
+  }
 }
