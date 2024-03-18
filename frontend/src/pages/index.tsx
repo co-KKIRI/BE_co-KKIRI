@@ -8,8 +8,8 @@ export default function Home() {
     flow: 'auth-code',
   });
 
-  const getTest = async () => {
-    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
+  const getCheck = async () => {
+    const response = await axios.get(`http://localhost:8080`, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ export default function Home() {
           console.log('Login Failed');
         }}
       />
-      <button onClick={() => getTest()}>쿠키 테스트</button>
+      <button onClick={() => getCheck()}>서버 체크</button>
     </>
   );
 }

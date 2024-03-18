@@ -28,8 +28,8 @@ const AuthGoogleCallback = () => {
     console.log(data);
   };
 
-  const getTest = async () => {
-    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
+  const getCheck = async () => {
+    const response = await axios.get(`http://localhost:8080`, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
@@ -44,14 +44,13 @@ const AuthGoogleCallback = () => {
   useEffect(() => {
     if (router.query.code) {
       getFetch(router.query.code as string);
-      // window.location.href = `http://localhost:8080/auth/google/redirect?code=${router.query.code}`;
     }
   }, [router]);
 
   return (
     <>
       <button onClick={() => getStatus()}>유저 상태 확인</button>
-      <button onClick={() => getTest()}>쿠키 테스트</button>
+      <button onClick={() => getCheck()}>서버 체크</button>
     </>
   );
 };
