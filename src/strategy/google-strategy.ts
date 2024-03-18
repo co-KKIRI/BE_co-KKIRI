@@ -27,14 +27,14 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<void> {
     const { id, displayName, photos } = profile;
 
-    const salt = bcrypt.genSaltSync(10);
-    const idHash = await bcrypt.hash(id, salt);
+    // const salt = bcrypt.genSaltSync(10);
+    // const idHash = await bcrypt.hash(id, salt);
 
     const socialLoginInfo: SocialLoginDto = {
       nickname: displayName,
       profileImageUrl: photos[0].value,
       socialProvider: SocialProvider.GOOGLE,
-      externalId: idHash,
+      externalId: id,
     };
 
     try {

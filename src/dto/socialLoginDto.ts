@@ -1,4 +1,4 @@
-import { IsEnum, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 import { SocialProvider } from 'src/entity/common/SocialProvider';
 
 export class SocialLoginDto {
