@@ -3,6 +3,8 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy, VerifyCallback } from 'passport-google-oauth20';
 import { SocialLoginDto } from 'src/dto/socialLoginDto';
+import { SocialProvider } from 'src/entity/common/SocialProvider';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class GoogleStrategy extends PassportStrategy(Strategy) {
@@ -23,27 +25,20 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<void> {
-    const { name, emails, provider } = profile;
-    // const socialLoginUserInfo: SocialLoginInfoDto = {
-    //   email: emails[0].value,
-    //   firstName: name.givenName,
-    //   lastName: name.familyName,
-    //   socialProvider: provider,
-    //   externalId: profile.id,
-    //   accessToken,
-    //   refreshToken,
-    // };
+    const { id, displayName, photos } = profile;
+
+    const salt = bcrypt.genSaltSync(10);
+    const idHash = await bcrypt.hash(id, salt);
 
     const socialLoginInfo: SocialLoginDto = {
-      socialProvider: provider,
-      externalId: profile.id,
+      nickname: displayName,
+      profileImageUrl: photos[0].value,
+      socialProvider: SocialProvider.GOOGLE,
+      externalId: idHash,
     };
-
-    console.log(profile);
 
     try {
       const member = await this.googleAuthService.validateAndSaveUser(socialLoginInfo);
-      console.log(member, 'strategy');
       done(null, member, accessToken);
     } catch (err) {
       done(err, false);

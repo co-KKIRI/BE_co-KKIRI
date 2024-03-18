@@ -6,44 +6,49 @@ import { SocialProvider } from './common/SocialProvider';
 })
 export class Member {
   @PrimaryGeneratedColumn()
-  id: number;
+  id!: number;
 
-  @Column({ length: 45 })
-  nickname: string;
+  @Column({ name: 'nickname', type: 'varchar', length: 45, nullable: true })
+  nickname?: string;
 
-  @Column({ name: 'profile_image_url', length: 200 })
-  profileImageUrl: string;
+  @Column({ name: 'profile_image_url', type: 'varchar', length: 200, nullable: true })
+  profileImageUrl?: string;
 
-  @Column({ length: 45 })
-  position: string;
+  @Column({ name: 'position', type: 'varchar', length: 45, nullable: true })
+  position?: string;
 
-  @Column()
-  career: number;
+  @Column({ name: 'career', type: 'int', nullable: true })
+  career?: number;
 
-  @Column({ length: 200 })
-  introduce: string;
+  @Column({ name: 'introduce', type: 'varchar', length: 200, nullable: true })
+  introduce?: string;
 
-  @Column({ length: 200 })
-  stack: string;
+  @Column({ name: 'stack', type: 'varchar', length: 200, nullable: true })
+  stack?: string;
 
-  @Column('text')
-  link: string;
+  @Column({ name: 'link', type: 'text', nullable: true })
+  link?: string;
 
-  @Column({ name: 'is_visible_profile' })
-  isVisibleProfile: boolean;
+  @Column({ name: 'is_visible_profile', type: 'boolean', nullable: true })
+  isVisibleProfile: boolean | null;
 
-  @Column({ name: 'social_provider', nullable: false })
-  socialProvider: string;
+  @Column({ name: 'social_provider', type: 'enum', enum: SocialProvider, nullable: false })
+  socialProvider!: SocialProvider;
 
-  @Column({ name: 'external_id', nullable: false })
-  externalId: string;
+  @Column({ name: 'external_id', type: 'varchar', length: 100, nullable: false })
+  externalId!: string;
 
-  @Column({ name: 'deleted_at' })
-  deletedAt: Date;
+  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
 
-  @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
-  createdAt: Date;
+  @CreateDateColumn({ name: 'created_at', type: 'timestamp', nullable: false })
+  createdAt!: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
-  updatedAt: Date;
+  @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: false })
+  updatedAt!: Date;
+
+  setProfileInfo(nickname: string, profileImageUrl: string) {
+    this.nickname = nickname;
+    this.profileImageUrl = profileImageUrl;
+  }
 }

@@ -1,4 +1,4 @@
 export enum SocialProvider {
-  GOOGLE,
-  GITHUB,
+  GOOGLE = 'GOOGLE',
+  GITHUB = 'GITHUB',
 }
