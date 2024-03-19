@@ -12,6 +12,7 @@ import { CommentController } from './controller/comment.controller';
 import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
+
 import { CommonModule } from './common/common.module';
 import { PostManagementController } from './controller/post-management.controller';
 import { PostManagementService } from './service/post-management.service';
@@ -19,6 +20,14 @@ import { TeamMemberQueryRepository } from './repository/team-member.query-reposi
 import { TeamMember } from './entity/team-member.entity';
 import { PostTeamMemberController } from './controller/post-team-member.controller';
 import { PostTeamMemberService } from './service/post-team-member.service';
+
+import { PassportModule } from '@nestjs/passport';
+import { SessionSerializerService } from './service/session-serializer.service';
+import { GoogleAuthenticationService } from './service/google-authentication.service';
+import { GoogleAuthenticationController } from './controller/google-auth.controller';
+import { GoogleStrategy } from './strategy/google-strategy';
+import { GoogleAuthGuard } from './guard/google-auth.guard';
+import { Member } from './entity/member.entity';
 
 @Module({
   imports: [
@@ -28,14 +37,18 @@ import { PostTeamMemberService } from './service/post-team-member.service';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member]),
     TestModule,
+    PassportModule.register({
+      session: true,
+    }),
   ],
   controllers: [
     AppController,
     CommentController,
     PostController,
     MemberController,
+    GoogleAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
   ],
@@ -47,6 +60,10 @@ import { PostTeamMemberService } from './service/post-team-member.service';
     MemberService,
     PostManagementService,
     TeamMemberQueryRepository,
+    GoogleAuthenticationService,
+    SessionSerializerService,
+    GoogleStrategy,
+    GoogleAuthGuard,
     PostTeamMemberService,
   ],
 })
