@@ -21,6 +21,8 @@ import { PostListController } from './controller/post-list.controller';
 import { PostListService } from './service/post-list.service';
 import { PostListQueryRepository } from './repository/post-list.query-repository';
 import { Member } from './entity/member.entity';
+import { PostView } from './entity/post-view.entity';
+import { Comment } from './entity/comment.entity';
 
 @Module({
   imports: [
@@ -30,7 +32,7 @@ import { Member } from './entity/member.entity';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
     TestModule,
   ],
   controllers: [

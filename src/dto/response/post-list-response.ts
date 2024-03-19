@@ -8,7 +8,7 @@ export class PostedList {
   @ApiProperty()
   type!: Type;
   @ApiProperty()
-  recruitEndAt!: string;
+  recruitEndAt!: Date;
   @ApiProperty()
   progressWay!: string;
   @ApiProperty()
@@ -21,23 +21,23 @@ export class PostedList {
   nickname: string;
   @ApiProperty()
   profileImageUrl: string;
-  // @ApiProperty()
-  // postViews: number;
-  // @ApiProperty()
-  // postCommentsNum: number;
+  @ApiProperty()
+  postViews!: number;
+  @ApiProperty()
+  postCommentsNum!: number;
 
   constructor(
     postId: number,
     type: Type,
-    recruitEndAt: string,
+    recruitEndAt: Date,
     progressWay: string,
     title: string,
     position: string[],
     stack: string[],
     nickname: string,
     profileImageUrl: string,
-    // postViews: number,
-    // postCommentsNum: number,
+    postViews: number,
+    postCommentsNum: number,
   ) {
     this.postId = postId;
     this.type = type;
@@ -48,8 +48,8 @@ export class PostedList {
     this.stack = stack;
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
-    // this.postViews = postViews;
-    // this.postCommentsNum = postCommentsNum;
+    this.postViews = postViews;
+    this.postCommentsNum = postCommentsNum;
   }
 }
 
@@ -73,6 +73,8 @@ export class PostListResponse {
         postedList.stack,
         postedList.nickname,
         postedList.profileImageUrl,
+        postedList.postViews,
+        postedList.postCommentsNum
       );
     });
     return new PostListResponse(postedListInfo);

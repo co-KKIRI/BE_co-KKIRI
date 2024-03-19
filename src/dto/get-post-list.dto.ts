@@ -20,6 +20,8 @@ export class GetPostListDto {
         tuple.stack,
         tuple.nickname,
         tuple.profileImageUrl,
+        tuple.postViews,
+        tuple.postCommentsNum,
       );
     });
     return new GetPostListDto(postedListInfo);
@@ -31,28 +33,28 @@ export class GetPostListDto {
 export class GetPostedList {
   postId!: number;
   type!: Type;
-  recruitEndAt!: string;
+  recruitEndAt: Date;
   progressWay!: string;
   title!: string;
   position!: string[];
   stack: string[];
   nickname: string;
   profileImageUrl: string;
-  // postViews: number;
-  // postCommentsNum: number;
+  postViews: number;
+  postCommentsNum: number;
 
   constructor(
     postId: number,
     type: Type,
-    recruitEndAt: string,
+    recruitEndAt: Date,
     progressWay: string,
     title: string,
     position: string[],
     stack: string[],
     nickname: string,
     profileImageUrl: string,
-    // postViews: number,
-    // postCommentsNum: number,
+    postViews: number,
+    postCommentsNum: number,
   ) {
     this.postId = postId;
     this.type = type;
@@ -63,8 +65,8 @@ export class GetPostedList {
     this.stack = stack;
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
-    // this.postViews = postViews;
-    // this.postCommentsNum = postCommentsNum;
+    this.postViews = postViews;
+    this.postCommentsNum = postCommentsNum;
   }
 
 }
