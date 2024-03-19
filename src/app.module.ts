@@ -30,6 +30,9 @@ import { GoogleAuthenticationService } from './service/google-authentication.ser
 import { GoogleAuthenticationController } from './controller/google-auth.controller';
 import { GoogleStrategy } from './strategy/google-strategy';
 import { GoogleAuthGuard } from './guard/google-auth.guard';
+import { PostListController } from './controller/post-list.controller';
+import { PostListService } from './service/post-list.service';
+import { PostListQueryRepository } from './repository/post-list.query-repository';
 
 
 @Module({
@@ -49,7 +52,7 @@ import { GoogleAuthGuard } from './guard/google-auth.guard';
   controllers: [
     AppController,
     CommentController,
-    PostController,
+    PostListController,
     MemberController,
     GoogleAuthenticationController,
     PostManagementController,
@@ -59,7 +62,8 @@ import { GoogleAuthGuard } from './guard/google-auth.guard';
     Logger,
     AppService,
     CommentService,
-    PostService,
+    PostListService,
+    PostListQueryRepository,
     MemberService,
     PostManagementService,
     TeamMemberQueryRepository,
