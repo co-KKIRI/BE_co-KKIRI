@@ -15,6 +15,15 @@ export default function Home() {
         'Content-Type': 'application/json',
       },
     });
+  };
+
+  const getLogin = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/login`, {
+      withCredentials: true,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
 
     const { data } = response;
 
@@ -24,7 +33,8 @@ export default function Home() {
   return (
     <>
       <button onClick={() => login()}>클라 테스트</button>
-      <Link href={'http://localhost:8080/auth/google/login'}>서버 테스트</Link>
+      <Link href={'http://localhost:8080/auth/google/login'}>구글 로그인</Link>
+      <button onClick={() => getLogin()}>서버 테스트2</button>
       <GoogleLogin
         onSuccess={(credentialResponse) => {
           console.log(credentialResponse);

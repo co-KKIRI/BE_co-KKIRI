@@ -6,7 +6,7 @@ const AuthGoogleCallback = () => {
   const router = useRouter();
 
   const getFetch = async (code: string) => {
-    const response = await axios.get(`http://localhost:8080/auth/google/redirect?code=${code}`, {
+    const response = await axios.post(`http://localhost:8080/auth/google/redirect?code=${code}`, {
       withCredentials: true,
     });
 
@@ -16,7 +16,7 @@ const AuthGoogleCallback = () => {
   };
 
   const getStatus = async () => {
-    const response = await axios.get(`http://localhost:8080/auth/google/status`, {
+    const response = await axios.post(`http://localhost:8080/auth/google/status`, {
       withCredentials: true,
       headers: {
         'Content-Type': 'application/json',
