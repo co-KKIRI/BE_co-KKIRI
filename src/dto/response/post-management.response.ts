@@ -1,8 +1,8 @@
 import { PostStatus, Type } from '../../entity/common/Enums';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetStudyManagementDto } from '../get-study-management.dto';
+import { GetPostManagementDto } from '../get-post-management.dto';
 
-export class StudyManagementResponse {
+export class PostManagementResponse {
   @ApiProperty()
   postId!: number;
   @ApiProperty()
@@ -44,8 +44,8 @@ export class StudyManagementResponse {
     this.isLeader = isLeader;
   }
 
-  static from(dto: GetStudyManagementDto) {
-    return new StudyManagementResponse(
+  static from(dto: GetPostManagementDto) {
+    return new PostManagementResponse(
       dto.postId,
       dto.postTitle,
       dto.type,

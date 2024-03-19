@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 declare const module: any;
 
@@ -10,6 +12,21 @@ async function bootstrap() {
     bufferLogs: true,
   });
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
+
+  app.use(
+    session({
+      secret: 'co-kkiri',
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        maxAge: 1000 * 60 * 60 * 24,
+        httpOnly: true,
+      },
+    }),
+  );
+
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.enableCors({
     origin: ['http://localhost', 'http://127.0.0.1'],

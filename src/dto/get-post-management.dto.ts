@@ -1,12 +1,12 @@
 import { PostStatus, Type } from '../entity/common/Enums';
 import { Post } from '../entity/post.entity';
 
-type GetStudyManagementDtoOptions = {
+type GetPostManagementDtoOptions = {
   post: Post;
   isLeader: boolean;
 };
 
-export class GetStudyManagementDto {
+export class GetPostManagementDto {
   postId!: number;
   postTitle: string;
   type!: Type;
@@ -17,7 +17,7 @@ export class GetStudyManagementDto {
   positions: string[];
   isLeader: boolean;
 
-  constructor({ post, isLeader }: GetStudyManagementDtoOptions) {
+  constructor({ post, isLeader }: GetPostManagementDtoOptions) {
     this.postId = post.id;
     this.postTitle = post.title;
     this.type = post.type;
