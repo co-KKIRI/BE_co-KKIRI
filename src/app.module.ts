@@ -14,12 +14,12 @@ import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
 
 import { CommonModule } from './common/common.module';
-import { StudyManagementController } from './controller/study-management.controller';
-import { StudyManagementService } from './service/study-management.service';
+import { PostManagementController } from './controller/post-management.controller';
+import { PostManagementService } from './service/post-management.service';
 import { TeamMemberQueryRepository } from './repository/team-member.query-repository';
 import { TeamMember } from './entity/team-member.entity';
-import { StudyTeamMemberController } from './controller/study-team-member.controller';
-import { StudyTeamMemberService } from './service/study-team-member.service';
+import { PostTeamMemberController } from './controller/post-team-member.controller';
+import { PostTeamMemberService } from './service/post-team-member.service';
 
 import { PassportModule } from '@nestjs/passport';
 import { SessionSerializerService } from './service/session-serializer.service';
@@ -48,9 +48,9 @@ import { Member } from './entity/member.entity';
     CommentController,
     PostController,
     MemberController,
-    StudyManagementController,
-    StudyTeamMemberController,
     GoogleAuthenticationController,
+    PostManagementController,
+    PostTeamMemberController,
   ],
   providers: [
     Logger,
@@ -58,13 +58,13 @@ import { Member } from './entity/member.entity';
     CommentService,
     PostService,
     MemberService,
-    StudyManagementService,
+    PostManagementService,
     TeamMemberQueryRepository,
-    StudyTeamMemberService,
     GoogleAuthenticationService,
     SessionSerializerService,
     GoogleStrategy,
     GoogleAuthGuard,
+    PostTeamMemberService,
   ],
 })
 export class AppModule {}

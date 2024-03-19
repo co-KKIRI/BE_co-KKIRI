@@ -4,11 +4,11 @@ import { Repository } from 'typeorm';
 import { TeamMember } from '../entity/team-member.entity';
 import { TeamMemberStatus } from '../entity/common/Enums';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
-import { GetStudyTeamMemberDto } from '../dto/get-study-team-member.dto';
+import { GetPostTeamMemberDto } from '../dto/get-post-team-member.dto';
 import { Post } from '../entity/post.entity';
 
 @Injectable()
-export class StudyTeamMemberService {
+export class PostTeamMemberService {
   constructor(
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
@@ -50,13 +50,13 @@ export class StudyTeamMemberService {
     }
   }
 
-  async getAllStudyTeamMember(postId: number): Promise<GetStudyTeamMemberDto> {
+  async getAllPostTeamMember(postId: number): Promise<GetPostTeamMemberDto> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
     const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.ACCEPT);
-    return GetStudyTeamMemberDto.from(teamMembersTuples, post.memberId);
+    return GetPostTeamMemberDto.from(teamMembersTuples, post.memberId);
   }
 
   async deleteTeamMember(teamMemberId: number): Promise<void> {

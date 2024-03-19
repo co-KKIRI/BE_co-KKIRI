@@ -1,21 +1,21 @@
 import { GetAllTeamMembersTuple } from '../repository/team-member.query-repository';
 
-export class GetStudyApplyDto {
-  appliedStudyMemberList!: GetAppliedStudyMember[];
+export class GetPostApplyDto {
+  appliedPostMemberList!: GetAppliedPostMember[];
 
-  constructor(appliedStudyMemberList: GetAppliedStudyMember[]) {
-    this.appliedStudyMemberList = appliedStudyMemberList;
+  constructor(appliedPostMemberList: GetAppliedPostMember[]) {
+    this.appliedPostMemberList = appliedPostMemberList;
   }
 
   static from(tuples: GetAllTeamMembersTuple[]) {
-    const appliedStudyMemberList = tuples.map((tuple) => {
-      return new GetAppliedStudyMember(tuple.teamMemberId, tuple.memberId, tuple.nickname, tuple.profileImageUrl);
+    const appliedPostMemberList = tuples.map((tuple) => {
+      return new GetAppliedPostMember(tuple.teamMemberId, tuple.memberId, tuple.nickname, tuple.profileImageUrl);
     });
-    return new GetStudyApplyDto(appliedStudyMemberList);
+    return new GetPostApplyDto(appliedPostMemberList);
   }
 }
 
-export class GetAppliedStudyMember {
+export class GetAppliedPostMember {
   teamMemberId!: number;
   memberId!: number;
   nickname?: string;
