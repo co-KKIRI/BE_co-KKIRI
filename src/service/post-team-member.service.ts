@@ -4,8 +4,9 @@ import { Repository } from 'typeorm';
 import { TeamMember } from '../entity/team-member.entity';
 import { TeamMemberStatus } from '../entity/common/Enums';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
-import { GetPostTeamMemberDto } from '../dto/get-post-team-member.dto';
+import { GetPostTeamMember, GetPostTeamMemberDto } from '../dto/get-post-team-member.dto';
 import { Post } from '../entity/post.entity';
+import { PaginationRequest } from '../common/pagination/pagination-request';
 
 @Injectable()
 export class PostTeamMemberService {
@@ -50,13 +51,23 @@ export class PostTeamMemberService {
     }
   }
 
-  async getAllPostTeamMember(postId: number): Promise<GetPostTeamMemberDto> {
+  async getAllPostTeamMember(postId: number, paginationRequest: PaginationRequest) {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
-    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.ACCEPT);
-    return GetPostTeamMemberDto.from(teamMembersTuples, post.memberId);
+    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(
+      postId,
+      TeamMemberStatus.ACCEPT,
+      paginationRequest,
+    );
+    const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(
+      postId,
+      TeamMemberStatus.ACCEPT,
+    );
+    const getPostTeamMembers = teamMembersTuples.map((teamMember) => GetPostTeamMember.from(teamMember, post.memberId));
+
+    return { getPostTeamMembers, totalCount };
   }
 
   async deleteTeamMember(teamMemberId: number): Promise<void> {

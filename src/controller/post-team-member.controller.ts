@@ -1,7 +1,10 @@
-import { Controller, Delete, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
 import { PostTeamMemberResponse } from '../dto/response/post-team-member.response';
 import { PostTeamMemberService } from '../service/post-team-member.service';
 import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PaginationRequest } from '../common/pagination/pagination-request';
+import { ApiPaginatedResponse } from '../common/pagination/pagination.decorator';
+import { PaginationResponse } from '../common/pagination/pagination-response';
 
 @ApiTags('PostTeamMember')
 @Controller()
@@ -21,11 +24,22 @@ export class PostTeamMemberController {
   }
 
   @ApiOperation({ summary: '스터디/프로젝트 멤버 목록' })
-  @ApiCreatedResponse({ type: PostTeamMemberResponse })
+  @ApiPaginatedResponse(PostTeamMemberResponse)
   @Get('/post/:postId/team-member')
-  async getAllPostTeamMember(@Param('postId', ParseIntPipe) postId: number): Promise<PostTeamMemberResponse> {
-    const getPostTeamMemberDto = await this.postTeamMemberService.getAllPostTeamMember(postId);
-    return PostTeamMemberResponse.from(getPostTeamMemberDto);
+  async getAllPostTeamMember(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Query() paginationRequest: PaginationRequest,
+  ): Promise<PaginationResponse<PostTeamMemberResponse>> {
+    const { getPostTeamMembers, totalCount } = await this.postTeamMemberService.getAllPostTeamMember(
+      postId,
+      paginationRequest,
+    );
+
+    return PaginationResponse.of({
+      data: PostTeamMemberResponse.fromList(getPostTeamMembers),
+      options: paginationRequest,
+      totalCount: totalCount,
+    });
   }
 
   @ApiOperation({ summary: '스터디/프로젝트 현재 팀원 삭제' })

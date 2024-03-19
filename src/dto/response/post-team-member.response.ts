@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GetPostTeamMemberDto } from '../get-post-team-member.dto';
+import { GetPostTeamMember, GetPostTeamMemberDto } from '../get-post-team-member.dto';
 
-export class PostTeamMember {
+export class PostTeamMemberResponse {
   @ApiProperty()
   teamMemberId!: number;
   @ApiProperty()
@@ -20,26 +20,17 @@ export class PostTeamMember {
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
   }
-}
 
-export class PostTeamMemberResponse {
-  @ApiProperty({ type: [PostTeamMember] })
-  postTeamMemberList!: PostTeamMember[];
-
-  constructor(postTeamMemberList: PostTeamMember[]) {
-    this.postTeamMemberList = postTeamMemberList;
-  }
-
-  static from(getPostTeamMemberDto: GetPostTeamMemberDto) {
-    const postTeamMemberList = getPostTeamMemberDto.appliedPostMemberList.map((appliedPostMember) => {
-      return new PostTeamMember(
-        appliedPostMember.isLeader,
-        appliedPostMember.teamMemberId,
-        appliedPostMember.memberId,
-        appliedPostMember.nickname,
-        appliedPostMember.profileImageUrl,
-      );
-    });
-    return new PostTeamMemberResponse(postTeamMemberList);
+  static fromList(getPostTeamMember: GetPostTeamMember[]) {
+    return getPostTeamMember.map(
+      (getPostTeamMember) =>
+        new PostTeamMemberResponse(
+          getPostTeamMember.isLeader,
+          getPostTeamMember.teamMemberId,
+          getPostTeamMember.memberId,
+          getPostTeamMember.nickname,
+          getPostTeamMember.profileImageUrl,
+        ),
+    );
   }
 }
