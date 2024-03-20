@@ -23,8 +23,8 @@ export class TeamMemberQueryRepository {
         'member.nickname as nickname',
         'member.profileImageUrl as profileImageUrl',
       ])
-      .limit(paginationRequest.getSkip())
-      .offset(paginationRequest.take)
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
       .orderBy('team_member.updatedAt', paginationRequest.order)
       .getRawMany();
     return plainToInstance(GetAllTeamMembersTuple, teamMembers);

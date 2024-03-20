@@ -32,5 +32,7 @@ export class PaginationRequest {
   @IsOptional()
   readonly take: number = 10;
 
-  skip: number = (this.page - 1) * this.take;
+  getSkip(): number {
+    return (this.page - 1) * this.take;
+  }
 }
