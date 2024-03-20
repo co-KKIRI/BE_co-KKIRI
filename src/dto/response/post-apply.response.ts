@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GetPostApplyDto } from '../get-post-apply.dto';
+import { GetAppliedPostMember } from '../get-post-apply.dto';
 
-export class AppliedPostMember {
+export class PostApplyResponse {
   @ApiProperty()
   teamMemberId!: number;
   @ApiProperty()
@@ -17,25 +17,16 @@ export class AppliedPostMember {
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
   }
-}
 
-export class PostApplyResponse {
-  @ApiProperty({ type: [AppliedPostMember] })
-  appliedPostMemberList!: AppliedPostMember[];
-
-  constructor(appliedPostMemberList: AppliedPostMember[]) {
-    this.appliedPostMemberList = appliedPostMemberList;
-  }
-
-  static from(getPostApplyDto: GetPostApplyDto) {
-    const appliedPostMemberList = getPostApplyDto.appliedPostMemberList.map((appliedPostMember) => {
-      return new AppliedPostMember(
-        appliedPostMember.teamMemberId,
-        appliedPostMember.memberId,
-        appliedPostMember.nickname,
-        appliedPostMember.profileImageUrl,
-      );
-    });
-    return new PostApplyResponse(appliedPostMemberList);
+  static fromList(getAppliedPostMemberList: GetAppliedPostMember[]) {
+    return getAppliedPostMemberList.map(
+      (getAppliedPostMember) =>
+        new PostApplyResponse(
+          getAppliedPostMember.teamMemberId,
+          getAppliedPostMember.memberId,
+          getAppliedPostMember.nickname,
+          getAppliedPostMember.profileImageUrl,
+        ),
+    );
   }
 }
