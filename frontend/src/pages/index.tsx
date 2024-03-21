@@ -18,11 +18,32 @@ export default function Home() {
   };
 
   const getLogin = async () => {
-    const response = await axios.get(`http://localhost:8080/auth/google/login`, {
+    window.open('http://localhost:8080/auth/google/login', '_blank');
+    // const response = await axios.get(`http://localhost:8080/auth/google/login`, {
+    //   withCredentials: true,
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    // });
+
+    // const { data } = response;
+
+    // console.log(data);
+  };
+
+  const getTest = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
       withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
+
+  const getTest1 = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test1`, {
+      withCredentials: true,
     });
 
     const { data } = response;
@@ -44,6 +65,8 @@ export default function Home() {
         }}
       />
       <button onClick={() => getCheck()}>서버 체크</button>
+      <button onClick={() => getTest()}>어스가드 테스트</button>
+      <button onClick={() => getTest1()}>어스가드 테스트1</button>
     </>
   );
 }
