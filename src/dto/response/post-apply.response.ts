@@ -9,12 +9,15 @@ export class PostApplyResponse {
   @ApiProperty()
   nickname?: string;
   @ApiProperty()
+  position?: string;
+  @ApiProperty()
   profileImageUrl?: string;
 
-  constructor(teamMemberId: number, memberId: number, nickname?: string, profileImageUrl?: string) {
+  constructor(teamMemberId: number, memberId: number, nickname?: string, position?: string, profileImageUrl?: string) {
     this.teamMemberId = teamMemberId;
     this.memberId = memberId;
     this.nickname = nickname;
+    this.position = position;
     this.profileImageUrl = profileImageUrl;
   }
 
@@ -25,6 +28,7 @@ export class PostApplyResponse {
           getAppliedPostMember.teamMemberId,
           getAppliedPostMember.memberId,
           getAppliedPostMember.nickname,
+          getAppliedPostMember.position,
           getAppliedPostMember.profileImageUrl,
         ),
     );
