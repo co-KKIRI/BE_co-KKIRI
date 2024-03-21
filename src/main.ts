@@ -22,6 +22,8 @@ async function bootstrap() {
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
         httpOnly: true,
+        domain: 'localhost',
+        path: '/',
       },
     }),
   );

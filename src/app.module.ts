@@ -6,10 +6,8 @@ import { TestModule } from './test/test.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeORMConfigService } from 'src/database/database.config';
 import { CommentService } from './service/comment.service';
-import { PostService } from './service/post.service';
 import { MemberService } from './service/member.service';
 import { CommentController } from './controller/comment.controller';
-import { PostController } from './controller/post.controller';
 import { MemberController } from './controller/member.controller';
 import { Post } from './entity/post.entity';
 import { Member } from './entity/member.entity';
@@ -33,7 +31,7 @@ import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { PostListController } from './controller/post-list.controller';
 import { PostListService } from './service/post-list.service';
 import { PostListQueryRepository } from './repository/post-list.query-repository';
-
+import { RolesGuard } from './guard/roles.guard';
 
 @Module({
   imports: [
@@ -71,6 +69,7 @@ import { PostListQueryRepository } from './repository/post-list.query-repository
     SessionSerializerService,
     GoogleStrategy,
     GoogleAuthGuard,
+    RolesGuard,
     PostTeamMemberService,
   ],
 })
