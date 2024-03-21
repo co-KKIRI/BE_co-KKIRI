@@ -29,6 +29,12 @@ export class PostDetails {
   positions: string[];
   @ApiProperty()
   stacks: string[];
+  @ApiProperty()
+  views!: number;
+  @ApiProperty()
+  scraps!: number;
+  @ApiProperty()
+  commentsNum!: number;
 
   constructor(
     postTitle: string,
@@ -44,6 +50,9 @@ export class PostDetails {
     capacity: number,
     positions: string[],
     stacks: string[],
+    views: number,
+    scraps: number,
+    commentsNum: number,
   ) {
     this.postTitle = postTitle;
     this.postContent = postContent;
@@ -58,6 +67,9 @@ export class PostDetails {
     this.capacity = capacity;
     this.positions = positions;
     this.stacks = stacks;
+    this.views = views;
+    this.scraps = scraps;
+    this.commentsNum = commentsNum;
   }
 }
 export class PostDetailResponse {
@@ -83,6 +95,9 @@ export class PostDetailResponse {
       dto.postDetail.capacity,
       dto.postDetail.positions,
       dto.postDetail.stacks,
+      dto.postDetail.views,
+      dto.postDetail.scraps,
+      dto.postDetail.commentsNum,
     );
     return new PostDetailResponse(postDetails);
   }

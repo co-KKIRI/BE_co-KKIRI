@@ -13,6 +13,7 @@ import { Post } from './entity/post.entity';
 import { Member } from './entity/member.entity';
 import { PostView } from './entity/post-view.entity';
 import { Comment } from './entity/comment.entity';
+import { PostScrap } from './entity/post-scrap.entity';
 
 import { CommonModule } from './common/common.module';
 import { PostManagementController } from './controller/post-management.controller';
@@ -36,6 +37,7 @@ import { PostDetailService } from './service/post-detail.service';
 import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 
 
+
 @Module({
   imports: [
     CommonModule,
@@ -44,7 +46,7 @@ import { PostDetailQueryRepository } from './repository/post-detail.query-reposi
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
     TestModule,
     PassportModule.register({
       session: true,
@@ -78,4 +80,4 @@ import { PostDetailQueryRepository } from './repository/post-detail.query-reposi
     PostDetailQueryRepository,
   ],
 })
-export class AppModule {}
+export class AppModule { }

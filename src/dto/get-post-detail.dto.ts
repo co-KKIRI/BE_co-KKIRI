@@ -5,9 +5,9 @@ export class GetPostDetailDto {
   postDetail!: GetPostDetails;
 
   constructor(postDetail: GetPostDetails) {
-    this.postDetail=postDetail;
+    this.postDetail = postDetail;
   }
-  static from(tuple: GetAllPostDetailTuple){
+  static from(tuple: GetAllPostDetailTuple) {
     const postDetail = new GetPostDetails(
       tuple.postTitle,
       tuple.postContent,
@@ -21,7 +21,10 @@ export class GetPostDetailDto {
       tuple.contactWay,
       tuple.capacity,
       tuple.positions,
-      tuple.stacks,      
+      tuple.stacks,
+      tuple.views,
+      tuple.scraps,
+      tuple.commentsNum,
     );
     return new GetPostDetailDto(postDetail);
   }
@@ -41,6 +44,9 @@ export class GetPostDetails {
   capacity: number;
   positions: string[];
   stacks: string[];
+  views!: number;
+  scraps!: number;
+  commentsNum!: number;
 
   constructor(
     postTitle: string,
@@ -55,7 +61,10 @@ export class GetPostDetails {
     contactWay: string,
     capacity: number,
     positions: string[],
-    stacks: string[],
+    stack: string[],
+    views: number,
+    scraps: number,
+    commentsNum: number,
   ) {
     this.postTitle = postTitle;
     this.postContent = postContent;
@@ -69,6 +78,9 @@ export class GetPostDetails {
     this.contactWay = contactWay;
     this.capacity = capacity;
     this.positions = positions;
-    this.stacks = stacks;
+    this.stacks = stack;
+    this.views = views;
+    this.scraps = scraps;
+    this.commentsNum = commentsNum;
   }
 }
