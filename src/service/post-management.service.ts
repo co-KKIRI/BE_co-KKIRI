@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
 import { GetPostManagementDto } from '../dto/get-post-management.dto';
-import { GetPostApplyDto } from '../dto/get-post-apply.dto';
+import { GetAppliedPostMember } from '../dto/get-post-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
 import { PostStatus, TeamMemberStatus } from '../entity/common/Enums';
+import { PaginationRequest } from '../common/pagination/pagination-request';
 
 @Injectable()
 export class PostManagementService {
@@ -27,10 +28,16 @@ export class PostManagementService {
     return new GetPostManagementDto({ post, isLeader: isLeader });
   }
 
-  async getPostApply(postId: number): Promise<GetPostApplyDto> {
-    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(postId, TeamMemberStatus.READY);
+  async getPostApply(postId: number, paginationRequest: PaginationRequest) {
+    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(
+      postId,
+      TeamMemberStatus.READY,
+      paginationRequest,
+    );
+    const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(postId, TeamMemberStatus.READY);
 
-    return new GetPostApplyDto(teamMembersTuples);
+    const getAppliedPostMembers = teamMembersTuples.map((teamMember) => GetAppliedPostMember.from(teamMember));
+    return { getAppliedPostMembers, totalCount };
   }
 
   async recruitEnd(postId: number): Promise<void> {

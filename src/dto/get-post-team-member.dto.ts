@@ -41,4 +41,14 @@ export class GetPostTeamMember {
     this.profileImageUrl = profileImageUrl;
     this.isLeader = memberId === leaderMemberId;
   }
+
+  static from(tuple: GetAllTeamMembersTuple, leaderMemberId: number) {
+    return new GetPostTeamMember(
+      leaderMemberId,
+      tuple.teamMemberId,
+      tuple.memberId,
+      tuple.nickname,
+      tuple.profileImageUrl,
+    );
+  }
 }
