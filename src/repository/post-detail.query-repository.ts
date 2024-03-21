@@ -14,7 +14,7 @@ export class PostDetailQueryRepository {
     const postDetail = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
-      .innerJoin(Member, 'member', 'post.meber_id = member.id')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
       .where('post.id = :postId', { postId })
       .select([
         'post.title as postTitle',

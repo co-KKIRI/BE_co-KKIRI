@@ -6,7 +6,7 @@ import { PostDetailQueryRepository } from "src/repository/post-detail.query-repo
 
 @Injectable()
 export class PostDetailService {
-  constructor(@InjectRepository(Post) private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
+  constructor(private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   async getPostDetail(postId: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
