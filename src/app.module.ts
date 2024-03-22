@@ -35,6 +35,7 @@ import { PostListQueryRepository } from './repository/post-list.query-repository
 import { PostDetailController } from './controller/post-detail.controller';
 import { PostDetailService } from './service/post-detail.service';
 import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
+import { RolesGuard } from './guard/roles.guard';
 
 
 
@@ -75,6 +76,7 @@ import { PostDetailQueryRepository } from './repository/post-detail.query-reposi
     SessionSerializerService,
     GoogleStrategy,
     GoogleAuthGuard,
+    RolesGuard,
     PostTeamMemberService,
     PostDetailService,
     PostDetailQueryRepository,
