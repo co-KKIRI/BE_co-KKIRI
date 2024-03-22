@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from 'src/entity/member.entity';
 import { SocialLoginDto } from 'src/dto/socialLoginDto';
-import { GetMemberInfoSummaryResponse } from 'src/dto/response/get-member-info-summary.response';
+import { GetMemberInfoSummaryResponse } from 'src/dto/response/member/get-member-info-summary.response';
 import { MemberQueryRepository } from 'src/repository/member.query-repository';
 
 @Injectable()
@@ -39,7 +38,7 @@ export class MemberService {
 
     const { nickname, profileImageUrl } = memberSummary;
 
-    return new GetMemberInfoSummaryResponse(nickname ?? '', profileImageUrl ?? '');
+    return new GetMemberInfoSummaryResponse(nickname, profileImageUrl);
   }
 
   // async findUserById(id: number): Promise<User> {

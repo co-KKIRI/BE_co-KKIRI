@@ -1,6 +1,6 @@
 import { Controller, Get, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { GetMemberInfoSummaryResponse } from 'src/dto/response/get-member-info-summary.response';
+import { GetMemberInfoSummaryResponse } from 'src/dto/response/member/get-member-info-summary.response';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { MemberService } from 'src/service/member.service';
 
