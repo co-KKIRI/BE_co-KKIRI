@@ -2,17 +2,16 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+const axiosInstance = axios.create({
+  baseURL: 'http://localhost:8080',
+  withCredentials: true,
+});
+
 const AuthGoogleCallback = () => {
   const router = useRouter();
 
   const getFetch = async (code: string) => {
-    const response = await axios.post(`http://localhost:8080/auth/google/redirect?code=${code}`, {
-      withCredentials: true,
-    });
-
-    const { data } = response;
-
-    console.log(data);
+    const response = await axiosInstance.post(`/auth/google/redirect?code=${code}`);
   };
 
   const getStatus = async () => {
@@ -31,9 +30,26 @@ const AuthGoogleCallback = () => {
   const getCheck = async () => {
     const response = await axios.get(`http://localhost:8080`, {
       withCredentials: true,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
+
+  const getTest = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test`, {
+      withCredentials: true,
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
+
+  const getTest1 = async () => {
+    const response = await axios.get(`http://localhost:8080/auth/google/test1`, {
+      withCredentials: true,
     });
 
     const { data } = response;
@@ -51,6 +67,8 @@ const AuthGoogleCallback = () => {
     <>
       <button onClick={() => getStatus()}>유저 상태 확인</button>
       <button onClick={() => getCheck()}>서버 체크</button>
+      <button onClick={() => getTest()}>어스가드 테스트</button>
+      <button onClick={() => getTest1()}>어스가드 테스트1</button>
     </>
   );
 };

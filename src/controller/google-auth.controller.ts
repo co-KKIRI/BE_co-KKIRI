@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
+import { Roles } from 'src/common/roles/roles.decorator';
 import { GoogleAuthGuard } from 'src/guard/google-auth.guard';
+import { RolesGuard } from 'src/guard/roles.guard';
 
 @ApiTags('GoogleAuth')
 @Controller('auth/google')
@@ -21,4 +22,18 @@ export class GoogleAuthenticationController {
   @Post('/redirect')
   @UseGuards(GoogleAuthGuard)
   async handleRedirect() {}
+
+  // roles guard test
+  @Get('/test')
+  @UseGuards(RolesGuard)
+  @Roles('anyone')
+  async handleAuthTest() {
+    console.log('test');
+  }
+
+  @Get('/test1')
+  @UseGuards(RolesGuard)
+  async handleAuthTest1() {
+    console.log('test');
+  }
 }
