@@ -16,7 +16,6 @@ export class MyPageService {
       myPageInfo.introduce,
       JSON.parse(myPageInfo.stack ?? JSON.stringify([])),
       myPageInfo.link,
-      myPageInfo.isVisibleProfile,
     );
   }
 }

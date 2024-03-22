@@ -21,7 +21,6 @@ export class MyPageQueryRepository {
         'member.introduce as introduce',
         'member.stack as stack',
         'member.link as link',
-        'member.isVisibleProfile as isVisibleProfile',
       ])
       .getRawOne();
 
@@ -37,5 +36,4 @@ export class GetMyPageInfoTuple {
   introduce?: string;
   stack?: string;
   link?: string;
-  isVisibleProfile?: boolean;
 }

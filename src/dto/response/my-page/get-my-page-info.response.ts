@@ -6,7 +6,6 @@ export class GetMyPageInfoResponse {
   introduce?: string;
   stack?: string[];
   link?: string;
-  isVisibleProfile?: boolean;
 
   constructor(
     nickname?: string,
@@ -16,7 +15,6 @@ export class GetMyPageInfoResponse {
     introduce?: string,
     stack?: string[],
     link?: string,
-    isVisibleProfile?: boolean,
   ) {
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
@@ -25,6 +23,5 @@ export class GetMyPageInfoResponse {
     this.introduce = introduce;
     this.stack = stack;
     this.link = link;
-    this.isVisibleProfile = isVisibleProfile;
   }
 }
