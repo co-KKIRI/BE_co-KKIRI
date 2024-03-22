@@ -1,10 +1,6 @@
-// import { Controller, Delete, Get, Param, ParseIntPipe, Patch } from '@nestjs/common';
-// import { PostTeamMemberResponse } from '../dto/response/post-team-member.response';
-// import { PostTeamMemberService } from '../service/post-team-member.service';
-// import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-
-import { Controller, Get, Patch, Req } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { MyPageService } from 'src/service/my-page.service';
 
@@ -20,8 +16,10 @@ export class MyPageController {
   }
 
   @ApiOperation({ summary: '유저 정보 수정' })
-  @Patch('/my-page/info')
-  async patchMyInfo() {}
+  @Patch('/info')
+  async patchMyInfo(@Req() req, @Body() memberInfo: PatchMyPageInfoDto): Promise<void> {
+    return this.mypageService.patchMyPageInfo(req.user.id, memberInfo);
+  }
 
   @ApiOperation({ summary: '팀 초대된 목록' })
   @Get('/invite/list')
