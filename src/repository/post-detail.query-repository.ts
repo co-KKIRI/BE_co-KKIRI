@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectDataSource } from "@nestjs/typeorm";
-import { Transform, plainToClass, plainToInstance } from "class-transformer";
-import { IsInt } from "class-validator";
+import { Transform, plainToInstance } from "class-transformer";
+import { IsDate, IsInt } from "class-validator";
 import { Comment } from "src/entity/comment.entity";
 import { Type } from "src/entity/common/Enums";
 import { Member } from "src/entity/member.entity";
@@ -40,12 +40,32 @@ export class PostDetailQueryRepository {
         'COUNT(DISTINCT post_view.id) as views',
         'COUNT(DISTINCT post_scrap.id) as scraps',
         'COUNT(DISTINCT comment.id) as commentsNum',
-        // .isScraped
       ])
       .groupBy('post.id')
       .getRawOne();
     return plainToInstance(GetAllPostDetailTuple, postDetail);
   }
+
+  async getAllComments(postId: number) {
+    const commentsInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Comment, 'comment')
+      .innerJoin(Member, 'member', 'member.id = comment.member_id')
+      .where('comment.post_id = :postId', { postId })
+      .select([
+        'comment.id as commentId',
+        'comment.member_id as commentMemberId',
+        'member.profile_image_url as commentProfileImg',
+        'comment.created_at as commentCreatedAt',
+        'member.nickname as commentNickname',
+        'comment.content as commentContent',
+      ])
+      .orderBy('comment.created_at', 'ASC')
+      .getRawMany();
+    return plainToInstance(GetAllPostCommentTuple, commentsInfo);
+
+  }
+
 }
 
 export class GetAllPostDetailTuple {
@@ -75,4 +95,17 @@ export class GetAllPostDetailTuple {
   @IsInt()
   commentsNum: number;
 
+}
+
+export class GetAllPostCommentTuple {
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  commentId!: number;
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  commentMemberId!: number;
+  commentCreatedAt!: Date;
+  commentProfileImg?: string;
+  commentNickname?: string;
+  commentContent?: string;
 }
