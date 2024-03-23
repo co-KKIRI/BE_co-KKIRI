@@ -36,6 +36,9 @@ import { MemberQueryRepository } from './repository/member.query-repository';
 import { MyPageService } from './service/my-page.service';
 import { MyPageController } from './controller/my-page.controller';
 import { MyPageQueryRepository } from './repository/my-page.query-repository';
+import { PostDetailController } from './controller/post-detail.controller';
+import { PostDetailService } from './service/post-detail.service';
+import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 import { PostScrap } from './entity/post-scrap.entity';
 
 @Module({
@@ -60,6 +63,7 @@ import { PostScrap } from './entity/post-scrap.entity';
     GoogleAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
+    PostDetailController,
     MyPageController,
   ],
   providers: [
@@ -73,12 +77,15 @@ import { PostScrap } from './entity/post-scrap.entity';
     SessionSerializerService,
     PostTeamMemberService,
     MyPageService,
+    PostDetailService,
+
 
     // QueryRepository
     PostListQueryRepository,
     TeamMemberQueryRepository,
     MemberQueryRepository,
     MyPageQueryRepository,
+    PostDetailQueryRepository,
 
     // Strategy
     GoogleStrategy,
@@ -91,4 +98,4 @@ import { PostScrap } from './entity/post-scrap.entity';
     Logger,
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -42,7 +42,7 @@ export class Post {
   stack?: string;
 
   @Column({ length: 45 })
-  position?: string;
+  position: string;
 
   @Column({ name: 'image_url', length: 200 })
   imageUrl: string;
@@ -58,6 +58,9 @@ export class Post {
 
   @Column({ name: 'comment_count' })
   commentCount: number;
+  
+  @Column({ name: 'link', length: 100 })
+  link: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;
