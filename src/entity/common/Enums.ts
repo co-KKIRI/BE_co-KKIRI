@@ -18,5 +18,5 @@ export enum TeamMemberStatus {
 
 export enum TeamInviteType {
   SELF = 'SELF',
-  OTHER = 'OTHER',
+  OTHERS = 'OTHERS',
 }

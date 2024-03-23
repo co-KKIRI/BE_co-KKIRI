@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
+import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
 import { Member } from 'src/entity/member.entity';
 import { MyPageQueryRepository } from 'src/repository/my-page.query-repository';
@@ -49,12 +50,27 @@ export class MyPageService {
     await this.memberRepository.save(originMemberInfo);
   }
 
-  async getMyPageScrapList(id: number, paginationRequest: PaginationRequest) {
+  async getMyPageScrapList(
+    id: number,
+    paginationRequest: PaginationRequest,
+  ): Promise<{ myPageScrapList: GetMyPageScrapResponse[]; totalCount: number }> {
     const myPageScrapListTuple = await this.mypageQueryRepository.getMyPageScrap(id, paginationRequest);
     const totalCount = await this.mypageQueryRepository.getMyPageScrapCount(id);
 
     const myPageScrapList = myPageScrapListTuple.map((scrap) => GetMyPageScrapResponse.from(scrap));
 
     return { myPageScrapList, totalCount };
+  }
+
+  async getMyPageInviteList(
+    id: number,
+    paginationRequest: PaginationRequest,
+  ): Promise<{ inviteList: GetMyPageInviteResponse[]; totalCount: number }> {
+    const inviteListTuple = await this.mypageQueryRepository.getMyPageInviteList(id, paginationRequest);
+    const totalCount = await this.mypageQueryRepository.getMyPageInviteCount(id);
+
+    const inviteList = inviteListTuple.map((invite) => GetMyPageInviteResponse.from(invite));
+
+    return { inviteList, totalCount };
   }
 }
