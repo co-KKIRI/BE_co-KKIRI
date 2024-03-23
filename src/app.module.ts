@@ -13,7 +13,6 @@ import { Post } from './entity/post.entity';
 import { Member } from './entity/member.entity';
 import { PostView } from './entity/post-view.entity';
 import { Comment } from './entity/comment.entity';
-import { PostScrap } from './entity/post-scrap.entity';
 
 import { CommonModule } from './common/common.module';
 import { PostManagementController } from './controller/post-management.controller';
@@ -32,12 +31,11 @@ import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { PostListController } from './controller/post-list.controller';
 import { PostListService } from './service/post-list.service';
 import { PostListQueryRepository } from './repository/post-list.query-repository';
-import { PostDetailController } from './controller/post-detail.controller';
-import { PostDetailService } from './service/post-detail.service';
-import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 import { RolesGuard } from './guard/roles.guard';
-
-
+import { MemberQueryRepository } from './repository/member.query-repository';
+import { MyPageService } from './service/my-page.service';
+import { MyPageController } from './controller/my-page.controller';
+import { MyPageQueryRepository } from './repository/my-page.query-repository';
 
 @Module({
   imports: [
@@ -47,7 +45,7 @@ import { RolesGuard } from './guard/roles.guard';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
     TestModule,
     PassportModule.register({
       session: true,
@@ -61,25 +59,35 @@ import { RolesGuard } from './guard/roles.guard';
     GoogleAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
-    PostDetailController,
+    MyPageController,
   ],
   providers: [
-    Logger,
+    // Service
     AppService,
     CommentService,
     PostListService,
-    PostListQueryRepository,
     MemberService,
     PostManagementService,
-    TeamMemberQueryRepository,
     GoogleAuthenticationService,
     SessionSerializerService,
+    PostTeamMemberService,
+    MyPageService,
+
+    // QueryRepository
+    PostListQueryRepository,
+    TeamMemberQueryRepository,
+    MemberQueryRepository,
+    MyPageQueryRepository,
+
+    // Strategy
     GoogleStrategy,
+
+    // Guard
     GoogleAuthGuard,
     RolesGuard,
-    PostTeamMemberService,
-    PostDetailService,
-    PostDetailQueryRepository,
+
+    // ETC
+    Logger,
   ],
 })
-export class AppModule { }
+export class AppModule {}
