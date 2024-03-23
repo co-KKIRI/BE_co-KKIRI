@@ -9,10 +9,10 @@ export class Member {
   id!: number;
 
   @Column({ name: 'nickname', length: 45, nullable: true })
-  nickname: string;
+  nickname?: string;
 
   @Column({ name: 'profile_image_url', length: 200, nullable: true })
-  profileImageUrl: string;
+  profileImageUrl?: string;
 
   @Column({ name: 'position', length: 45, nullable: true })
   position?: string;
@@ -68,5 +68,9 @@ export class Member {
     this.introduce = introduce;
     this.stack = stack;
     this.link = link;
+  }
+
+  setIsVisibleProfile(isVisibleProfile: boolean) {
+    this.isVisibleProfile = isVisibleProfile;
   }
 }
