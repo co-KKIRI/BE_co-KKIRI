@@ -4,6 +4,7 @@ import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PaginationResponse } from 'src/common/pagination/pagination-response';
 import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
+import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { MyPageService } from 'src/service/my-page.service';
@@ -28,7 +29,18 @@ export class MyPageController {
 
   @ApiOperation({ summary: '팀 초대된 목록' })
   @Get('/invite/list')
-  async getInvitedTeamList() {}
+  async getMyPageInviteList(
+    @Req() req,
+    @Query() paginationRequest: PaginationRequest,
+  ): Promise<PaginationResponse<GetMyPageInviteResponse>> {
+    const { inviteList, totalCount } = await this.mypageService.getMyPageInviteList(req.user.id, paginationRequest);
+
+    return PaginationResponse.of({
+      data: inviteList,
+      options: paginationRequest,
+      totalCount,
+    });
+  }
 
   @ApiOperation({ summary: '스크랩 목록' })
   @Get('/scrap/list')

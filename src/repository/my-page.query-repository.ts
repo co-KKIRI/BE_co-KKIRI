@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Transform, plainToInstance } from 'class-transformer';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
-import { Type } from 'src/entity/common/Enums';
+import { TeamInviteType, Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { Post } from 'src/entity/post.entity';
+import { TeamMember } from 'src/entity/team-member.entity';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -67,6 +68,30 @@ export class MyPageQueryRepository {
       .innerJoin(Member, 'm', 'p.memberId = m.id')
       .where('ps.memberId = :id', { id });
   }
+
+  async getMyPageInviteList(id: number, paginationRequest: PaginationRequest) {
+    const myPageInviteList = await this.getMyPageInviteListBaseQuery(id)
+      .select(['p.id as id', 'p.title as title'])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('p.created_at', paginationRequest.order)
+      .getRawMany();
+
+    return plainToInstance(GetMyPageInviteTuple, myPageInviteList);
+  }
+
+  async getMyPageInviteCount(id: number): Promise<number> {
+    return await this.getMyPageInviteListBaseQuery(id).getCount();
+  }
+
+  private getMyPageInviteListBaseQuery(id: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(TeamMember, 'tm')
+      .innerJoin(Post, 'p', 'tm.post_id = p.id')
+      .where('tm.memberId = :id', { id })
+      .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS });
+  }
 }
 
 export class GetMyPageInfoTuple {
@@ -93,4 +118,9 @@ export class GetMyPageScrapTuple {
   commentCount?: number;
   @Transform(({ value }) => Boolean(value))
   isScrapped?: boolean;
+}
+
+export class GetMyPageInviteTuple {
+  id: number;
+  title: string;
 }
