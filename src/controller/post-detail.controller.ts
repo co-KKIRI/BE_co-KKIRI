@@ -19,10 +19,11 @@ export class PostDetailController {
   @ApiOperation({ summary: '포스트 상세' })
   @ApiCreatedResponse({ type: PostDetailResponse })
   @Get('post/:postId')
-  async getPostDetail(@Param('postId', ParseIntPipe) postId: number): Promise<PostDetailResponse> {
-    const postDetail = await this.postDetailService.getPostDetail(postId);
+  async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
+    const postDetail = await this.postDetailService.getPostDetail(postId, req.user.id);
     return PostDetailResponse.from(postDetail);
   }
+
   @ApiOperation({ summary: '포스트 댓글 목록' })
   @ApiPaginatedResponse(PostCommentResponse)
   @Get('post/:postId/comment/list')
