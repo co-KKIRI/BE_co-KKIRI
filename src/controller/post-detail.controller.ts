@@ -36,9 +36,18 @@ export class PostDetailController {
   async applyPost(
     @Param('postId', ParseIntPipe) postId: number,
     @Req() req): Promise<void> {
-    console.log(req.user);
     await this.postDetailService.applyPost(postId, req.user.id);
-    
+
+  }
+
+  @ApiOperation({ summary: '댓글 달기' })
+  @Post('post/:postId/comment/write')
+  async writeComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Req() req,
+    @Body('content') content: string
+  ): Promise<void> {
+    await this.postDetailService.writeComment(postId, req.user.id, content);
   }
 
 }
