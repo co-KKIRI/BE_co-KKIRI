@@ -9,15 +9,7 @@ export class GetPostCommentDto {
 
   static from(tuples: GetAllPostCommentTuple[], leaderMemberId: number) {
     const commentInfo = tuples.map((tuple) => {
-      return new GetPostComment(
-        leaderMemberId,
-        tuple.commentId,
-        tuple.commentMemberId,
-        tuple.commentCreatedAt,
-        tuple.commentProfileImg,
-        tuple.commentNickname,
-        tuple.commentContent,
-      );
+      return GetPostComment.from(tuple, leaderMemberId);
     });
     return new GetPostCommentDto(commentInfo);
   }

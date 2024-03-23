@@ -1,3 +1,4 @@
+import { PaginationRequest } from './../common/pagination/pagination-request';
 import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GetPostComment, GetPostCommentDto } from "src/dto/get-post-comment.dto";
@@ -22,16 +23,18 @@ export class PostDetailService {
     return new GetPostDetailDto(post);
   }
 
-  async getPostComments(postId: number) {
+  async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
-    const postCommentTuples = await this.postDetailQueryRepository.getAllComments(postId);
+
+    const totalCount = await this.postDetailQueryRepository.getAllCommentsTotalCount(postId);
+    const postCommentTuples = await this.postDetailQueryRepository.getAllComments(postId, paginationRequest);
+
     const getPostComments = postCommentTuples.map((postComment) =>
-      //TODO : 유저 검증 필요
-      GetPostComment.from(postComment, post.id));
-    return getPostComments;
+      GetPostComment.from(postComment, memberId));
+    return { getPostComments, totalCount };
   }
 
   async applyPost(postId: number, memberId: number): Promise<void> {
@@ -61,7 +64,7 @@ export class PostDetailService {
     }
     await this.commentRepository.save({
       postId: postId,
-      memberId:memberId,
+      memberId: memberId,
       content: content,
     })
   }

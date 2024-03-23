@@ -1,7 +1,8 @@
+import { PaginationRequest } from './../common/pagination/pagination-request';
 import { Injectable } from "@nestjs/common";
 import { InjectDataSource } from "@nestjs/typeorm";
 import { Transform, plainToInstance } from "class-transformer";
-import { IsDate, IsInt } from "class-validator";
+import { IsDate, IsInt, IsOptional } from "class-validator";
 import { Comment } from "src/entity/comment.entity";
 import { Type } from "src/entity/common/Enums";
 import { Member } from "src/entity/member.entity";
@@ -46,7 +47,21 @@ export class PostDetailQueryRepository {
     return plainToInstance(GetAllPostDetailTuple, postDetail);
   }
 
-  async getAllComments(postId: number) {
+  async getAllCommentsTotalCount(postId: number): Promise<number> {
+    return await this.getCommentBaseQuery(postId).getCount();
+  }
+
+  private getCommentBaseQuery(postId: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(Comment, 'comment')
+      .innerJoin(Post, 'post', 'comment.post_id = post.id')
+      .where('comment.post_id = :postId', { postId })
+  }
+
+
+  async getAllComments(postId: number, paginationRequest: PaginationRequest)
+    : Promise<GetAllPostCommentTuple[]> {
     const commentsInfo = await this.dataSource
       .createQueryBuilder()
       .from(Comment, 'comment')
@@ -60,7 +75,9 @@ export class PostDetailQueryRepository {
         'member.nickname as commentNickname',
         'comment.content as commentContent',
       ])
-      .orderBy('comment.created_at', 'ASC')
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('comment.updated_at', paginationRequest.order)
       .getRawMany();
     return plainToInstance(GetAllPostCommentTuple, commentsInfo);
 
@@ -105,7 +122,10 @@ export class GetAllPostCommentTuple {
   @IsInt()
   commentMemberId!: number;
   commentCreatedAt!: Date;
+  @IsOptional()
   commentProfileImg?: string;
+  @IsOptional()
   commentNickname?: string;
+  @IsOptional()
   commentContent?: string;
 }

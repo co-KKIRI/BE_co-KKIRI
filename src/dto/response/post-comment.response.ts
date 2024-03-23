@@ -30,7 +30,7 @@ export class PostCommentResponse {
     this.commentNickname = commentNickname;
     this.commentContent = commentContent;
   }
-  static from(getPostComment: GetPostComment[]) {
+  static fromList(getPostComment: GetPostComment[]) {
     return getPostComment.map((getPostComment) =>
       new PostCommentResponse(
         getPostComment.isMine,
