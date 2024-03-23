@@ -22,6 +22,7 @@ export class GetPostDetailDto {
       tuple.capacity,
       tuple.positions,
       tuple.stacks,
+      tuple.link,
       tuple.views,
       tuple.scraps,
       tuple.commentsNum,
@@ -44,6 +45,7 @@ export class GetPostDetails {
   capacity: number;
   positions: string[];
   stacks: string[];
+  link: string;
   views!: number;
   scraps!: number;
   commentsNum!: number;
@@ -62,6 +64,7 @@ export class GetPostDetails {
     capacity: number,
     positions: string[],
     stack: string[],
+    link: string,
     views: number,
     scraps: number,
     commentsNum: number,
@@ -79,6 +82,7 @@ export class GetPostDetails {
     this.capacity = capacity;
     this.positions = positions;
     this.stacks = stack;
+    this.link = link;
     this.views = views;
     this.scraps = scraps;
     this.commentsNum = commentsNum;

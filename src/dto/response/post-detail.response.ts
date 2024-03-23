@@ -30,6 +30,8 @@ export class PostDetails {
   @ApiProperty()
   stacks: string[];
   @ApiProperty()
+  link: string;
+  @ApiProperty()
   views!: number;
   @ApiProperty()
   scraps!: number;
@@ -50,6 +52,7 @@ export class PostDetails {
     capacity: number,
     positions: string[],
     stacks: string[],
+    link: string,
     views: number,
     scraps: number,
     commentsNum: number,
@@ -67,6 +70,7 @@ export class PostDetails {
     this.capacity = capacity;
     this.positions = positions;
     this.stacks = stacks;
+    this.link=link;
     this.views = views;
     this.scraps = scraps;
     this.commentsNum = commentsNum;
@@ -95,6 +99,7 @@ export class PostDetailResponse {
       dto.postDetail.capacity,
       dto.postDetail.positions,
       dto.postDetail.stacks,
+      dto.postDetail.link,
       dto.postDetail.views,
       dto.postDetail.scraps,
       dto.postDetail.commentsNum,

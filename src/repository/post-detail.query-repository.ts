@@ -38,6 +38,7 @@ export class PostDetailQueryRepository {
         'post.capacity as capacity',
         'post.position as positions',
         'post.stack as stacks',
+        'post.link as link',
         'COUNT(DISTINCT post_view.id) as views',
         'COUNT(DISTINCT post_scrap.id) as scraps',
         'COUNT(DISTINCT comment.id) as commentsNum',
@@ -98,6 +99,7 @@ export class GetAllPostDetailTuple {
   progressWay: string;
   contactWay: string;
   capacity: number;
+  link: string;
   @Transform(({ value }) => value?.split(',') || [])
   positions: string[];
   @Transform(({ value }) => value?.split(',') || [])
