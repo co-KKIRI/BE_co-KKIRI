@@ -6,6 +6,7 @@ import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.d
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
+import { GetMyPageVisibleProfileResponse } from 'src/dto/response/my-page/get-my-page-visible-profile.response';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { MyPageService } from 'src/service/my-page.service';
 
@@ -55,6 +56,12 @@ export class MyPageController {
       options: paginationRequest,
       totalCount,
     });
+  }
+
+  @ApiOperation({ summary: '프로필 공개 여부' })
+  @Get('/visible-profile')
+  async getMyPageVisibleProfile(@Req() req): Promise<GetMyPageVisibleProfileResponse> {
+    return this.mypageService.getMyPageVisibleProfile(req.user.id);
   }
 
   @ApiOperation({ summary: '프로필 공개 여부 수정' })

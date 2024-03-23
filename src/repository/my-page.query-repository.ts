@@ -92,6 +92,17 @@ export class MyPageQueryRepository {
       .where('tm.memberId = :id', { id })
       .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS });
   }
+
+  async getMyPageVisibleProfile(id: number): Promise<GetMyPageVisibleProfileTuple> {
+    const isVisibleProfile = await this.dataSource
+      .createQueryBuilder()
+      .from(Member, 'member')
+      .where('member.id = :id', { id })
+      .select(['member.is_visible_profile as isVisibleProflie'])
+      .getRawOne();
+
+    return plainToInstance(GetMyPageVisibleProfileTuple, isVisibleProfile);
+  }
 }
 
 export class GetMyPageInfoTuple {
@@ -123,4 +134,9 @@ export class GetMyPageScrapTuple {
 export class GetMyPageInviteTuple {
   id: number;
   title: string;
+}
+
+export class GetMyPageVisibleProfileTuple {
+  @Transform(({ value }) => Boolean(value))
+  isVisibleProflie: boolean;
 }
