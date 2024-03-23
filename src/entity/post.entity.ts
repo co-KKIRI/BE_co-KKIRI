@@ -39,7 +39,7 @@ export class Post {
   progressWay: string;
 
   @Column({ length: 200 })
-  stack: string;
+  stack?: string;
 
   @Column({ length: 45 })
   position: string;
@@ -49,6 +49,15 @@ export class Post {
 
   @Column()
   capacity: number;
+
+  @Column({ name: 'view_count' })
+  viewCount: number;
+
+  @Column({ name: 'scrap_count' })
+  scrapCount: number;
+
+  @Column({ name: 'comment_count' })
+  commentCount: number;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;

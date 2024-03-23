@@ -39,6 +39,7 @@ import { MyPageQueryRepository } from './repository/my-page.query-repository';
 import { PostDetailController } from './controller/post-detail.controller';
 import { PostDetailService } from './service/post-detail.service';
 import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
+import { PostScrap } from './entity/post-scrap.entity';
 
 @Module({
   imports: [
@@ -48,7 +49,7 @@ import { PostDetailQueryRepository } from './repository/post-detail.query-reposi
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
     TestModule,
     PassportModule.register({
       session: true,
