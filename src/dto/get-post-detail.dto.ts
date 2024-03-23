@@ -23,9 +23,9 @@ export class GetPostDetailDto {
       tuple.positions,
       tuple.stacks,
       tuple.link,
-      tuple.views,
-      tuple.scraps,
-      tuple.commentsNum,
+      tuple.viewCount,
+      tuple.scrapCount,
+      tuple.commentCount,
     );
     return new GetPostDetailDto(postDetail);
   }
@@ -46,9 +46,9 @@ export class GetPostDetails {
   positions: string[];
   stacks: string[];
   link: string;
-  views!: number;
-  scraps!: number;
-  commentsNum!: number;
+  viewCount!: number;
+  scrapCount!: number;
+  commentCount: number;
 
   constructor(
     postTitle: string,
@@ -65,9 +65,9 @@ export class GetPostDetails {
     positions: string[],
     stack: string[],
     link: string,
-    views: number,
-    scraps: number,
-    commentsNum: number,
+    viewCount: number,
+    scrapCount: number,
+    commentCount: number,
   ) {
     this.postTitle = postTitle;
     this.postContent = postContent;
@@ -83,8 +83,8 @@ export class GetPostDetails {
     this.positions = positions;
     this.stacks = stack;
     this.link = link;
-    this.views = views;
-    this.scraps = scraps;
-    this.commentsNum = commentsNum;
+    this.viewCount = viewCount;
+    this.scrapCount = scrapCount;
+    this.commentCount = commentCount;
   }
 }

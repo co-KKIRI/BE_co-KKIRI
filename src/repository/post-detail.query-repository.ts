@@ -39,9 +39,9 @@ export class PostDetailQueryRepository {
         'post.position as positions',
         'post.stack as stacks',
         'post.link as link',
-        'post.viewCount as views',
-        'post.scrapCount as scraps',
-        'post.commentCount as commentsNum',
+        'post.viewCount as viewCount',
+        'post.scrapCount as scrapCount',
+        'post.commentCount as commentCount',
       ])
       .groupBy('post.id')
       .getRawOne();
@@ -84,6 +84,14 @@ export class PostDetailQueryRepository {
 
   }
 
+  async updateView(postId: number, view: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .update(Post)
+      .set({ viewCount: view })
+      .where('id = :postId', { postId })
+      .execute()
+  }
 }
 
 export class GetAllPostDetailTuple {
@@ -106,13 +114,13 @@ export class GetAllPostDetailTuple {
   stacks: string[];
   @Transform(({ value }) => Number(value))
   @IsInt()
-  views: number;
+  viewCount: number;
   @Transform(({ value }) => Number(value))
   @IsInt()
-  scraps: number;
+  scrapCount: number;
   @Transform(({ value }) => Number(value))
   @IsInt()
-  commentsNum: number;
+  commentCount: number;
 
 }
 
