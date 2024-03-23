@@ -42,7 +42,7 @@ export class Post {
   stack: string;
 
   @Column({ length: 45 })
-  position?: string;
+  position: string;
 
   @Column({ name: 'image_url', length: 200 })
   imageUrl: string;

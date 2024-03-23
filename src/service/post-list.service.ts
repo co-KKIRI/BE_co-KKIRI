@@ -7,8 +7,7 @@ import { Repository } from "typeorm";
 
 @Injectable()
 export class PostListService {
-  constructor(@InjectRepository(Post) private readonly postRepository: Repository<Post>,
-    private readonly postListQueryRepository: PostListQueryRepository,
+  constructor(private readonly postListQueryRepository: PostListQueryRepository,
   ) { }
 
   async getPostList(): Promise<GetPostListDto> {

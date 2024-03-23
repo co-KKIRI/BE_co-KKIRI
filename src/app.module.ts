@@ -13,6 +13,7 @@ import { Post } from './entity/post.entity';
 import { Member } from './entity/member.entity';
 import { PostView } from './entity/post-view.entity';
 import { Comment } from './entity/comment.entity';
+import { PostScrap } from './entity/post-scrap.entity';
 
 import { CommonModule } from './common/common.module';
 import { PostManagementController } from './controller/post-management.controller';
@@ -31,7 +32,12 @@ import { GoogleAuthGuard } from './guard/google-auth.guard';
 import { PostListController } from './controller/post-list.controller';
 import { PostListService } from './service/post-list.service';
 import { PostListQueryRepository } from './repository/post-list.query-repository';
+import { PostDetailController } from './controller/post-detail.controller';
+import { PostDetailService } from './service/post-detail.service';
+import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 import { RolesGuard } from './guard/roles.guard';
+
+
 
 @Module({
   imports: [
@@ -41,7 +47,7 @@ import { RolesGuard } from './guard/roles.guard';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
     TestModule,
     PassportModule.register({
       session: true,
@@ -55,6 +61,7 @@ import { RolesGuard } from './guard/roles.guard';
     GoogleAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
+    PostDetailController,
   ],
   providers: [
     Logger,
@@ -71,6 +78,8 @@ import { RolesGuard } from './guard/roles.guard';
     GoogleAuthGuard,
     RolesGuard,
     PostTeamMemberService,
+    PostDetailService,
+    PostDetailQueryRepository,
   ],
 })
-export class AppModule {}
+export class AppModule { }
