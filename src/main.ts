@@ -24,6 +24,7 @@ async function bootstrap() {
         httpOnly: true,
         domain: 'localhost',
         path: '/',
+        sameSite: 'lax',
       },
     }),
   );
