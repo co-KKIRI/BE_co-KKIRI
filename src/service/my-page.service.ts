@@ -5,6 +5,7 @@ import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.d
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
+import { GetMyPageVisibleProfileResponse } from 'src/dto/response/my-page/get-my-page-visible-profile.response';
 import { Member } from 'src/entity/member.entity';
 import { MyPageQueryRepository } from 'src/repository/my-page.query-repository';
 import { Repository } from 'typeorm';
@@ -72,5 +73,11 @@ export class MyPageService {
     const inviteList = inviteListTuple.map((invite) => GetMyPageInviteResponse.from(invite));
 
     return { inviteList, totalCount };
+  }
+
+  async getMyPageVisibleProfile(id: number): Promise<GetMyPageVisibleProfileResponse> {
+    const visibleProfleDto = await this.mypageQueryRepository.getMyPageVisibleProfile(id);
+
+    return new GetMyPageVisibleProfileResponse(visibleProfleDto.isVisibleProflie);
   }
 }
