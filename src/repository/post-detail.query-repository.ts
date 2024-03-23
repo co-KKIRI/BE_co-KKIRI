@@ -39,9 +39,9 @@ export class PostDetailQueryRepository {
         'post.position as positions',
         'post.stack as stacks',
         'post.link as link',
-        'COUNT(DISTINCT post_view.id) as views',
-        'COUNT(DISTINCT post_scrap.id) as scraps',
-        'COUNT(DISTINCT comment.id) as commentsNum',
+        'post.viewCount as views',
+        'post.scrapCount as scraps',
+        'post.commentCount as commentsNum',
       ])
       .groupBy('post.id')
       .getRawOne();
