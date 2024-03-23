@@ -1,13 +1,15 @@
-import { Type } from "src/entity/common/Enums";
+import { PostApplyStatus, Type } from "src/entity/common/Enums";
 import { GetAllPostDetailTuple } from "src/repository/post-detail.query-repository";
 
 export class GetPostDetailDto {
   postDetail!: GetPostDetails;
+  postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetail: GetPostDetails) {
+  constructor(postDetail: GetPostDetails, postApplyStatus: PostApplyStatus) {
     this.postDetail = postDetail;
+    this.postApplyStatus = postApplyStatus;
   }
-  static from(tuple: GetAllPostDetailTuple) {
+  static from(tuple: GetAllPostDetailTuple, postApplyStatus: PostApplyStatus) {
     const postDetail = new GetPostDetails(
       tuple.postTitle,
       tuple.postContent,
@@ -27,7 +29,7 @@ export class GetPostDetailDto {
       tuple.scrapCount,
       tuple.commentCount,
     );
-    return new GetPostDetailDto(postDetail);
+    return new GetPostDetailDto(postDetail, postApplyStatus);
   }
 }
 
