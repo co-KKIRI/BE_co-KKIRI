@@ -21,6 +21,6 @@ jobs:
     - name: Build the Docker image
       run: docker build -t be_co-kkiri .
     - name: taging
-      run: docker tag be_co-kkiri:latest co-kkiri/be_co-kkiri:latest
+      run: docker tag be_co-kkiri:latest kontae/be_co-kkiri:latest
     - name: Push to Dockerhub
-      run: docker push co-kkiri/be_co-kkiri:latest
+      run: docker push kontae/be_co-kkiri:latest
