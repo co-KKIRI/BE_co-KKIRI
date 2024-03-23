@@ -1,7 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
+import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
 import { Member } from 'src/entity/member.entity';
 import { MyPageQueryRepository } from 'src/repository/my-page.query-repository';
 import { Repository } from 'typeorm';
@@ -45,5 +47,14 @@ export class MyPageService {
     );
 
     await this.memberRepository.save(originMemberInfo);
+  }
+
+  async getMyPageScrapList(id: number, paginationRequest: PaginationRequest) {
+    const myPageScrapListTuple = await this.mypageQueryRepository.getMyPageScrap(id, paginationRequest);
+    const totalCount = await this.mypageQueryRepository.getMyPageScrapCount(id);
+
+    const myPageScrapList = myPageScrapListTuple.map((scrap) => GetMyPageScrapResponse.from(scrap));
+
+    return { myPageScrapList, totalCount };
   }
 }

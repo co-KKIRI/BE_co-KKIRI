@@ -1,7 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { plainToInstance } from 'class-transformer';
+import { Transform, plainToInstance } from 'class-transformer';
+import { PaginationRequest } from 'src/common/pagination/pagination-request';
+import { Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
+import { PostScrap } from 'src/entity/post-scrap.entity';
+import { Post } from 'src/entity/post.entity';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -26,6 +30,43 @@ export class MyPageQueryRepository {
 
     return plainToInstance(GetMyPageInfoTuple, mypageInfo);
   }
+
+  async getMyPageScrap(id: number, paginationRequest: PaginationRequest): Promise<GetMyPageScrapTuple[]> {
+    const myPageScrap = await this.getMyPageScrapBaseQuery(id)
+      .select([
+        'p.id as postId',
+        'p.type as type',
+        'p.recruit_end_at as recruitEndAt',
+        'p.progress_way as progressWay',
+        'p.title',
+        'p.position',
+        'p.stack',
+        'm.nickname as memberNickname',
+        'm.profile_image_url as memberProfileImageUrl',
+        'p.view_count as viewCount',
+        'p.comment_count as commentCount',
+        'true as isScrapped',
+      ])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('ps.created_at', paginationRequest.order)
+      .getRawMany();
+
+    return plainToInstance(GetMyPageScrapTuple, myPageScrap);
+  }
+
+  async getMyPageScrapCount(id: number): Promise<number> {
+    return await this.getMyPageScrapBaseQuery(id).getCount();
+  }
+
+  private getMyPageScrapBaseQuery(id: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(PostScrap, 'ps')
+      .innerJoin(Post, 'p', 'ps.postId = p.id')
+      .innerJoin(Member, 'm', 'p.memberId = m.id')
+      .where('ps.memberId = :id', { id });
+  }
 }
 
 export class GetMyPageInfoTuple {
@@ -36,4 +77,20 @@ export class GetMyPageInfoTuple {
   introduce?: string;
   stack?: string;
   link?: string;
+}
+
+export class GetMyPageScrapTuple {
+  postId: number;
+  type: Type;
+  recruitEndAt?: string;
+  progressWay?: string;
+  title?: string;
+  position?: string;
+  stack?: string;
+  memberNickname?: string;
+  memberProfileImageUrl?: string;
+  viewCount?: number;
+  commentCount?: number;
+  @Transform(({ value }) => Boolean(value))
+  isScrapped?: boolean;
 }
