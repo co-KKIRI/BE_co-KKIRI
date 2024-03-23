@@ -36,6 +36,7 @@ import { MemberQueryRepository } from './repository/member.query-repository';
 import { MyPageService } from './service/my-page.service';
 import { MyPageController } from './controller/my-page.controller';
 import { MyPageQueryRepository } from './repository/my-page.query-repository';
+import { PostScrap } from './entity/post-scrap.entity';
 
 @Module({
   imports: [
@@ -45,7 +46,7 @@ import { MyPageQueryRepository } from './repository/my-page.query-repository';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
     TestModule,
     PassportModule.register({
       session: true,
