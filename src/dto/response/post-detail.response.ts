@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "src/entity/common/Enums";
+import { PostApplyStatus, Type } from "src/entity/common/Enums";
 import { GetPostDetailDto } from "../get-post-detail.dto";
 
 export class PostDetails {
@@ -70,7 +70,7 @@ export class PostDetails {
     this.capacity = capacity;
     this.positions = positions;
     this.stacks = stacks;
-    this.link=link;
+    this.link = link;
     this.viewCount = viewCount;
     this.scrapCount = scrapCount;
     this.commentCount = commentCount;
@@ -79,9 +79,11 @@ export class PostDetails {
 export class PostDetailResponse {
   @ApiProperty({ type: PostDetails })
   postDetails!: PostDetails;
+  postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetails: PostDetails) {
+  constructor(postDetails: PostDetails, postApplyStatus: PostApplyStatus) {
     this.postDetails = postDetails;
+    this.postApplyStatus = postApplyStatus;
   }
 
   static from(dto: GetPostDetailDto) {
@@ -104,7 +106,7 @@ export class PostDetailResponse {
       dto.postDetail.scrapCount,
       dto.postDetail.commentCount,
     );
-    return new PostDetailResponse(postDetails);
+    return new PostDetailResponse(postDetails, dto.postApplyStatus);
   }
 
 }
