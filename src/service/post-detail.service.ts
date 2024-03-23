@@ -62,10 +62,13 @@ export class PostDetailService {
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+
     await this.commentRepository.save({
       postId: postId,
       memberId: memberId,
       content: content,
     })
+    post.commentCount += 1;
+    await this.postRepository.save(post);
   }
-}
+} 
