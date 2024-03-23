@@ -23,7 +23,6 @@ async function bootstrap() {
         maxAge: 1000 * 60 * 60 * 24,
         domain: 'localhost',
         path: '/',
-        sameSite: 'lax',
       },
     }),
   );
