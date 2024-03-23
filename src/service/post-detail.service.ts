@@ -19,8 +19,8 @@ export class PostDetailService {
 
   async getPostDetail(postId: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
-
-    return new GetPostDetailDto(post);
+    await this.postDetailQueryRepository.updateView(postId, post.viewCount + 1);
+    return new GetPostDetailDto({ ...post, viewCount: post.viewCount + 1 });
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
