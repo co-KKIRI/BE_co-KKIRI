@@ -21,13 +21,14 @@ export class PostDetailService {
 
   async getPostDetail(postId: number, memberId: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
-    await this.postDetailQueryRepository.updateView(postId, post.viewCount + 1);
+    const newViewCount = post.viewCount + 1;
+    await this.postDetailQueryRepository.updateView(postId, newViewCount);
 
     await this.postViewRepository.save({
       postId: postId,
       memberId: memberId,
     });
-    return new GetPostDetailDto({ ...post, viewCount: post.viewCount + 1 });
+    return new GetPostDetailDto({ ...post, viewCount: newViewCount });
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
