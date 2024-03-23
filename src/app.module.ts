@@ -32,6 +32,10 @@ import { PostListController } from './controller/post-list.controller';
 import { PostListService } from './service/post-list.service';
 import { PostListQueryRepository } from './repository/post-list.query-repository';
 import { RolesGuard } from './guard/roles.guard';
+import { MemberQueryRepository } from './repository/member.query-repository';
+import { MyPageService } from './service/my-page.service';
+import { MyPageController } from './controller/my-page.controller';
+import { MyPageQueryRepository } from './repository/my-page.query-repository';
 
 @Module({
   imports: [
@@ -55,22 +59,35 @@ import { RolesGuard } from './guard/roles.guard';
     GoogleAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
+    MyPageController,
   ],
   providers: [
-    Logger,
+    // Service
     AppService,
     CommentService,
     PostListService,
-    PostListQueryRepository,
     MemberService,
     PostManagementService,
-    TeamMemberQueryRepository,
     GoogleAuthenticationService,
     SessionSerializerService,
+    PostTeamMemberService,
+    MyPageService,
+
+    // QueryRepository
+    PostListQueryRepository,
+    TeamMemberQueryRepository,
+    MemberQueryRepository,
+    MyPageQueryRepository,
+
+    // Strategy
     GoogleStrategy,
+
+    // Guard
     GoogleAuthGuard,
     RolesGuard,
-    PostTeamMemberService,
+
+    // ETC
+    Logger,
   ],
 })
 export class AppModule {}

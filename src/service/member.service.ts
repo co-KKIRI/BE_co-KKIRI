@@ -1,14 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { Repository, UpdateResult } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from 'src/entity/member.entity';
 import { SocialLoginDto } from 'src/dto/socialLoginDto';
+import { GetMemberInfoSummaryResponse } from 'src/dto/response/member/get-member-info-summary.response';
+import { MemberQueryRepository } from 'src/repository/member.query-repository';
 
 @Injectable()
 export class MemberService {
-  constructor(@InjectRepository(Member) private memberRepository: Repository<Member>) {
-    // private readonly userRepository: UsersRepository,
+  constructor(
+    @InjectRepository(Member) private memberRepository: Repository<Member>,
+    private readonly memberQueryRepository: MemberQueryRepository,
+  ) {
     // private readonly configService: ConfigService,
   }
 
@@ -24,6 +27,18 @@ export class MemberService {
       // socialProvidedRefreshToken: refreshToken,
     });
     return await this.memberRepository.save(newMember);
+  }
+
+  async getMemberInfoSummary(id: number): Promise<GetMemberInfoSummaryResponse> {
+    const memberSummary = await this.memberQueryRepository.getMemberInfoSummary(id);
+
+    if (memberSummary === null) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    const { nickname, profileImageUrl } = memberSummary;
+
+    return new GetMemberInfoSummaryResponse(nickname, profileImageUrl);
   }
 
   // async findUserById(id: number): Promise<User> {

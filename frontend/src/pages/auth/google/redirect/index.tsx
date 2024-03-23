@@ -57,6 +57,16 @@ const AuthGoogleCallback = () => {
     console.log(data);
   };
 
+  const getAPITest = async () => {
+    const response = await axios.get(`http://localhost:8080/member/info/summary`, {
+      withCredentials: true,
+    });
+
+    const { data } = response;
+
+    console.log(data);
+  };
+
   useEffect(() => {
     if (router.query.code) {
       getFetch(router.query.code as string);
@@ -69,6 +79,7 @@ const AuthGoogleCallback = () => {
       <button onClick={() => getCheck()}>서버 체크</button>
       <button onClick={() => getTest()}>어스가드 테스트</button>
       <button onClick={() => getTest1()}>어스가드 테스트1</button>
+      <button onClick={() => getAPITest()}>API 테스트</button>
     </>
   );
 };
