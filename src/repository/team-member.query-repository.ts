@@ -21,6 +21,7 @@ export class TeamMemberQueryRepository {
         'team_member.id as teamMemberId',
         'team_member.memberId as memberId',
         'member.nickname as nickname',
+        'member.position as position',
         'member.profileImageUrl as profileImageUrl',
       ])
       .limit(paginationRequest.take)
@@ -48,5 +49,6 @@ export class GetAllTeamMembersTuple {
   teamMemberId!: number;
   memberId!: number;
   nickname?: string;
+  position?: string;
   profileImageUrl?: string;
 }

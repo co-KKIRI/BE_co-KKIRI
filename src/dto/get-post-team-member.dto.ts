@@ -9,13 +9,7 @@ export class GetPostTeamMemberDto {
 
   static from(tuples: GetAllTeamMembersTuple[], leaderMemberId: number) {
     const appliedPostMemberList = tuples.map((tuple) => {
-      return new GetPostTeamMember(
-        leaderMemberId,
-        tuple.teamMemberId,
-        tuple.memberId,
-        tuple.nickname,
-        tuple.profileImageUrl,
-      );
+      return GetPostTeamMember.from(tuple, leaderMemberId);
     });
     return new GetPostTeamMemberDto(appliedPostMemberList);
   }
@@ -25,6 +19,7 @@ export class GetPostTeamMember {
   teamMemberId!: number;
   memberId!: number;
   nickname?: string;
+  position?: string;
   profileImageUrl?: string;
   isLeader!: boolean;
 
@@ -33,11 +28,13 @@ export class GetPostTeamMember {
     teamMemberId: number,
     memberId: number,
     nickname?: string,
+    position?: string,
     profileImageUrl?: string,
   ) {
     this.teamMemberId = teamMemberId;
     this.memberId = memberId;
     this.nickname = nickname;
+    this.position = position;
     this.profileImageUrl = profileImageUrl;
     this.isLeader = memberId === leaderMemberId;
   }
@@ -48,6 +45,7 @@ export class GetPostTeamMember {
       tuple.teamMemberId,
       tuple.memberId,
       tuple.nickname,
+      tuple.position,
       tuple.profileImageUrl,
     );
   }

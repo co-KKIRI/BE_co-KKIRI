@@ -9,15 +9,25 @@ export class PostTeamMemberResponse {
   @ApiProperty()
   nickname?: string;
   @ApiProperty()
+  position?: string;
+  @ApiProperty()
   profileImageUrl?: string;
   @ApiProperty()
   isLeader!: boolean;
 
-  constructor(isLeader: boolean, teamMemberId: number, memberId: number, nickname?: string, profileImageUrl?: string) {
+  constructor(
+    isLeader: boolean,
+    teamMemberId: number,
+    memberId: number,
+    nickname?: string,
+    position?: string,
+    profileImageUrl?: string,
+  ) {
     this.isLeader = isLeader;
     this.teamMemberId = teamMemberId;
     this.memberId = memberId;
     this.nickname = nickname;
+    this.position = position;
     this.profileImageUrl = profileImageUrl;
   }
 
@@ -29,6 +39,7 @@ export class PostTeamMemberResponse {
           getPostTeamMember.teamMemberId,
           getPostTeamMember.memberId,
           getPostTeamMember.nickname,
+          getPostTeamMember.position,
           getPostTeamMember.profileImageUrl,
         ),
     );
