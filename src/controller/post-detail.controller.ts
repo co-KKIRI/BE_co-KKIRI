@@ -4,8 +4,10 @@ import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
 import { ApiPaginatedResponse } from "src/common/pagination/pagination.decorator";
 import { Roles } from "src/common/roles/roles.decorator";
+import { RecruitedPostInfoDto } from "src/dto/request/recruited-post-info";
 import { PostCommentResponse } from "src/dto/response/post-comment.response";
 import { PostDetailResponse } from "src/dto/response/post-detail.response";
+import { RecruitPostResponse } from "src/dto/response/recruit-post-response";
 import { RolesGuard } from "src/guard/roles.guard";
 import { PostDetailService } from "src/service/post-detail.service";
 
@@ -63,4 +65,12 @@ export class PostDetailController {
     await this.postDetailService.writeComment(postId, req.user.id, content);
   }
 
+  @ApiOperation({ summary: '스터디 모집' })
+  @Post('post/recruit')
+  async recruitPostInfo(
+    @Req() req,
+    @Body() recruitedPostInfo: RecruitedPostInfoDto
+  ): Promise<RecruitPostResponse> {
+    return this.postDetailService.recruitPost(req.user.id, recruitedPostInfo);
+  }
 }
