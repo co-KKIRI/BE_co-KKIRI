@@ -38,21 +38,15 @@ export class PostManagementController {
     });
   }
 
-  @ApiOperation({ summary: '스터디 모집 마감' })
-  @Patch(':postId/recruit-end')
-  async recruitEnd(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
-    await this.postManagementService.recruitEnd(postId);
+  @ApiOperation({ summary: '스터디 시작' })
+  @Patch(':postId/start')
+  async start(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
+    await this.postManagementService.start(postId);
   }
 
-  @ApiOperation({ summary: '스터디 모집 시작' })
-  @Patch(':postId/recruit-start')
-  async recruitStart(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
-    await this.postManagementService.recruitStart(postId);
-  }
-
-  @ApiOperation({ summary: '스터디 모집 완료' })
-  @Patch(':postId/recruit-complete')
+  @ApiOperation({ summary: '스터디 완료' })
+  @Patch(':postId/end')
   async recruitComplete(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
-    await this.postManagementService.recruitComplete(postId);
+    await this.postManagementService.end(postId);
   }
 }
