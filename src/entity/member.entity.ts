@@ -73,4 +73,8 @@ export class Member {
   setIsVisibleProfile(isVisibleProfile: boolean) {
     this.isVisibleProfile = isVisibleProfile;
   }
+
+  setDeletedAt(deletedAt: Date) {
+    this.deletedAt = deletedAt;
+  }
 }

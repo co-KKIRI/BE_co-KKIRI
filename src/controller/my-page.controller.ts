@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PaginationResponse } from 'src/common/pagination/pagination-response';
@@ -27,6 +27,12 @@ export class MyPageController {
   @Patch('/info')
   async patchMyInfo(@Req() req, @Body() memberInfo: PatchMyPageInfoDto): Promise<void> {
     return this.mypageService.patchMyPageInfo(req.user.id, memberInfo);
+  }
+
+  @ApiOperation({ summary: '유저 탈퇴' })
+  @Delete('/info')
+  async deleteMyInfo(@Req() req): Promise<void> {
+    await this.mypageService.deleteMyPageInfo(req.user.id);
   }
 
   @ApiOperation({ summary: '팀 초대된 목록' })
