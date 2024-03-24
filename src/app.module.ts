@@ -40,6 +40,8 @@ import { PostDetailController } from './controller/post-detail.controller';
 import { PostDetailService } from './service/post-detail.service';
 import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 import { PostScrap } from './entity/post-scrap.entity';
+import { ImageController } from './controller/image.controller';
+import { ImageService } from './service/image.service';
 
 @Module({
   imports: [
@@ -65,6 +67,7 @@ import { PostScrap } from './entity/post-scrap.entity';
     PostTeamMemberController,
     PostDetailController,
     MyPageController,
+    ImageController,
   ],
   providers: [
     // Service
@@ -78,7 +81,7 @@ import { PostScrap } from './entity/post-scrap.entity';
     PostTeamMemberService,
     MyPageService,
     PostDetailService,
-
+    ImageService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -98,4 +101,4 @@ import { PostScrap } from './entity/post-scrap.entity';
     Logger,
   ],
 })
-export class AppModule { }
+export class AppModule {}
