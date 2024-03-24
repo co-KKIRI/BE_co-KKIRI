@@ -42,6 +42,7 @@ import { PostDetailQueryRepository } from './repository/post-detail.query-reposi
 import { PostScrap } from './entity/post-scrap.entity';
 import { ImageController } from './controller/image.controller';
 import { ImageService } from './service/image.service';
+import { TeamInvite } from './entity/team-invite.entity';
 
 @Module({
   imports: [
@@ -51,7 +52,7 @@ import { ImageService } from './service/image.service';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap, TeamInvite]),
     TestModule,
     PassportModule.register({
       session: true,
