@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
+import { IsArray, IsDateString, IsEnum, IsNumber, IsOptional, IsString, MaxLength } from "class-validator";
 import { Type } from "src/entity/common/Enums";
 
 export class RecruitedPostInfoDto {
@@ -41,6 +41,7 @@ export class RecruitedPostInfoDto {
 
   @ApiProperty()
   @IsString()
+  @MaxLength(1000)
   content!: string;
 
   @ApiPropertyOptional()
