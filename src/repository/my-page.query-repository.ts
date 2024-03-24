@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Transform, plainToInstance } from 'class-transformer';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
-import { TeamInviteType, Type } from 'src/entity/common/Enums';
+import { TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { Post } from 'src/entity/post.entity';
@@ -92,6 +92,7 @@ export class MyPageQueryRepository {
       .innerJoin(Post, 'p', 'tm.post_id = p.id')
       .innerJoin(TeamInvite, 'ti', 'tm.team_invite_id = ti.id')
       .where('tm.memberId = :id', { id })
+      .andWhere('tm.status = :status', { status: TeamMemberStatus.READY })
       .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS });
   }
 
