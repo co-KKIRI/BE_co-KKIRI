@@ -80,4 +80,16 @@ export class MyPageService {
 
     return new GetMyPageVisibleProfileResponse(visibleProfleDto.isVisibleProflie);
   }
+
+  async patchVisibleProfile(id: number, isVisibleProfile: boolean): Promise<void> {
+    const member = await this.memberRepository.findOneBy({ id });
+
+    if (member === null) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    member.setIsVisibleProfile(isVisibleProfile);
+
+    await this.memberRepository.save(member);
+  }
 }

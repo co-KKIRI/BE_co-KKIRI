@@ -1,15 +1,17 @@
 import { GetMyPageInviteTuple } from 'src/repository/my-page.query-repository';
 
 export class GetMyPageInviteResponse {
-  id: number;
+  postId: number;
+  teamInviteId: number;
   title: string;
 
-  constructor(id: number, title: string) {
-    this.id = id;
+  constructor(postId: number, teamInviteId: number, title: string) {
+    this.postId = postId;
+    this.teamInviteId = teamInviteId;
     this.title = title;
   }
 
   static from(tuple: GetMyPageInviteTuple) {
-    return new GetMyPageInviteResponse(tuple.id, tuple.title);
+    return new GetMyPageInviteResponse(tuple.postId, tuple.teamInviteId, tuple.title);
   }
 }

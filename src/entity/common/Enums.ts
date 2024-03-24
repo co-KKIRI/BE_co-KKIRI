@@ -20,3 +20,10 @@ export enum TeamInviteType {
   SELF = 'SELF',
   OTHERS = 'OTHERS',
 }
+
+export enum PostApplyStatus {
+  OWNER = 'OWNER',
+  INVITED = 'INVITED',
+  NOT_APPLIED = 'NOT_APPLIED',
+  APPLIED = 'APPLIED'
+}

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { Type } from "src/entity/common/Enums";
+import { PostApplyStatus, Type } from "src/entity/common/Enums";
 import { GetPostDetailDto } from "../get-post-detail.dto";
 
 export class PostDetails {
@@ -32,11 +32,11 @@ export class PostDetails {
   @ApiProperty()
   link: string;
   @ApiProperty()
-  views!: number;
+  viewCount!: number;
   @ApiProperty()
-  scraps!: number;
+  scrapCount!: number;
   @ApiProperty()
-  commentsNum!: number;
+  commentCount!: number;
 
   constructor(
     postTitle: string,
@@ -53,9 +53,9 @@ export class PostDetails {
     positions: string[],
     stacks: string[],
     link: string,
-    views: number,
-    scraps: number,
-    commentsNum: number,
+    viewCount: number,
+    scrapCount: number,
+    commentCount: number,
   ) {
     this.postTitle = postTitle;
     this.postContent = postContent;
@@ -70,18 +70,20 @@ export class PostDetails {
     this.capacity = capacity;
     this.positions = positions;
     this.stacks = stacks;
-    this.link=link;
-    this.views = views;
-    this.scraps = scraps;
-    this.commentsNum = commentsNum;
+    this.link = link;
+    this.viewCount = viewCount;
+    this.scrapCount = scrapCount;
+    this.commentCount = commentCount;
   }
 }
 export class PostDetailResponse {
   @ApiProperty({ type: PostDetails })
   postDetails!: PostDetails;
+  postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetails: PostDetails) {
+  constructor(postDetails: PostDetails, postApplyStatus: PostApplyStatus) {
     this.postDetails = postDetails;
+    this.postApplyStatus = postApplyStatus;
   }
 
   static from(dto: GetPostDetailDto) {
@@ -100,11 +102,11 @@ export class PostDetailResponse {
       dto.postDetail.positions,
       dto.postDetail.stacks,
       dto.postDetail.link,
-      dto.postDetail.views,
-      dto.postDetail.scraps,
-      dto.postDetail.commentsNum,
+      dto.postDetail.viewCount,
+      dto.postDetail.scrapCount,
+      dto.postDetail.commentCount,
     );
-    return new PostDetailResponse(postDetails);
+    return new PostDetailResponse(postDetails, dto.postApplyStatus);
   }
 
 }

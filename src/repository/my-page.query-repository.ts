@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Transform, plainToInstance } from 'class-transformer';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
-import { TeamInviteType, Type } from 'src/entity/common/Enums';
+import { TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { Post } from 'src/entity/post.entity';
+import { TeamInvite } from 'src/entity/team-invite.entity';
 import { TeamMember } from 'src/entity/team-member.entity';
 import { DataSource } from 'typeorm';
 
@@ -71,7 +72,7 @@ export class MyPageQueryRepository {
 
   async getMyPageInviteList(id: number, paginationRequest: PaginationRequest) {
     const myPageInviteList = await this.getMyPageInviteListBaseQuery(id)
-      .select(['p.id as id', 'p.title as title'])
+      .select(['p.id as postId', 'ti.id as teamInviteId', 'p.title as title'])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
       .orderBy('p.created_at', paginationRequest.order)
@@ -89,7 +90,9 @@ export class MyPageQueryRepository {
       .createQueryBuilder()
       .from(TeamMember, 'tm')
       .innerJoin(Post, 'p', 'tm.post_id = p.id')
+      .innerJoin(TeamInvite, 'ti', 'tm.team_invite_id = ti.id')
       .where('tm.memberId = :id', { id })
+      .andWhere('tm.status = :status', { status: TeamMemberStatus.READY })
       .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS });
   }
 
@@ -132,7 +135,8 @@ export class GetMyPageScrapTuple {
 }
 
 export class GetMyPageInviteTuple {
-  id: number;
+  postId: number;
+  teamInviteId: number;
   title: string;
 }
 

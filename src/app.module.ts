@@ -40,6 +40,12 @@ import { PostDetailController } from './controller/post-detail.controller';
 import { PostDetailService } from './service/post-detail.service';
 import { PostDetailQueryRepository } from './repository/post-detail.query-repository';
 import { PostScrap } from './entity/post-scrap.entity';
+import { ImageController } from './controller/image.controller';
+import { ImageService } from './service/image.service';
+import { TeamInvite } from './entity/team-invite.entity';
+import { TeamService } from './service/team.service';
+import { TeamController } from './controller/team.controller';
+import { TeamInviteQueryRepository } from './repository/team-invite.query-repository';
 
 @Module({
   imports: [
@@ -49,7 +55,7 @@ import { PostScrap } from './entity/post-scrap.entity';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap]),
+    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap, TeamInvite]),
     TestModule,
     PassportModule.register({
       session: true,
@@ -65,6 +71,8 @@ import { PostScrap } from './entity/post-scrap.entity';
     PostTeamMemberController,
     PostDetailController,
     MyPageController,
+    ImageController,
+    TeamController,
   ],
   providers: [
     // Service
@@ -78,7 +86,8 @@ import { PostScrap } from './entity/post-scrap.entity';
     PostTeamMemberService,
     MyPageService,
     PostDetailService,
-
+    ImageService,
+    TeamService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -86,6 +95,7 @@ import { PostScrap } from './entity/post-scrap.entity';
     MemberQueryRepository,
     MyPageQueryRepository,
     PostDetailQueryRepository,
+    TeamInviteQueryRepository,
 
     // Strategy
     GoogleStrategy,
@@ -98,4 +108,4 @@ import { PostScrap } from './entity/post-scrap.entity';
     Logger,
   ],
 })
-export class AppModule { }
+export class AppModule {}

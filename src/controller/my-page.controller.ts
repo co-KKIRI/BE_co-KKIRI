@@ -3,6 +3,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PaginationResponse } from 'src/common/pagination/pagination-response';
 import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
+import { PatchMyPageVisibleProfileRequest } from 'src/dto/request/my-page/patch-my-page-visible-profile';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
@@ -66,7 +67,9 @@ export class MyPageController {
 
   @ApiOperation({ summary: '프로필 공개 여부 수정' })
   @Patch('/visible-profile')
-  async patchProfileVisible() {}
+  async patchVisibleProfile(@Req() req, @Body() body: PatchMyPageVisibleProfileRequest): Promise<void> {
+    return this.mypageService.patchVisibleProfile(req.user.id, body.isVisibleProfile);
+  }
 }
 
 // @ApiTags('PostTeamMember')
