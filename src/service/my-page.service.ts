@@ -51,6 +51,18 @@ export class MyPageService {
     await this.memberRepository.save(originMemberInfo);
   }
 
+  async deleteMyPageInfo(id: number): Promise<void> {
+    const member = await this.memberRepository.findOneBy({ id });
+
+    if (member === null) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    member.setDeletedAt(new Date());
+
+    await this.memberRepository.save(member);
+  }
+
   async getMyPageScrapList(
     id: number,
     paginationRequest: PaginationRequest,
