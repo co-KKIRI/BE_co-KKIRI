@@ -79,4 +79,30 @@ export class Post {
   isModifiableEnd() {
     return [PostStatus.READY, PostStatus.PROGRESS].includes(this.status);
   }
+
+  setPostInfo(
+    type: Type,
+    recruitEndAt: Date,
+    progressPeriod: string,
+    capacity: number,
+    contactWay: string,
+    progressWay: string,
+    stacks: string,
+    positions: string,
+    title: string,
+    content: string,
+    link?: string,
+  ) {
+    this.type = type;
+    this.recruitEndAt = recruitEndAt;
+    this.progressPeriod = progressPeriod;
+    this.capacity = capacity;
+    this.contactWay = contactWay;
+    this.progressWay = progressWay;
+    this.stack = stacks;
+    this.position = positions;
+    this.title = title;
+    this.content = content;
+    this.link = link;
+  }
 }

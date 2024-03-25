@@ -1,13 +1,13 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
 import { ApiPaginatedResponse } from "src/common/pagination/pagination.decorator";
 import { Roles } from "src/common/roles/roles.decorator";
-import { RecruitedPostInfoDto } from "src/dto/request/recruited-post-info";
+import { RecruitedPostInfoDto } from "src/dto/request/post-detail/recruited-post-info";
 import { PostCommentResponse } from "src/dto/response/post-comment.response";
 import { PostDetailResponse } from "src/dto/response/post-detail.response";
-import { RecruitPostResponse } from "src/dto/response/recruit-post-response";
+import { RecruitPostResponse } from "src/dto/response/post-detail/recruit-post-response";
 import { RolesGuard } from "src/guard/roles.guard";
 import { PostDetailService } from "src/service/post-detail.service";
 
@@ -63,6 +63,15 @@ export class PostDetailController {
     @Body('content') content: string
   ): Promise<void> {
     await this.postDetailService.writeComment(postId, req.user.id, content);
+  }
+
+  @ApiOperation({ summary: '스터디 수정' })
+  @Patch('post/:postId/modify')
+  async updatePost(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Req() req,
+    @Body() patchPostInfo: RecruitedPostInfoDto): Promise<void> {
+    return this.postDetailService.patchPostInfo(postId, req.user.id, patchPostInfo);
   }
 
   @ApiOperation({ summary: '스터디 모집' })
