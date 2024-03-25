@@ -29,10 +29,7 @@ export class PostDetailService {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
 
     let isScraped = false;
-    if (typeof memberId === 'undefined') {
-      isScraped = false;
-    }
-    else {
+    if (typeof memberId !== 'undefined') {
       const isScrapedMember = await this.postScrapRepository.findOneBy({ postId, memberId });
       isScraped = isScrapedMember !== null;
     }
@@ -203,7 +200,7 @@ export class PostDetailService {
     };
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
-    if (!teamMember || typeof memberId === 'undefined') {
+    if (!teamMember || !memberId) {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {

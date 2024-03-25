@@ -23,10 +23,7 @@ export class PostDetailController {
   @ApiCreatedResponse({ type: PostDetailResponse })
   @Get('post/:postId')
   async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
-    let userId: number | undefined;
-    if (req.user && req.user.id) {
-      userId = req.user.id;
-    }
+    const userId = req.user?.id;
     const postDetail = await this.postDetailService.getPostDetail(postId, userId );
     return PostDetailResponse.from(postDetail);
   }
