@@ -48,6 +48,8 @@ import { TeamController } from './controller/team.controller';
 import { TeamInviteQueryRepository } from './repository/team-invite.query-repository';
 import { MemberSearchService } from './service/member-search.service';
 import { MemberSearchQueryRepository } from './repository/member-search.query-repository';
+import { PostController } from './controller/post.controller';
+import { PostService } from './service/post.service';
 
 @Module({
   imports: [
@@ -75,6 +77,7 @@ import { MemberSearchQueryRepository } from './repository/member-search.query-re
     MyPageController,
     ImageController,
     TeamController,
+    PostController,
   ],
   providers: [
     // Service
@@ -91,6 +94,7 @@ import { MemberSearchQueryRepository } from './repository/member-search.query-re
     ImageService,
     TeamService,
     MemberSearchService,
+    PostService,
 
     // QueryRepository
     PostListQueryRepository,
