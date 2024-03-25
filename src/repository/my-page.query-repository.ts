@@ -40,14 +40,14 @@ export class MyPageQueryRepository {
         'p.type as type',
         'p.recruit_end_at as recruitEndAt',
         'p.progress_way as progressWay',
-        'p.title',
-        'p.position',
-        'p.stack',
+        'p.title as title',
+        'p.position as position',
+        'p.stack as stack',
         'm.nickname as memberNickname',
         'm.profile_image_url as memberProfileImageUrl',
         'p.view_count as viewCount',
         'p.comment_count as commentCount',
-        'true as isScrapped',
+        'true as isScraped',
       ])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
@@ -131,7 +131,7 @@ export class GetMyPageScrapTuple {
   viewCount?: number;
   commentCount?: number;
   @Transform(({ value }) => Boolean(value))
-  isScrapped?: boolean;
+  isScraped?: boolean;
 }
 
 export class GetMyPageInviteTuple {
