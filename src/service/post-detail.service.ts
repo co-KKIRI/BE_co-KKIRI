@@ -142,6 +142,18 @@ export class PostDetailService {
     await this.postRepository.save(postInfo);
   }
 
+  async deleteCommentInfo(postId: number, commentId: number, memberId: number): Promise<void> {
+    const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId: postId });
+    if (commentInfo === null) {
+      throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
+    }
+    if (commentInfo.memberId !== memberId) {
+      throw new UnauthorizedException('해당 댓글을 작성한 사용자가 아닙니다.');
+    }
+
+    await this.commentRepository.remove(commentInfo);
+  }
+
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
     const memberInfo = await this.memberRepository.findOneBy({ id: memberId });
     if (memberInfo === null) {

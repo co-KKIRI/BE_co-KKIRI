@@ -92,6 +92,15 @@ export class PostDetailController {
     return this.postDetailService.deletePostInfo(postId, req.user.id);
   }
 
+  @ApiOperation({ summary: '댓글 삭제' })
+  @Delete('post/:postId/:commentId')
+  async deleteComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @Req() req): Promise<void> {
+    return this.postDetailService.deleteCommentInfo(postId, commentId, req.user.id);
+  }
+
   @ApiOperation({ summary: '스터디 모집' })
   @Post('post/recruit')
   async recruitPostInfo(
