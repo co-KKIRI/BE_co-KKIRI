@@ -5,7 +5,7 @@ export class GetMyPageScrapResponse {
   postId: number;
   type: Type;
   recruitEndAt?: string;
-  isScrapped?: boolean;
+  isScraped?: boolean;
   progressWay?: string;
   title?: string;
   position?: string[];
@@ -19,7 +19,7 @@ export class GetMyPageScrapResponse {
     postId: number,
     type: Type,
     recruitEndAt?: string,
-    isScrapped?: boolean,
+    isScraped?: boolean,
     progressWay?: string,
     title?: string,
     position?: string[],
@@ -32,7 +32,7 @@ export class GetMyPageScrapResponse {
     this.postId = postId;
     this.type = type;
     this.recruitEndAt = recruitEndAt;
-    this.isScrapped = isScrapped;
+    this.isScraped = isScraped;
     this.progressWay = progressWay;
     this.title = title;
     this.position = position;
@@ -48,7 +48,7 @@ export class GetMyPageScrapResponse {
       tuple.postId,
       tuple.type,
       tuple.recruitEndAt,
-      tuple.isScrapped,
+      tuple.isScraped,
       tuple.progressWay,
       tuple.title,
       JSON.parse(tuple.position ?? JSON.stringify([])),
