@@ -17,6 +17,8 @@ export class GetPostManagementDto {
   positions: string[];
   isLeader: boolean;
   stacks: string[];
+  recruitEndAt?: Date;
+  progressPeriod?: string;
 
   constructor({ post, isLeader }: GetPostManagementDtoOptions) {
     this.postId = post.id;
@@ -29,5 +31,7 @@ export class GetPostManagementDto {
     this.positions = post.position?.split(',') || [];
     this.isLeader = isLeader;
     this.stacks = post.stack ? JSON.parse(post.stack) : [];
+    this.recruitEndAt = post.recruitEndAt;
+    this.progressPeriod = post.progressPeriod;
   }
 }
