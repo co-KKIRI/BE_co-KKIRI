@@ -3,13 +3,15 @@ import { GetAllPostDetailTuple } from "src/repository/post-detail.query-reposito
 
 export class GetPostDetailDto {
   postDetail!: GetPostDetails;
+  isScraped!: boolean;
   postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetail: GetPostDetails, postApplyStatus: PostApplyStatus) {
+  constructor(postDetail: GetPostDetails, isScraped: boolean, postApplyStatus: PostApplyStatus) {
     this.postDetail = postDetail;
+    this.isScraped = isScraped;
     this.postApplyStatus = postApplyStatus;
   }
-  static from(tuple: GetAllPostDetailTuple, postApplyStatus: PostApplyStatus) {
+  static from(tuple: GetAllPostDetailTuple, isScraped: boolean, postApplyStatus: PostApplyStatus) {
     const postDetail = new GetPostDetails(
       tuple.postTitle,
       tuple.postContent,
@@ -29,7 +31,7 @@ export class GetPostDetailDto {
       tuple.scrapCount,
       tuple.commentCount,
     );
-    return new GetPostDetailDto(postDetail, postApplyStatus);
+    return new GetPostDetailDto(postDetail, isScraped, postApplyStatus);
   }
 }
 
