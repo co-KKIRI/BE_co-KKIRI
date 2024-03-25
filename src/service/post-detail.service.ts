@@ -1,5 +1,5 @@
 import { PaginationRequest } from './../common/pagination/pagination-request';
-import { ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GetPostComment, GetPostCommentDto } from "src/dto/get-post-comment.dto";
 import { GetPostDetailDto } from "src/dto/get-post-detail.dto";
@@ -22,13 +22,6 @@ export class PostDetailService {
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
-
-  // async recruitPost(memberId: number, recruitPostDto: RecruitPostDto): Promise<void> {
-  //   await this.postRepository.save({
-  //     memberId: memberId,
-  //     type:
-  //   })
-  // }
 
   async getPostDetail(postId: number, memberId: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
@@ -91,6 +84,35 @@ export class PostDetailService {
     await this.postRepository.save(post);
   }
 
+  async patchPostInfo(postId: number, memberId: number, originPostInfo: RecruitedPostInfoDto): Promise<void> {
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+
+    if (post.memberId !== memberId) {
+      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.')
+    }
+    post.setPostInfo(
+      originPostInfo.type,
+      originPostInfo.recruitEndAt,
+      originPostInfo.progressPeriod,
+      originPostInfo.capacity,
+      originPostInfo.contactWay,
+      originPostInfo.progressWay,
+      JSON.stringify(originPostInfo.stacks ?? []),
+      JSON.stringify(originPostInfo.positions ?? []),
+      originPostInfo.title,
+      originPostInfo.content,
+      originPostInfo.link,
+    )
+
+    await this.postRepository.save(post);
+  }
+
+
+
+
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
     const memberInfo = await this.memberRepository.findOneBy({ id: memberId });
     if (memberInfo === null) {
@@ -106,8 +128,8 @@ export class PostDetailService {
       capacity: dto.capacity,
       contactWay: dto.contactWay,
       progressWay: dto.progressWay,
-      stack: JSON.stringify(dto.stacks),
-      position: JSON.stringify(dto.positions),
+      stack: JSON.stringify(dto.stacks ?? []),
+      position: JSON.stringify(dto.positions ?? []),
       link: dto.link,
       title: dto.title,
       content: dto.content
