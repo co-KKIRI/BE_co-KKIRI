@@ -3,8 +3,8 @@ import { ConflictException, Injectable, NotFoundException } from "@nestjs/common
 import { InjectRepository } from "@nestjs/typeorm";
 import { GetPostComment, GetPostCommentDto } from "src/dto/get-post-comment.dto";
 import { GetPostDetailDto } from "src/dto/get-post-detail.dto";
-import { RecruitedPostInfoDto } from 'src/dto/request/recruited-post-info';
-import { RecruitPostResponse } from 'src/dto/response/recruit-post-response';
+import { RecruitedPostInfoDto } from 'src/dto/request/post-detail/recruited-post-info';
+import { RecruitPostResponse } from 'src/dto/response/post-detail/recruit-post-response';
 import { Comment } from "src/entity/comment.entity";
 import { PostApplyStatus, PostStatus, TeamInviteType, TeamMemberStatus } from "src/entity/common/Enums";
 import { Member } from 'src/entity/member.entity';
