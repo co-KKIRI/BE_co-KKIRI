@@ -21,6 +21,8 @@ export class PostManagementResponse {
   positions: string[];
   @ApiProperty()
   isLeader!: boolean;
+  @ApiProperty()
+  stack?: string;
 
   constructor(
     postId: number,
@@ -32,6 +34,7 @@ export class PostManagementResponse {
     capacity: number,
     positions: string[],
     isLeader: boolean,
+    stack?: string,
   ) {
     this.postId = postId;
     this.postTitle = postTitle;
@@ -42,6 +45,7 @@ export class PostManagementResponse {
     this.capacity = capacity;
     this.positions = positions;
     this.isLeader = isLeader;
+    this.stack = stack;
   }
 
   static from(dto: GetPostManagementDto) {
@@ -55,6 +59,7 @@ export class PostManagementResponse {
       dto.capacity,
       dto.positions,
       dto.isLeader,
+      dto.stack,
     );
   }
 }
