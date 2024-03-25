@@ -8,6 +8,7 @@ import { RecruitPostResponse } from 'src/dto/response/post-detail/recruit-post-r
 import { Comment } from "src/entity/comment.entity";
 import { PostApplyStatus, PostStatus, TeamInviteType, TeamMemberStatus } from "src/entity/common/Enums";
 import { Member } from 'src/entity/member.entity';
+import { PostScrap } from 'src/entity/post-scrap.entity';
 import { PostView } from 'src/entity/post-view.entity';
 import { Post } from "src/entity/post.entity";
 import { TeamMember } from "src/entity/team-member.entity";
@@ -21,10 +22,20 @@ export class PostDetailService {
     @InjectRepository(Comment) private readonly commentRepository: Repository<Comment>,
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
+    @InjectRepository(PostScrap) private readonly postScrapRepository: Repository<PostScrap>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
-  async getPostDetail(postId: number, memberId: number): Promise<GetPostDetailDto> {
+  async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
+
+    let isScraped = false;
+    if (typeof memberId === 'undefined') {
+      isScraped = false;
+    }
+    else {
+      const isScrapedMember = await this.postScrapRepository.findOneBy({ postId, memberId });
+      isScraped = isScrapedMember !== null;
+    }
     const newViewCount = post.viewCount + 1;
     await this.postDetailQueryRepository.updateView(postId, newViewCount);
 
@@ -32,7 +43,7 @@ export class PostDetailService {
       postId: postId,
       memberId: memberId,
     });
-    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, await this.getPostApplyType(postId, memberId));
+    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, isScraped, await this.getPostApplyType(postId, memberId));
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
@@ -178,17 +189,21 @@ export class PostDetailService {
     return new RecruitPostResponse(savedPost.id);
   }
 
-  private async getPostApplyType(postId: number, memberId: number): Promise<PostApplyStatus> {
+  private async getPostApplyType(postId: number, memberId?: number): Promise<PostApplyStatus> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+    if (post.status !== PostStatus.READY) {
+      return PostApplyStatus.RECRUIT_CLOSED;
+    }
+
     if (memberId === post?.memberId) {
       return PostApplyStatus.OWNER
     };
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
-    if (!teamMember) {
+    if (!teamMember || typeof memberId === 'undefined') {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {

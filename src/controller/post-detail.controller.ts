@@ -18,11 +18,16 @@ import { PostDetailService } from "src/service/post-detail.service";
 export class PostDetailController {
   constructor(private readonly postDetailService: PostDetailService) { }
 
+  @Roles('anyone')
   @ApiOperation({ summary: '포스트 상세' })
   @ApiCreatedResponse({ type: PostDetailResponse })
   @Get('post/:postId')
   async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
-    const postDetail = await this.postDetailService.getPostDetail(postId, req.user.id);
+    let userId: number | undefined;
+    if (req.user && req.user.id) {
+      userId = req.user.id;
+    }
+    const postDetail = await this.postDetailService.getPostDetail(postId, userId );
     return PostDetailResponse.from(postDetail);
   }
 
