@@ -9,8 +9,8 @@ import { plainToInstance } from 'class-transformer';
 export class MemberSearchQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async searchMember(request: PaginationRequest, stacks: string[], position?: string) {
-    const searchedMember = await this.baseQuery(stacks, position)
+  async searchMember(request: PaginationRequest, stacks: string[], position?: string, nickname?: string) {
+    const searchedMember = await this.baseQuery(stacks, position, nickname)
       .select([
         'member.id as memberId',
         'member.nickname as nickname',
@@ -27,15 +27,18 @@ export class MemberSearchQueryRepository {
     return plainToInstance(SearchedMemberTuple, searchedMember);
   }
 
-  async searchMemberTotalCount(stacks: string[], position?: string) {
-    return await this.baseQuery(stacks, position).getCount();
+  async searchMemberTotalCount(stacks: string[], position?: string, nickname?: string) {
+    return await this.baseQuery(stacks, position, nickname).getCount();
   }
 
-  private baseQuery(stacks: string[], position?: string) {
+  private baseQuery(stacks: string[], position?: string, nickname?: string) {
     let query = this.dataSource.createQueryBuilder().from(Member, 'member');
 
     if (position) {
       query = query.where('member.position = :position', { position });
+    }
+    if (nickname) {
+      query = query.andWhere('member.nickname like :nickname', { nickname: `${nickname}%` });
     }
     if (stacks.length > 0) {
       query = query.andWhere('member.stack in (:...stacks)', { stacks });

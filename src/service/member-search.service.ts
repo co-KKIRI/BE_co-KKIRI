@@ -8,6 +8,7 @@ export class MemberSearchService {
   constructor(private readonly memberSearchQueryRepository: MemberSearchQueryRepository) {}
 
   async searchMember(searchMemberRequest: SearchMemberRequest) {
+    const nickname = searchMemberRequest.nickname;
     const stacks = searchMemberRequest.stacks ?? [];
     const position = searchMemberRequest.position;
 
@@ -15,9 +16,10 @@ export class MemberSearchService {
       searchMemberRequest,
       stacks,
       position,
+      nickname,
     );
 
-    const totalCount = await this.memberSearchQueryRepository.searchMemberTotalCount(stacks, position);
+    const totalCount = await this.memberSearchQueryRepository.searchMemberTotalCount(stacks, position, nickname);
 
     const searchMemberProfileList = searchedMemberTuples.map((searchedMemberTuple) =>
       SearchMemberDto.from(searchedMemberTuple),

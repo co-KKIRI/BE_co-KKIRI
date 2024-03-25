@@ -6,6 +6,11 @@ import { Type } from 'class-transformer';
 export class SearchMemberRequest extends PaginationRequest {
   @Type(() => String)
   @IsOptional()
+  @ApiProperty({ description: '닉네임' })
+  nickname?: string;
+
+  @Type(() => String)
+  @IsOptional()
   @ApiProperty({ description: '스택' })
   stacks?: string[];
 
