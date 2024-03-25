@@ -23,6 +23,10 @@ export class PostManagementResponse {
   isLeader!: boolean;
   @ApiProperty()
   stacks: string[];
+  @ApiProperty()
+  recruitEndAt?: Date;
+  @ApiProperty()
+  progressPeriod?: string;
 
   constructor(
     postId: number,
@@ -35,6 +39,8 @@ export class PostManagementResponse {
     positions: string[],
     isLeader: boolean,
     stacks: string[],
+    recruitEndAt?: Date,
+    progressPeriod?: string,
   ) {
     this.postId = postId;
     this.postTitle = postTitle;
@@ -46,6 +52,8 @@ export class PostManagementResponse {
     this.positions = positions;
     this.isLeader = isLeader;
     this.stacks = stacks;
+    this.recruitEndAt = recruitEndAt;
+    this.progressPeriod = progressPeriod;
   }
 
   static from(dto: GetPostManagementDto) {
@@ -60,6 +68,8 @@ export class PostManagementResponse {
       dto.positions,
       dto.isLeader,
       dto.stacks,
+      dto.recruitEndAt,
+      dto.progressPeriod,
     );
   }
 }
