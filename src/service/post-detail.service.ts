@@ -54,6 +54,7 @@ export class PostDetailService {
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+
     const isAlreadyTeamMember = await this.teamMemberRepository.findOneBy({
       postId: postId, memberId: memberId
     });
@@ -91,7 +92,7 @@ export class PostDetailService {
     }
 
     if (post.memberId !== memberId) {
-      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.')
+      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.');
     }
     post.setPostInfo(
       originPostInfo.type,
@@ -117,16 +118,28 @@ export class PostDetailService {
     content: string
   ): Promise<void> {
     const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId });
-    
     if (commentInfo === null) {
       throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
     }
     if (commentInfo.memberId !== memberId) {
       throw new UnauthorizedException('해당 댓글을 작성한 사용자가 아닙니다.');
     }
-    commentInfo.setCommentInfo(content);
 
+    commentInfo.setCommentInfo(content);
     await this.commentRepository.save(commentInfo);
+  }
+
+  async deletePostInfo(postId: number, memberId: number): Promise<void> {
+    const postInfo = await this.postRepository.findOneBy({ id: postId });
+    if (postInfo === null) {
+      throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (postInfo.memberId !== memberId) {
+      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.');
+    }
+
+    postInfo.deletePostInfo(new Date());
+    await this.postRepository.save(postInfo);
   }
 
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {

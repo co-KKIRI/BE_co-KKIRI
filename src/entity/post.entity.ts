@@ -62,6 +62,9 @@ export class Post {
   @Column({ name: 'link', length: 100 })
   link?: string;
 
+  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
+  deletedAt?: Date;
+
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;
 
@@ -105,4 +108,6 @@ export class Post {
     this.content = content;
     this.link = link;
   }
+
+  deletePostInfo(deletedAt?: Date) { this.deletedAt = deletedAt };
 }

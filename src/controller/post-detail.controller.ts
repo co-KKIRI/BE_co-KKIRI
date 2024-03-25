@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
@@ -83,6 +83,13 @@ export class PostDetailController {
     @Body('content') content: string,
   ): Promise<void> {
     return this.postDetailService.patchCommentInfo(postId, commentId, req.user.id, content);
+  }
+
+  @ApiOperation({ summary: '포스트 삭제' })
+  @Delete('post/:postId')
+  async deletePost(
+    @Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<void> {
+    return this.postDetailService.deletePostInfo(postId, req.user.id);
   }
 
   @ApiOperation({ summary: '스터디 모집' })
