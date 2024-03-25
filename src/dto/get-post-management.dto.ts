@@ -16,7 +16,7 @@ export class GetPostManagementDto {
   capacity: number;
   positions: string[];
   isLeader: boolean;
-  stack?: string;
+  stacks: string[];
 
   constructor({ post, isLeader }: GetPostManagementDtoOptions) {
     this.postId = post.id;
@@ -28,6 +28,6 @@ export class GetPostManagementDto {
     this.capacity = post.capacity;
     this.positions = post.position?.split(',') || [];
     this.isLeader = isLeader;
-    this.stack = post.stack;
+    this.stacks = post.stack ? JSON.parse(post.stack) : [];
   }
 }
