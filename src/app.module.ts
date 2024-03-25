@@ -46,6 +46,8 @@ import { TeamInvite } from './entity/team-invite.entity';
 import { TeamService } from './service/team.service';
 import { TeamController } from './controller/team.controller';
 import { TeamInviteQueryRepository } from './repository/team-invite.query-repository';
+import { MemberSearchService } from './service/member-search.service';
+import { MemberSearchQueryRepository } from './repository/member-search.query-repository';
 
 @Module({
   imports: [
@@ -88,6 +90,7 @@ import { TeamInviteQueryRepository } from './repository/team-invite.query-reposi
     PostDetailService,
     ImageService,
     TeamService,
+    MemberSearchService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -96,6 +99,7 @@ import { TeamInviteQueryRepository } from './repository/team-invite.query-reposi
     MyPageQueryRepository,
     PostDetailQueryRepository,
     TeamInviteQueryRepository,
+    MemberSearchQueryRepository,
 
     // Strategy
     GoogleStrategy,
