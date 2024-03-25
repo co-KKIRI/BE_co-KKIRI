@@ -13,6 +13,8 @@ export class SearchMemberResponse {
   position?: string;
   @ApiProperty()
   career?: number;
+  @ApiProperty()
+  gauge?: number;
 
   constructor(
     memberId: number,
@@ -21,6 +23,7 @@ export class SearchMemberResponse {
     profileImageUrl?: string,
     position?: string,
     career?: number,
+    gauge?: number,
   ) {
     this.memberId = memberId;
     this.stacks = stacks;
@@ -28,6 +31,7 @@ export class SearchMemberResponse {
     this.profileImageUrl = profileImageUrl;
     this.position = position;
     this.career = career;
+    this.gauge = gauge;
   }
 
   static fromList(searchMemberProfileList: SearchMemberResponse[]) {
@@ -40,6 +44,7 @@ export class SearchMemberResponse {
           searchMemberProfile.profileImageUrl,
           searchMemberProfile.position,
           searchMemberProfile.career,
+          searchMemberProfile.gauge,
         ),
     );
   }

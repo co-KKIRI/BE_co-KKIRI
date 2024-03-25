@@ -7,6 +7,7 @@ export class SearchMemberDto {
   position?: string;
   career?: number;
   stacks: string[];
+  gauge?: number;
 
   constructor(
     memberId: number,
@@ -15,6 +16,7 @@ export class SearchMemberDto {
     profileImageUrl?: string,
     position?: string,
     career?: number,
+    gauge?: number,
   ) {
     this.memberId = memberId;
     this.stacks = stacks;
@@ -22,6 +24,7 @@ export class SearchMemberDto {
     this.profileImageUrl = profileImageUrl;
     this.position = position;
     this.career = career;
+    this.gauge = gauge;
   }
 
   static from(searchMemberTuple: SearchedMemberTuple) {
@@ -32,6 +35,7 @@ export class SearchMemberDto {
       searchMemberTuple.profileImageUrl,
       searchMemberTuple.position,
       searchMemberTuple.career,
+      0,
     );
   }
 }
