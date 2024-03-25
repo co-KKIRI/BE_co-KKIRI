@@ -8,6 +8,7 @@ import { RecruitPostResponse } from 'src/dto/response/post-detail/recruit-post-r
 import { Comment } from "src/entity/comment.entity";
 import { PostApplyStatus, PostStatus, TeamInviteType, TeamMemberStatus } from "src/entity/common/Enums";
 import { Member } from 'src/entity/member.entity';
+import { PostScrap } from 'src/entity/post-scrap.entity';
 import { PostView } from 'src/entity/post-view.entity';
 import { Post } from "src/entity/post.entity";
 import { TeamMember } from "src/entity/team-member.entity";
@@ -21,10 +22,17 @@ export class PostDetailService {
     @InjectRepository(Comment) private readonly commentRepository: Repository<Comment>,
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
+    @InjectRepository(PostScrap) private readonly postScrapRepository: Repository<PostScrap>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
-  async getPostDetail(postId: number, memberId: number): Promise<GetPostDetailDto> {
+  async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
+
+    let isScraped = false;
+    if (typeof memberId !== 'undefined') {
+      const isScrapedMember = await this.postScrapRepository.findOneBy({ postId, memberId });
+      isScraped = isScrapedMember !== null;
+    }
     const newViewCount = post.viewCount + 1;
     await this.postDetailQueryRepository.updateView(postId, newViewCount);
 
@@ -32,7 +40,7 @@ export class PostDetailService {
       postId: postId,
       memberId: memberId,
     });
-    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, await this.getPostApplyType(postId, memberId));
+    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, isScraped, await this.getPostApplyType(postId, memberId));
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
@@ -54,6 +62,7 @@ export class PostDetailService {
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+
     const isAlreadyTeamMember = await this.teamMemberRepository.findOneBy({
       postId: postId, memberId: memberId
     });
@@ -91,7 +100,7 @@ export class PostDetailService {
     }
 
     if (post.memberId !== memberId) {
-      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.')
+      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.');
     }
     post.setPostInfo(
       originPostInfo.type,
@@ -110,8 +119,48 @@ export class PostDetailService {
     await this.postRepository.save(post);
   }
 
+  async patchCommentInfo(
+    postId: number,
+    commentId: number,
+    memberId: number,
+    content: string
+  ): Promise<void> {
+    const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId });
+    if (commentInfo === null) {
+      throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
+    }
+    if (commentInfo.memberId !== memberId) {
+      throw new UnauthorizedException('해당 댓글을 작성한 사용자가 아닙니다.');
+    }
 
+    commentInfo.setCommentInfo(content);
+    await this.commentRepository.save(commentInfo);
+  }
 
+  async deletePostInfo(postId: number, memberId: number): Promise<void> {
+    const postInfo = await this.postRepository.findOneBy({ id: postId });
+    if (postInfo === null) {
+      throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (postInfo.memberId !== memberId) {
+      throw new UnauthorizedException('해당 포스트를 작성한 사용자가 아닙니다.');
+    }
+
+    postInfo.deletePostInfo(new Date());
+    await this.postRepository.save(postInfo);
+  }
+
+  async deleteCommentInfo(postId: number, commentId: number, memberId: number): Promise<void> {
+    const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId: postId });
+    if (commentInfo === null) {
+      throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
+    }
+    if (commentInfo.memberId !== memberId) {
+      throw new UnauthorizedException('해당 댓글을 작성한 사용자가 아닙니다.');
+    }
+
+    await this.commentRepository.remove(commentInfo);
+  }
 
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
     const memberInfo = await this.memberRepository.findOneBy({ id: memberId });
@@ -137,18 +186,21 @@ export class PostDetailService {
     return new RecruitPostResponse(savedPost.id);
   }
 
-
-  private async getPostApplyType(postId: number, memberId: number): Promise<PostApplyStatus> {
+  private async getPostApplyType(postId: number, memberId?: number): Promise<PostApplyStatus> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+    if (post.status !== PostStatus.READY) {
+      return PostApplyStatus.RECRUIT_CLOSED;
+    }
+
     if (memberId === post?.memberId) {
       return PostApplyStatus.OWNER
     };
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
-    if (!teamMember) {
+    if (!teamMember || !memberId) {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards } from "@nestjs/common";
 import { ApiCreatedResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
@@ -18,11 +18,13 @@ import { PostDetailService } from "src/service/post-detail.service";
 export class PostDetailController {
   constructor(private readonly postDetailService: PostDetailService) { }
 
+  @Roles('anyone')
   @ApiOperation({ summary: '포스트 상세' })
   @ApiCreatedResponse({ type: PostDetailResponse })
   @Get('post/:postId')
   async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
-    const postDetail = await this.postDetailService.getPostDetail(postId, req.user.id);
+    const userId = req.user?.id;
+    const postDetail = await this.postDetailService.getPostDetail(postId, userId );
     return PostDetailResponse.from(postDetail);
   }
 
@@ -72,6 +74,33 @@ export class PostDetailController {
     @Req() req,
     @Body() patchPostInfo: RecruitedPostInfoDto): Promise<void> {
     return this.postDetailService.patchPostInfo(postId, req.user.id, patchPostInfo);
+  }
+
+  @ApiOperation({ summary: '댓글 수정' })
+  @Patch('post/:postId/:commentId')
+  async updateComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @Req() req,
+    @Body('content') content: string,
+  ): Promise<void> {
+    return this.postDetailService.patchCommentInfo(postId, commentId, req.user.id, content);
+  }
+
+  @ApiOperation({ summary: '포스트 삭제' })
+  @Delete('post/:postId')
+  async deletePost(
+    @Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<void> {
+    return this.postDetailService.deletePostInfo(postId, req.user.id);
+  }
+
+  @ApiOperation({ summary: '댓글 삭제' })
+  @Delete('post/:postId/:commentId')
+  async deleteComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @Req() req): Promise<void> {
+    return this.postDetailService.deleteCommentInfo(postId, commentId, req.user.id);
   }
 
   @ApiOperation({ summary: '스터디 모집' })

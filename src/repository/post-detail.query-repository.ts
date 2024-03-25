@@ -108,9 +108,9 @@ export class GetAllPostDetailTuple {
   contactWay: string;
   capacity: number;
   link: string;
-  @Transform(({ value }) => value?.split(',') || [])
+  @Transform(({ value }) => JSON.parse(value) || [])
   positions: string[];
-  @Transform(({ value }) => value?.split(',') || [])
+  @Transform(({ value }) => JSON.parse(value) || [])
   stacks: string[];
   @Transform(({ value }) => Number(value))
   @IsInt()

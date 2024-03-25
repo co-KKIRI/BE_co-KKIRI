@@ -79,10 +79,12 @@ export class PostDetails {
 export class PostDetailResponse {
   @ApiProperty({ type: PostDetails })
   postDetails!: PostDetails;
+  isScraped!: boolean;
   postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetails: PostDetails, postApplyStatus: PostApplyStatus) {
+  constructor(postDetails: PostDetails, isScraped: boolean, postApplyStatus: PostApplyStatus) {
     this.postDetails = postDetails;
+    this.isScraped = isScraped;
     this.postApplyStatus = postApplyStatus;
   }
 
@@ -106,7 +108,7 @@ export class PostDetailResponse {
       dto.postDetail.scrapCount,
       dto.postDetail.commentCount,
     );
-    return new PostDetailResponse(postDetails, dto.postApplyStatus);
+    return new PostDetailResponse(postDetails, dto.isScraped, dto.postApplyStatus);
   }
 
 }
