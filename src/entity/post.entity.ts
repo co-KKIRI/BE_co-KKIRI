@@ -58,9 +58,9 @@ export class Post {
 
   @Column({ name: 'comment_count' })
   commentCount: number;
-  
+
   @Column({ name: 'link', length: 100 })
-  link: string;
+  link?: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;
@@ -68,19 +68,15 @@ export class Post {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
 
-  setRecruitStatus(status: PostStatus) {
+  setStatus(status: PostStatus) {
     this.status = status;
   }
 
-  isModifiableRecruitEnd() {
-    return [PostStatus.READY, PostStatus.PROGRESS, PostStatus.PROGRESS_END].includes(this.status);
-  }
-
-  isModifiableRecruitStart() {
+  isModifiableStart() {
     return [PostStatus.READY].includes(this.status);
   }
 
-  isModifiableRecruitComplete() {
+  isModifiableEnd() {
     return [PostStatus.READY, PostStatus.PROGRESS].includes(this.status);
   }
 }

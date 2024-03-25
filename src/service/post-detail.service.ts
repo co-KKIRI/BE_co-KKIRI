@@ -3,8 +3,11 @@ import { ConflictException, Injectable, NotFoundException } from "@nestjs/common
 import { InjectRepository } from "@nestjs/typeorm";
 import { GetPostComment, GetPostCommentDto } from "src/dto/get-post-comment.dto";
 import { GetPostDetailDto } from "src/dto/get-post-detail.dto";
+import { RecruitedPostInfoDto } from 'src/dto/request/recruited-post-info';
+import { RecruitPostResponse } from 'src/dto/response/recruit-post-response';
 import { Comment } from "src/entity/comment.entity";
-import { PostApplyStatus, TeamInviteType, TeamMemberStatus } from "src/entity/common/Enums";
+import { PostApplyStatus, PostStatus, TeamInviteType, TeamMemberStatus } from "src/entity/common/Enums";
+import { Member } from 'src/entity/member.entity';
 import { PostView } from 'src/entity/post-view.entity';
 import { Post } from "src/entity/post.entity";
 import { TeamMember } from "src/entity/team-member.entity";
@@ -17,6 +20,7 @@ export class PostDetailService {
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     @InjectRepository(Comment) private readonly commentRepository: Repository<Comment>,
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
+    @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   // async recruitPost(memberId: number, recruitPostDto: RecruitPostDto): Promise<void> {
@@ -87,12 +91,37 @@ export class PostDetailService {
     await this.postRepository.save(post);
   }
 
+  async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
+    const memberInfo = await this.memberRepository.findOneBy({ id: memberId });
+    if (memberInfo === null) {
+      throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
+    }
+
+    const savedPost = await this.postRepository.save({
+      type: dto.type,
+      memberId: memberId,
+      status: PostStatus.READY,
+      recruitEndAt: dto.recruitEndAt,
+      progressPeriod: dto.progressPeriod,
+      capacity: dto.capacity,
+      contactWay: dto.contactWay,
+      progressWay: dto.progressWay,
+      stack: JSON.stringify(dto.stacks),
+      position: JSON.stringify(dto.positions),
+      link: dto.link,
+      title: dto.title,
+      content: dto.content
+    })
+    return new RecruitPostResponse(savedPost.id);
+  }
+
+
   private async getPostApplyType(postId: number, memberId: number): Promise<PostApplyStatus> {
     const post = await this.postRepository.findOneBy({ id: postId });
-    if(post === null ){
+    if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
-    if (memberId === post?.memberId){
+    if (memberId === post?.memberId) {
       return PostApplyStatus.OWNER
     };
 

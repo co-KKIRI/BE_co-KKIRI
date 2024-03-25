@@ -40,33 +40,23 @@ export class PostManagementService {
     return { getAppliedPostMembers, totalCount };
   }
 
-  async recruitEnd(postId: number): Promise<void> {
+  async start(postId: number): Promise<void> {
     const post = await this.getPost(postId);
-    if (!post.isModifiableRecruitEnd()) {
-      throw new BadRequestException('마감이 불가능한 상태입니다.');
+    if (!post.isModifiableStart()) {
+      throw new BadRequestException('시작이 불가능한 상태입니다.');
     }
 
-    if (post.status) post.setRecruitStatus(PostStatus.PROGRESS_END);
+    if (post.status) post.setStatus(PostStatus.PROGRESS);
     await this.postRepository.save(post);
   }
 
-  async recruitStart(postId: number): Promise<void> {
+  async end(postId: number): Promise<void> {
     const post = await this.getPost(postId);
-    if (!post.isModifiableRecruitStart()) {
-      throw new BadRequestException('모집 시작이 불가능한 상태입니다.');
+    if (!post.isModifiableEnd()) {
+      throw new BadRequestException('완료가 불가능한 상태입니다.');
     }
 
-    if (post.status) post.setRecruitStatus(PostStatus.PROGRESS);
-    await this.postRepository.save(post);
-  }
-
-  async recruitComplete(postId: number): Promise<void> {
-    const post = await this.getPost(postId);
-    if (!post.isModifiableRecruitComplete()) {
-      throw new BadRequestException('모집 완료가 불가능한 상태입니다.');
-    }
-
-    if (post.status) post.setRecruitStatus(PostStatus.DONE);
+    if (post.status) post.setStatus(PostStatus.DONE);
     await this.postRepository.save(post);
   }
 
