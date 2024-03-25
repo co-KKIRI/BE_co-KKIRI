@@ -74,6 +74,17 @@ export class PostDetailController {
     return this.postDetailService.patchPostInfo(postId, req.user.id, patchPostInfo);
   }
 
+  @ApiOperation({ summary: '댓글 수정' })
+  @Patch('post/:postId/:commentId')
+  async updateComment(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Param('commentId', ParseIntPipe) commentId: number,
+    @Req() req,
+    @Body('content') content: string,
+  ): Promise<void> {
+    return this.postDetailService.patchCommentInfo(postId, commentId, req.user.id, content);
+  }
+
   @ApiOperation({ summary: '스터디 모집' })
   @Post('post/recruit')
   async recruitPostInfo(
