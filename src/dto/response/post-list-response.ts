@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "src/entity/common/Enums";
-import { GetPostListDto } from "../get-post-list.dto";
+import { GetPostListDto, GetPostedList } from "../get-post-list.dto";
 
 export class PostedList {
   @ApiProperty()
@@ -14,17 +14,17 @@ export class PostedList {
   @ApiProperty()
   title!: string;
   @ApiProperty()
-  position!: string[];
+  positions: string[];
   @ApiProperty()
-  stack: string[];
+  stacks: string[];
   @ApiProperty()
   nickname: string;
   @ApiProperty()
   profileImageUrl: string;
   @ApiProperty()
-  postViews!: number;
+  viewCount!: number;
   @ApiProperty()
-  postCommentsNum!: number;
+  commentCount!: number;
 
   constructor(
     postId: number,
@@ -32,24 +32,40 @@ export class PostedList {
     recruitEndAt: Date,
     progressWay: string,
     title: string,
-    position: string[],
-    stack: string[],
+    positions: string[],
+    stacks: string[],
     nickname: string,
     profileImageUrl: string,
-    postViews: number,
-    postCommentsNum: number,
+    viewCount: number,
+    commentCount: number,
   ) {
     this.postId = postId;
     this.type = type;
     this.recruitEndAt = recruitEndAt;
     this.progressWay = progressWay;
     this.title = title;
-    this.position = position;
-    this.stack = stack;
+    this.positions = positions;
+    this.stacks = stacks;
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
-    this.postViews = postViews;
-    this.postCommentsNum = postCommentsNum;
+    this.viewCount = viewCount;
+    this.commentCount = commentCount;
+  }
+
+  static from(tuple: PostedList) {
+    return new PostedList(
+      tuple.postId,
+      tuple.type,
+      tuple.recruitEndAt,
+      tuple.progressWay,
+      tuple.title,
+      tuple.positions,
+      tuple.stacks,
+      tuple.nickname,
+      tuple.profileImageUrl,
+      tuple.viewCount,
+      tuple.commentCount
+    );
   }
 }
 
@@ -61,23 +77,11 @@ export class PostListResponse {
     this.postInfo = postInfo;
   }
 
-  static from(getPostListDto: GetPostListDto) {
-    const postedListInfo = getPostListDto.postInfo.map((postedList) => {
-      return new PostedList(
-        postedList.postId,
-        postedList.type,
-        postedList.recruitEndAt,
-        postedList.progressWay,
-        postedList.title,
-        postedList.position,
-        postedList.stack,
-        postedList.nickname,
-        postedList.profileImageUrl,
-        postedList.postViews,
-        postedList.postCommentsNum
-      );
+  static from(getPostLists: GetPostedList[]) {
+    const postListInfo = getPostLists.map((tuple) => {
+      return PostedList.from(tuple);
     });
-    return new PostListResponse(postedListInfo);
+    return new GetPostListDto(postListInfo);
   }
 }
 
