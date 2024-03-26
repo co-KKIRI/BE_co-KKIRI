@@ -30,6 +30,7 @@ export class GetPostedList {
   profileImageUrl: string;
   viewCount!: number;
   commentCount!: number;
+  isScraped!: boolean;
 
   constructor(
     postId: number,
@@ -43,6 +44,7 @@ export class GetPostedList {
     profileImageUrl: string,
     postViews: number,
     postCommentsNum: number,
+    isScraped: boolean,
   ) {
     this.postId = postId;
     this.type = type;
@@ -55,6 +57,7 @@ export class GetPostedList {
     this.profileImageUrl = profileImageUrl;
     this.viewCount = postViews;
     this.commentCount = postCommentsNum;
+    this.isScraped = isScraped;
   }
 
   static from(tuple: GetAllPostListTuple) {
@@ -69,7 +72,8 @@ export class GetPostedList {
       tuple.nickname,
       tuple.profileImageUrl,
       tuple.viewCount,
-      tuple.commentCount
+      tuple.commentCount,
+      tuple.isScraped
     );
   }
 }

@@ -11,8 +11,8 @@ export class PostListService {
   constructor(private readonly postListQueryRepository: PostListQueryRepository,
   ) { }
 
-  async getPostList(paginationRequest: PaginationRequest) {
-    const postListTuples = await this.postListQueryRepository.getAllPostList(paginationRequest);
+  async getPostList(paginationRequest: PaginationRequest, memberId: number) {
+    const postListTuples = await this.postListQueryRepository.getAllPostList(paginationRequest, memberId);
     const totalCount = await this.postListQueryRepository.getAllPostListTotalCount();
     const postInfo = postListTuples.map((postList) =>
       GetPostedList.from(postList));

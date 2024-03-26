@@ -6,6 +6,7 @@ import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { Comment } from "src/entity/comment.entity";
 import { PostStatus, Type } from "src/entity/common/Enums";
 import { Member } from "src/entity/member.entity";
+import { PostScrap } from "src/entity/post-scrap.entity";
 import { PostView } from "src/entity/post-view.entity";
 import { Post } from "src/entity/post.entity";
 import { DataSource } from "typeorm";
@@ -14,11 +15,12 @@ import { DataSource } from "typeorm";
 export class PostListQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
-  async getAllPostList(paginationRequest: PaginationRequest): Promise<GetAllPostListTuple[]> {
+  async getAllPostList(paginationRequest: PaginationRequest, memberId: number): Promise<GetAllPostListTuple[]> {
     const postList = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.status = :status', { status: PostStatus.READY })
       .select([
         'post.id as postId',
@@ -31,7 +33,8 @@ export class PostListQueryRepository {
         'member.nickname as nickname',
         'member.profileImageUrl as profileImageUrl',
         'post.viewCount as viewCount',
-        'post.commentCount as commentCount'
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
       ])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
@@ -73,4 +76,6 @@ export class GetAllPostListTuple {
   @Transform(({ value }) => Number(value))
   @IsInt()
   commentCount!: number;
+  @Transform(({ value }) => value === '1')
+  isScraped!: boolean;
 }

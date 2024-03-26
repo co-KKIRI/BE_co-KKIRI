@@ -25,6 +25,8 @@ export class PostedList {
   viewCount!: number;
   @ApiProperty()
   commentCount!: number;
+  @ApiProperty()
+  isScraped!: boolean;
 
   constructor(
     postId: number,
@@ -38,6 +40,7 @@ export class PostedList {
     profileImageUrl: string,
     viewCount: number,
     commentCount: number,
+    isScraped: boolean,
   ) {
     this.postId = postId;
     this.type = type;
@@ -50,6 +53,7 @@ export class PostedList {
     this.profileImageUrl = profileImageUrl;
     this.viewCount = viewCount;
     this.commentCount = commentCount;
+    this.isScraped = isScraped;
   }
 
   static from(tuple: PostedList) {
@@ -64,7 +68,8 @@ export class PostedList {
       tuple.nickname,
       tuple.profileImageUrl,
       tuple.viewCount,
-      tuple.commentCount
+      tuple.commentCount,
+      tuple.isScraped
     );
   }
 }
