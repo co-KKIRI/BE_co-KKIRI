@@ -6,14 +6,14 @@ export class GetMemberResponse {
   profileImageUrl?: string;
   career?: number;
   position?: string;
-  stack: string[];
+  stacks: string[];
   gauge?: number;
   link?: string;
   introduce?: string;
 
   constructor(
     memberId: number,
-    stack: string[],
+    stacks: string[],
     nickname?: string,
     profileImageUrl?: string,
     career?: number,
@@ -27,7 +27,7 @@ export class GetMemberResponse {
     this.profileImageUrl = profileImageUrl;
     this.career = career;
     this.position = position;
-    this.stack = stack;
+    this.stacks = stacks;
     this.gauge = gauge;
     this.link = link;
     this.introduce = introduce;
@@ -36,7 +36,7 @@ export class GetMemberResponse {
   static from(memberDto: MemberDto) {
     return new GetMemberResponse(
       memberDto.memberId,
-      memberDto.stack,
+      memberDto.stacks,
       memberDto.nickname,
       memberDto.profileImageUrl,
       memberDto.career,
