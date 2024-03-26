@@ -15,6 +15,120 @@ import { DataSource } from "typeorm";
 export class PostListQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
+  async getMainStudyLatestList(memberId: number): Promise<GetAllPostListTuple[]> {
+    const mainPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.type = :type', { type: Type.STUDY })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(4)
+      .orderBy('post.createdAt', 'DESC')
+      .addOrderBy('post.scrapCount', 'DESC')
+      .getRawMany()
+    return plainToInstance(GetAllPostListTuple, mainPostInfo);
+  }
+
+  async getMainStudyHottestList(memberId: number): Promise<GetAllPostListTuple[]> {
+    const mainPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.type = :type', { type: Type.STUDY })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(4)
+      .orderBy('post.viewCount', 'DESC')
+      .getRawMany()
+    return plainToInstance(GetAllPostListTuple, mainPostInfo);
+  }
+
+  async getMainProjectLatestList(memberId: number): Promise<GetAllPostListTuple[]> {
+    const mainPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.type = :type', { type: Type.PROJECT })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(4)
+      .orderBy('post.createdAt', 'DESC')
+      .getRawMany()
+    return plainToInstance(GetAllPostListTuple, mainPostInfo);
+  }
+
+  async getMainProjectHottestList(memberId: number): Promise<GetAllPostListTuple[]> {
+    const mainPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.type = :type', { type: Type.PROJECT })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(4)
+      .orderBy('post.viewCount', 'DESC')
+      .addOrderBy('post.scrapCount', 'DESC')
+      .getRawMany()
+    return plainToInstance(GetAllPostListTuple, mainPostInfo);
+  }
+
   async getAllPostList(
     paginationRequest: PaginationRequest,
     stacks: string[],
