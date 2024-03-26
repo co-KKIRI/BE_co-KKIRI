@@ -4,6 +4,7 @@ import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
 import { ApiPaginatedResponse } from "src/common/pagination/pagination.decorator";
 import { Roles } from "src/common/roles/roles.decorator";
+import { SearchPostList } from "src/dto/request/search-post-list.request";
 import { PostListResponse } from "src/dto/response/post-list-response";
 import { RolesGuard } from "src/guard/roles.guard";
 import { PostListService } from "src/service/post-list.service";
@@ -19,14 +20,14 @@ export class PostListController {
   @ApiPaginatedResponse(PostListResponse)
   @Get('post/list')
   async getPostList(
-    @Query() paginationRequest: PaginationRequest,
+    @Query() searchPostList: SearchPostList,
     @Req() req,
   ): Promise<PaginationResponse<PostListResponse>> {
     const userId = req.user?.id;
-    const { postInfo, totalCount } = await this.postListService.getPostList(paginationRequest, userId);
+    const { postInfo, totalCount } = await this.postListService.getPostList(searchPostList, userId);
     return PaginationResponse.of({
       data: [PostListResponse.from(postInfo)],
-      options: paginationRequest,
+      options: searchPostList,
       totalCount,
     })
   }
