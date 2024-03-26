@@ -26,7 +26,7 @@ export class PostListController {
     const userId = req.user?.id;
     const { postInfo, totalCount } = await this.postListService.getPostList(searchPostList, userId);
     return PaginationResponse.of({
-      data: [PostListResponse.from(postInfo)],
+      data: PostListResponse.from(postInfo),
       options: searchPostList,
       totalCount,
     })

@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "src/entity/common/Enums";
 import { GetPostListDto, GetPostedList } from "../get-post-list.dto";
 
-export class PostedList {
+export class PostListResponse {
   @ApiProperty()
   postId!: number;
   @ApiProperty()
@@ -56,37 +56,24 @@ export class PostedList {
     this.isScraped = isScraped;
   }
 
-  static from(tuple: PostedList) {
-    return new PostedList(
-      tuple.postId,
-      tuple.type,
-      tuple.recruitEndAt,
-      tuple.progressWay,
-      tuple.title,
-      tuple.positions,
-      tuple.stacks,
-      tuple.nickname,
-      tuple.profileImageUrl,
-      tuple.viewCount,
-      tuple.commentCount,
-      tuple.isScraped
-    );
-  }
-}
-
-export class PostListResponse {
-  @ApiProperty({ type: PostedList })
-  postInfo!: PostedList[];
-
-  constructor(postInfo: PostedList[]) {
-    this.postInfo = postInfo;
-  }
-
   static from(getPostLists: GetPostedList[]) {
-    const postListInfo = getPostLists.map((tuple) => {
-      return PostedList.from(tuple);
-    });
-    return new GetPostListDto(postListInfo);
+    return getPostLists.map(
+      (getPostLists) =>
+        new PostListResponse(
+          getPostLists.postId,
+          getPostLists.type,
+          getPostLists.recruitEndAt,
+          getPostLists.progressWay,
+          getPostLists.title,
+          getPostLists.positions,
+          getPostLists.stacks,
+          getPostLists.nickname,
+          getPostLists.profileImageUrl,
+          getPostLists.viewCount,
+          getPostLists.commentCount,
+          getPostLists.isScraped
+        )
+    )
   }
 }
 
