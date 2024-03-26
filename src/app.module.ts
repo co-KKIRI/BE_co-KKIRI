@@ -50,6 +50,9 @@ import { MemberSearchService } from './service/member-search.service';
 import { MemberSearchQueryRepository } from './repository/member-search.query-repository';
 import { PostController } from './controller/post.controller';
 import { PostService } from './service/post.service';
+import { ScoutController } from './controller/scout.controller';
+import { ScoutService } from './service/scout.service';
+import { ScoutQueryRepository } from './repository/scout.query-repository';
 
 @Module({
   imports: [
@@ -78,6 +81,7 @@ import { PostService } from './service/post.service';
     ImageController,
     TeamController,
     PostController,
+    ScoutController,
   ],
   providers: [
     // Service
@@ -95,6 +99,7 @@ import { PostService } from './service/post.service';
     TeamService,
     MemberSearchService,
     PostService,
+    ScoutService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -104,6 +109,7 @@ import { PostService } from './service/post.service';
     PostDetailQueryRepository,
     TeamInviteQueryRepository,
     MemberSearchQueryRepository,
+    ScoutQueryRepository,
 
     // Strategy
     GoogleStrategy,
