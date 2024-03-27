@@ -27,4 +27,18 @@ export class MyPostController {
     })
   }
 
+  @Roles('anyone')
+  @ApiOperation({ summary: '내가 모집한 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/recruit/list')
+  async getMyRecruitedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyRecruitedPost, totalCount } = await this.postListService.getMyRecruitedPost(paginationRequest, 1);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyRecruitedPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
 }
