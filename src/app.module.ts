@@ -50,6 +50,7 @@ import { MemberSearchService } from './service/member-search.service';
 import { MemberSearchQueryRepository } from './repository/member-search.query-repository';
 import { PostController } from './controller/post.controller';
 import { PostService } from './service/post.service';
+import { MyPostController } from './controller/my-post-controller';
 
 @Module({
   imports: [
@@ -78,6 +79,7 @@ import { PostService } from './service/post.service';
     ImageController,
     TeamController,
     PostController,
+    MyPostController
   ],
   providers: [
     // Service
@@ -116,4 +118,4 @@ import { PostService } from './service/post.service';
     Logger,
   ],
 })
-export class AppModule {}
+export class AppModule { }
