@@ -46,12 +46,12 @@ export class PostListService {
     return { postInfo, totalCount };
   }
 
-  async getMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number) {
-    const myRecruitedPostTuples = await this.postListQueryRepository.getAllMyRecruitedPost(paginationRequest, memberId);
-    const totalCount = await this.postListQueryRepository.getAllMyRecruitedPostCount(memberId);
+  async getMyAppliedPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myAppliedPostTuples = await this.postListQueryRepository.getAllMyAppliedPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyAppliedPostCount(memberId);
 
-    const getMyRecruitedPost = myRecruitedPostTuples.map((postList) =>
+    const getMyAppliedPost = myAppliedPostTuples.map((postList) =>
       GetPostedList.from(postList));
-    return { getMyRecruitedPost, totalCount };
+    return { getMyAppliedPost, totalCount };
   }
 }

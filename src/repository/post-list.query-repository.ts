@@ -223,9 +223,9 @@ export class PostListQueryRepository {
     return query;
   }
 
-  async getAllMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number)
+  async getAllMyAppliedPost(paginationRequest: PaginationRequest, memberId: number)
     : Promise<GetAllPostListTuple[]> {
-    const myRecruitedPostInfo = await this.dataSource
+    const myAppliedPostInfo = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'member.id = post.member_id')
@@ -251,14 +251,14 @@ export class PostListQueryRepository {
       .offset(paginationRequest.getSkip())
       .orderBy('post.created_at', paginationRequest.order)
       .getRawMany();
-    return plainToInstance(GetAllPostListTuple, myRecruitedPostInfo);
+    return plainToInstance(GetAllPostListTuple, myAppliedPostInfo);
   }
 
-  async getAllMyRecruitedPostCount(memberId: number): Promise<number> {
-    return await this.getMyRecruitedPostBaseQuery(memberId).getCount();
+  async getAllMyAppliedPostCount(memberId: number): Promise<number> {
+    return await this.getMyAppliedPostBaseQuery(memberId).getCount();
   }
 
-  private getMyRecruitedPostBaseQuery(memberId: number) {
+  private getMyAppliedPostBaseQuery(memberId: number) {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
