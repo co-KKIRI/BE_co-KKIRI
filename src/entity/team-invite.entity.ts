@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'team_invite' })
 export class TeamInvite {
@@ -19,4 +19,12 @@ export class TeamInvite {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
+
+  static invite(sendMemberId: number, receiveMemberId: number, message: string): TeamInvite {
+    const teamInvite = new TeamInvite();
+    teamInvite.sendMemberId = sendMemberId;
+    teamInvite.receiveMemberId = receiveMemberId;
+    teamInvite.message = message;
+    return teamInvite;
+  }
 }
