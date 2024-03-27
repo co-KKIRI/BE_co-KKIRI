@@ -21,7 +21,7 @@ export class PostService {
     await this.postScrapRepository.save(newPostScrap);
   }
 
-  async deleteScrap(memberId: number, postId: number) {
+  async deleteScrap(memberId: number, postId: number): Promise<void> {
     const postScrap = await this.postScrapRepository.findOneBy({ memberId, postId });
 
     if (!postScrap) {
