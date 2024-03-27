@@ -26,6 +26,7 @@ export class PostDetailQueryRepository {
       .where('post.id = :postId', { postId })
       .select([
         'post.title as postTitle',
+        'post.memberId as postMemberId',
         'post.content as postContent',
         'member.profileImageUrl as userProfileImg',
         'member.nickname as userNickname',
@@ -96,6 +97,7 @@ export class PostDetailQueryRepository {
 
 export class GetAllPostDetailTuple {
   postTitle!: string;
+  postMemberId!: number;
   postContent: string;
   userProfileImg: string;
   userNickname: string;
