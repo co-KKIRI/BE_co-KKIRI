@@ -14,6 +14,7 @@ export class GetPostDetailDto {
   static from(tuple: GetAllPostDetailTuple, isScraped: boolean, postApplyStatus: PostApplyStatus) {
     const postDetail = new GetPostDetails(
       tuple.postTitle,
+      tuple.postMemberId,
       tuple.postContent,
       tuple.userProfileImg,
       tuple.userNickname,
@@ -37,6 +38,7 @@ export class GetPostDetailDto {
 
 export class GetPostDetails {
   postTitle!: string;
+  postMemberId!: number;
   postContent: string;
   userProfileImg: string;
   userNickname: string;
@@ -56,6 +58,7 @@ export class GetPostDetails {
 
   constructor(
     postTitle: string,
+    postMemberId: number,
     postContent: string,
     userProfileImg: string,
     userNickname: string,
@@ -74,6 +77,7 @@ export class GetPostDetails {
     commentCount: number,
   ) {
     this.postTitle = postTitle;
+    this.postMemberId = postMemberId;
     this.postContent = postContent;
     this.userProfileImg = userProfileImg;
     this.userNickname = userNickname;

@@ -5,6 +5,8 @@ export class PostCommentResponse {
   @ApiProperty()
   commentId!: number;
   @ApiProperty()
+  commentMemberId!: number;
+  @ApiProperty()
   commentProfileImg?: string;
   @ApiProperty()
   commentNickname?: string;
@@ -18,6 +20,7 @@ export class PostCommentResponse {
   constructor(
     isMine: boolean,
     commentId: number,
+    commentMemberId: number,
     commentCreatedAt: Date,
     commentProfileImg?: string,
     commentNickname?: string,
@@ -25,6 +28,7 @@ export class PostCommentResponse {
   ) {
     this.isMine = isMine;
     this.commentId = commentId;
+    this.commentMemberId = commentMemberId;
     this.commentCreatedAt = commentCreatedAt;
     this.commentProfileImg = commentProfileImg;
     this.commentNickname = commentNickname;
@@ -35,6 +39,7 @@ export class PostCommentResponse {
       new PostCommentResponse(
         getPostComment.isMine,
         getPostComment.commentId,
+        getPostComment.commentMemberId,
         getPostComment.commentCreatedAt,
         getPostComment.commentProfileImg,
         getPostComment.commentNickname,

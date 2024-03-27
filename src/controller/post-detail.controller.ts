@@ -24,10 +24,11 @@ export class PostDetailController {
   @Get('post/:postId')
   async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
     const userId = req.user?.id;
-    const postDetail = await this.postDetailService.getPostDetail(postId, userId );
+    const postDetail = await this.postDetailService.getPostDetail(postId, userId);
     return PostDetailResponse.from(postDetail);
   }
 
+  @Roles('anyone')
   @ApiOperation({ summary: '포스트 댓글 목록' })
   @ApiPaginatedResponse(PostCommentResponse)
   @Get('post/:postId/comment/list')
@@ -36,9 +37,9 @@ export class PostDetailController {
     @Query() paginationRequest: PaginationRequest,
     @Req() req,
   ): Promise<PaginationResponse<PostCommentResponse>> {
-
+    const userId = req.user?.id;
     const { getPostComments, totalCount } = await this.postDetailService.getPostComments(
-      postId, paginationRequest, req.user.id);
+      postId, paginationRequest, userId);
 
     return PaginationResponse.of({
       data: PostCommentResponse.fromList(getPostComments),
