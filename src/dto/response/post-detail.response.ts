@@ -6,6 +6,8 @@ export class PostDetails {
   @ApiProperty()
   postTitle!: string;
   @ApiProperty()
+  postMemberId!: number;
+  @ApiProperty()
   postContent: string;
   @ApiProperty()
   userProfileImg?: string;
@@ -40,6 +42,7 @@ export class PostDetails {
 
   constructor(
     postTitle: string,
+    postMemberId: number,
     postContent: string,
     userProfileImg: string,
     userNickname: string,
@@ -58,6 +61,7 @@ export class PostDetails {
     commentCount: number,
   ) {
     this.postTitle = postTitle;
+    this.postMemberId = postMemberId;
     this.postContent = postContent;
     this.userProfileImg = userProfileImg;
     this.userNickname = userNickname;
@@ -91,6 +95,7 @@ export class PostDetailResponse {
   static from(dto: GetPostDetailDto) {
     const postDetails = new PostDetails(
       dto.postDetail.postTitle,
+      dto.postDetail.postMemberId,
       dto.postDetail.postContent,
       dto.postDetail.userProfileImg,
       dto.postDetail.userNickname,
