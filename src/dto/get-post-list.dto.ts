@@ -10,19 +10,7 @@ export class GetPostListDto {
 
   static from(tuples: GetAllPostListTuple[]) {
     const postedListInfo = tuples.map((tuple) => {
-      return new GetPostedList(
-        tuple.postId,
-        tuple.type,
-        tuple.recruitEndAt,
-        tuple.progressWay,
-        tuple.title,
-        tuple.position,
-        tuple.stack,
-        tuple.nickname,
-        tuple.profileImageUrl,
-        tuple.postViews,
-        tuple.postCommentsNum,
-      );
+      return GetPostedList.from(tuple);
     });
     return new GetPostListDto(postedListInfo);
   }
@@ -36,12 +24,13 @@ export class GetPostedList {
   recruitEndAt: Date;
   progressWay!: string;
   title!: string;
-  position!: string[];
-  stack: string[];
+  positions: string[];
+  stacks: string[];
   nickname: string;
   profileImageUrl: string;
-  postViews: number;
-  postCommentsNum: number;
+  viewCount!: number;
+  commentCount!: number;
+  isScraped!: boolean;
 
   constructor(
     postId: number,
@@ -49,24 +38,42 @@ export class GetPostedList {
     recruitEndAt: Date,
     progressWay: string,
     title: string,
-    position: string[],
-    stack: string[],
+    positions: string[],
+    stacks: string[],
     nickname: string,
     profileImageUrl: string,
     postViews: number,
     postCommentsNum: number,
+    isScraped: boolean,
   ) {
     this.postId = postId;
     this.type = type;
     this.recruitEndAt = recruitEndAt;
     this.progressWay = progressWay;
     this.title = title;
-    this.position = position;
-    this.stack = stack;
+    this.positions = positions;
+    this.stacks = stacks;
     this.nickname = nickname;
     this.profileImageUrl = profileImageUrl;
-    this.postViews = postViews;
-    this.postCommentsNum = postCommentsNum;
+    this.viewCount = postViews;
+    this.commentCount = postCommentsNum;
+    this.isScraped = isScraped;
   }
 
+  static from(tuple: GetAllPostListTuple) {
+    return new GetPostedList(
+      tuple.postId,
+      tuple.type,
+      tuple.recruitEndAt,
+      tuple.progressWay,
+      tuple.title,
+      tuple.positions,
+      tuple.stacks,
+      tuple.nickname,
+      tuple.profileImageUrl,
+      tuple.viewCount,
+      tuple.commentCount,
+      tuple.isScraped
+    );
+  }
 }

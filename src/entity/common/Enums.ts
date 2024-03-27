@@ -28,3 +28,15 @@ export enum PostApplyStatus {
   APPLIED = 'APPLIED',
   RECRUIT_CLOSED = 'RECRUIT_CLOSED'
 }
+
+export enum PostListType {
+  ALL = 'ALL',
+  PROJECT = 'PROJECT',
+  STUDY = 'STUDY'
+}
+
+export enum PostListSortBy{
+  LATEST = 'LATEST',
+  BY_DEADLINE = 'BY_DEADLINE',
+  BY_VIEW = 'BY_VIEW'
+}
