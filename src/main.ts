@@ -5,6 +5,9 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { ValidationPipe } from '@nestjs/common';
+import RedisStore from 'connect-redis';
+import { createClient } from 'redis';
+import { ConfigService } from '@nestjs/config';
 
 declare const module: any;
 
@@ -12,11 +15,30 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
+  const configService = app.get(ConfigService);
+
+  const redisClient = createClient({
+    socket: {
+      host: configService.get('REDIS_HOST'),
+      port: configService.get('REDIS_PORT'),
+    },
+  });
+  redisClient
+    .connect()
+    .then(() => console.log('redis connect'))
+    .catch(console.error);
+
+  const redisStore = new RedisStore({
+    client: redisClient,
+    prefix: 'co-kkiri:',
+  });
+
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
 
   app.use(
     session({
       secret: 'co-kkiri',
+      store: redisStore,
       resave: false,
       saveUninitialized: false,
       cookie: {
