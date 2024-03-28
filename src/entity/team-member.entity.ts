@@ -29,6 +29,16 @@ export class TeamMember {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
 
+  static invite(postId: number, memberId: number, teamInviteId: number): TeamMember {
+    const teamMember = new TeamMember();
+    teamMember.postId = postId;
+    teamMember.memberId = memberId;
+    teamMember.teamInviteId = teamInviteId;
+    teamMember.inviteType = TeamInviteType.OTHERS;
+    teamMember.status = TeamMemberStatus.READY;
+    return teamMember;
+  }
+
   setStatus(status: TeamMemberStatus): void {
     this.status = status;
   }
