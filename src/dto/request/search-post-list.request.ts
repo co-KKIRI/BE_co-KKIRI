@@ -33,5 +33,5 @@ export class SearchPostList extends PaginationRequest {
   @Type(() => String)
   @IsOptional()
   @ApiProperty({ description: '제목 검색' })
-  search?: PostListSortBy;
+  search?: string;
 }
