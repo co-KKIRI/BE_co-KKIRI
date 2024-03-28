@@ -202,7 +202,7 @@ export class PostListQueryRepository {
       query = query.andWhere('post.position like :position', { position: `%${position}%` });
     }
     if (progressWay) {
-      query = query.andWhere('post.progressWay like :progressWay', { progressWay });
+      query = query.andWhere('post.progressWay = :progressWay', { progressWay });
     }
 
     if (stacks.length > 0) {
