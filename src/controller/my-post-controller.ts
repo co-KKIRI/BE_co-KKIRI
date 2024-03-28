@@ -53,4 +53,18 @@ export class MyPostController {
     })
   }
 
+  @ApiOperation({ summary: '내가 완료한 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/complete/list')
+  async getMyCompletedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyCompletedPost, totalCount } = await this.postListService.getMyCompletedPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyCompletedPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
+
 }

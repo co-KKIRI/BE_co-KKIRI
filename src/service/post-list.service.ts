@@ -72,4 +72,13 @@ export class PostListService {
       GetPostedList.from(postList));
     return { getMyOnGoingPost, totalCount };
   }
+
+  async getMyCompletedPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myCompletedPostTuples = await this.postListQueryRepository.getAllMyCompletedPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyCompletedPostCount(memberId);
+
+    const getMyCompletedPost = myCompletedPostTuples.map((postList) =>
+      GetPostedList.from(postList));
+    return { getMyCompletedPost, totalCount };
+  }
 }

@@ -363,6 +363,55 @@ export class PostListQueryRepository {
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
   }
+
+  async getAllMyCompletedPost(paginationRequest: PaginationRequest, memberId: number)
+    : Promise<GetAllPostListTuple[]> {
+    const myCompletedPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.status = :status', { status: PostStatus.DONE })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('post.created_at', paginationRequest.order)
+      .getRawMany();
+    return plainToInstance(GetAllPostListTuple, myCompletedPostInfo);
+  }
+
+  async getAllMyCompletedPostCount(memberId: number): Promise<number> {
+    return await this.getMyCompletedPostBaseQuery(memberId).getCount();
+  }
+
+  private getMyCompletedPostBaseQuery(memberId: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.status = :status', { status: PostStatus.DONE })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
+  }
 }
 
 export class GetAllPostListTuple {
