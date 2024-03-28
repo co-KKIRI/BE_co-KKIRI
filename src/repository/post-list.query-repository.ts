@@ -24,6 +24,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -53,6 +54,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -81,6 +83,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -109,6 +112,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -185,7 +189,8 @@ export class PostListQueryRepository {
     sortBy?: PostListSortBy
   ) {
     let query = this.dataSource.createQueryBuilder().from(Post, 'post');
-    query = query.where('post.status = :status', { status: PostStatus.READY })
+    query = query.where('post.status = :status', { status: PostStatus.READY });
+    query = query.andWhere('post.deletedAt IS NULL');
 
     if (meetingType && meetingType !== PostListType.ALL) {
       query = query.andWhere('post.type= :type', { type: meetingType });
@@ -233,6 +238,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -265,6 +271,7 @@ export class PostListQueryRepository {
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('post.deletedAt IS NULL')
   }
 
   async getAllMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number)
@@ -275,6 +282,7 @@ export class PostListQueryRepository {
       .innerJoin(Member, 'member', 'member.id = post.member_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -305,6 +313,7 @@ export class PostListQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.deletedAt IS NULL')
   }
 
   async getAllMyOnGoingPost(paginationRequest: PaginationRequest, memberId: number)
