@@ -45,4 +45,40 @@ export class PostListService {
 
     return { postInfo, totalCount };
   }
+
+  async getMyAppliedPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myAppliedPostTuples = await this.postListQueryRepository.getAllMyAppliedPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyAppliedPostCount(memberId);
+
+    const getMyAppliedPost = myAppliedPostTuples.map((postList) =>
+      GetPostedList.from(postList));
+    return { getMyAppliedPost, totalCount };
+  }
+
+  async getMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myRecruitedPostTuples = await this.postListQueryRepository.getAllMyRecruitedPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyRecruitedPostCount(memberId);
+
+    const getMyRecruitedPost = myRecruitedPostTuples.map((postList) =>
+      GetPostedList.from(postList));
+    return { getMyRecruitedPost, totalCount };
+  }
+
+  async getMyOnGoingPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myOnGoingPostTuples = await this.postListQueryRepository.getAllMyOnGoingPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyOnGoingPostCount(memberId);
+
+    const getMyOnGoingPost = myOnGoingPostTuples.map((postList) =>
+      GetPostedList.from(postList));
+    return { getMyOnGoingPost, totalCount };
+  }
+
+  async getMyCompletedPost(paginationRequest: PaginationRequest, memberId: number) {
+    const myCompletedPostTuples = await this.postListQueryRepository.getAllMyCompletedPost(paginationRequest, memberId);
+    const totalCount = await this.postListQueryRepository.getAllMyCompletedPostCount(memberId);
+
+    const getMyCompletedPost = myCompletedPostTuples.map((postList) =>
+      GetPostedList.from(postList));
+    return { getMyCompletedPost, totalCount };
+  }
 }
