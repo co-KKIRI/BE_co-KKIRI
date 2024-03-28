@@ -27,15 +27,27 @@ export class MyPostController {
     })
   }
 
-  @Roles('anyone')
   @ApiOperation({ summary: '내가 모집한 스터디 목록' })
   @ApiPaginatedResponse(PostListResponse)
   @Get('/recruit/list')
   async getMyRecruitedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
     : Promise<PaginationResponse<PostListResponse>> {
-    const { getMyRecruitedPost, totalCount } = await this.postListService.getMyRecruitedPost(paginationRequest, 1);
+    const { getMyRecruitedPost, totalCount } = await this.postListService.getMyRecruitedPost(paginationRequest, req.user.id);
     return PaginationResponse.of({
       data: PostListResponse.from(getMyRecruitedPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
+  @ApiOperation({ summary: '내가 진행중인 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/on-going/list')
+  async getMyOnGoingPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyOnGoingPost, totalCount } = await this.postListService.getMyOnGoingPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyOnGoingPost),
       options: paginationRequest,
       totalCount
     })
