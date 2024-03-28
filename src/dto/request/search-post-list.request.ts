@@ -29,4 +29,9 @@ export class SearchPostList extends PaginationRequest {
   @IsOptional()
   @ApiProperty({ description: '정렬 기준' })
   sortBy?: PostListSortBy;
+
+  @Type(() => String)
+  @IsOptional()
+  @ApiProperty({ description: '제목 검색' })
+  search?: PostListSortBy;
 }
