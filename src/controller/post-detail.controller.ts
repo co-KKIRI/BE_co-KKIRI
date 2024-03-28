@@ -104,6 +104,15 @@ export class PostDetailController {
     return this.postDetailService.deleteCommentInfo(postId, commentId, req.user.id);
   }
 
+  @ApiOperation({ summary: '스터디 지원 취소' })
+  @Delete('post/:postId/apply/cancel')
+  async cancelApplication(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Req() req): Promise<void> {
+    return this.postDetailService.cancelApplicationInfo(postId, req.user.id);
+  }
+
+
   @ApiOperation({ summary: '스터디 모집' })
   @Post('post/recruit')
   async recruitPostInfo(
