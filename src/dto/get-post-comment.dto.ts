@@ -18,6 +18,7 @@ export class GetPostCommentDto {
 export class GetPostComment {
   isMine!: boolean;
   commentId!: number;
+  commentMemberId!: number;
   commentCreatedAt!: Date;
   commentProfileImg?: string;
   commentNickname?: string;
@@ -34,6 +35,7 @@ export class GetPostComment {
   ) {
     this.isMine = leaderMemberId === commentMemberId;
     this.commentId = commentId;
+    this.commentMemberId = commentMemberId;
     this.commentCreatedAt = commentCreatedAt;
     this.commentProfileImg = commentProfileImg;
     this.commentNickname = commentNickname;

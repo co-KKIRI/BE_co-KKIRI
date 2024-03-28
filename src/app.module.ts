@@ -53,6 +53,7 @@ import { PostService } from './service/post.service';
 import { ScoutController } from './controller/scout.controller';
 import { ScoutService } from './service/scout.service';
 import { ScoutQueryRepository } from './repository/scout.query-repository';
+import { MyPostController } from './controller/my-post-controller';
 
 @Module({
   imports: [
@@ -82,6 +83,7 @@ import { ScoutQueryRepository } from './repository/scout.query-repository';
     TeamController,
     PostController,
     ScoutController,
+    MyPostController
   ],
   providers: [
     // Service
@@ -122,4 +124,4 @@ import { ScoutQueryRepository } from './repository/scout.query-repository';
     Logger,
   ],
 })
-export class AppModule {}
+export class AppModule { }

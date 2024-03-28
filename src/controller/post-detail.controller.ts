@@ -24,10 +24,11 @@ export class PostDetailController {
   @Get('post/:postId')
   async getPostDetail(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostDetailResponse> {
     const userId = req.user?.id;
-    const postDetail = await this.postDetailService.getPostDetail(postId, userId );
+    const postDetail = await this.postDetailService.getPostDetail(postId, userId);
     return PostDetailResponse.from(postDetail);
   }
 
+  @Roles('anyone')
   @ApiOperation({ summary: '포스트 댓글 목록' })
   @ApiPaginatedResponse(PostCommentResponse)
   @Get('post/:postId/comment/list')
@@ -36,9 +37,9 @@ export class PostDetailController {
     @Query() paginationRequest: PaginationRequest,
     @Req() req,
   ): Promise<PaginationResponse<PostCommentResponse>> {
-
+    const userId = req.user?.id;
     const { getPostComments, totalCount } = await this.postDetailService.getPostComments(
-      postId, paginationRequest, req.user.id);
+      postId, paginationRequest, userId);
 
     return PaginationResponse.of({
       data: PostCommentResponse.fromList(getPostComments),
@@ -102,6 +103,15 @@ export class PostDetailController {
     @Req() req): Promise<void> {
     return this.postDetailService.deleteCommentInfo(postId, commentId, req.user.id);
   }
+
+  @ApiOperation({ summary: '스터디 지원 취소' })
+  @Delete('post/:postId/apply/cancel')
+  async cancelApplication(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Req() req): Promise<void> {
+    return this.postDetailService.cancelApplicationInfo(postId, req.user.id);
+  }
+
 
   @ApiOperation({ summary: '스터디 모집' })
   @Post('post/recruit')
