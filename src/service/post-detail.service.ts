@@ -162,6 +162,16 @@ export class PostDetailService {
     await this.commentRepository.remove(commentInfo);
   }
 
+  async cancelApplicationInfo(postId: number, memberId: number): Promise<void> {
+    const applicationInfo = await this.teamMemberRepository.findOneBy({ postId, memberId, status: TeamMemberStatus.READY });
+    if (applicationInfo === null) {
+      throw new NotFoundException('해당 지원글을 찾을 수 없습니다.');
+    }
+    await this.teamMemberRepository.remove(applicationInfo);
+  }
+
+
+
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
     const memberInfo = await this.memberRepository.findOneBy({ id: memberId });
     if (memberInfo === null) {
