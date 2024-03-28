@@ -188,9 +188,9 @@ export class PostListQueryRepository {
     progressWay?: string,
     sortBy?: PostListSortBy
   ) {
-    let query = this.dataSource.createQueryBuilder().from(Post, 'post');
-    query = query.where('post.status = :status', { status: PostStatus.READY });
-    query = query.andWhere('post.deletedAt IS NULL');
+    let query = this.dataSource.createQueryBuilder().from(Post, 'post')
+      .where('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL');
 
     if (meetingType && meetingType !== PostListType.ALL) {
       query = query.andWhere('post.type= :type', { type: meetingType });
