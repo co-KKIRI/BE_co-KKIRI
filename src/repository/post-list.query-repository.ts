@@ -441,6 +441,6 @@ export class GetAllPostListTuple {
   @Transform(({ value }) => Number(value))
   @IsInt()
   commentCount!: number;
-  @Transform(({ value }) => value === 1)
+  @Transform(({ value }) => value === '1')
   isScraped!: boolean;
 }
