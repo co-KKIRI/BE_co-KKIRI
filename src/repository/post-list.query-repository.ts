@@ -4,7 +4,7 @@ import { Transform, plainToInstance } from "class-transformer";
 import { IsInt } from "class-validator";
 import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { Comment } from "src/entity/comment.entity";
-import { PostListSortBy, PostListType, PostStatus, TeamInviteType, Type } from "src/entity/common/Enums";
+import { PostListSortBy, PostListType, PostStatus, TeamInviteType, TeamMemberStatus, Type } from "src/entity/common/Enums";
 import { Member } from "src/entity/member.entity";
 import { PostScrap } from "src/entity/post-scrap.entity";
 import { PostView } from "src/entity/post-view.entity";
@@ -24,6 +24,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -53,6 +54,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -81,6 +83,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -109,6 +112,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -184,8 +188,9 @@ export class PostListQueryRepository {
     progressWay?: string,
     sortBy?: PostListSortBy
   ) {
-    let query = this.dataSource.createQueryBuilder().from(Post, 'post');
-    query = query.where('post.status = :status', { status: PostStatus.READY })
+    let query = this.dataSource.createQueryBuilder().from(Post, 'post')
+      .where('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL');
 
     if (meetingType && meetingType !== PostListType.ALL) {
       query = query.andWhere('post.type= :type', { type: meetingType });
@@ -223,9 +228,9 @@ export class PostListQueryRepository {
     return query;
   }
 
-  async getAllMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number)
+  async getAllMyAppliedPost(paginationRequest: PaginationRequest, memberId: number)
     : Promise<GetAllPostListTuple[]> {
-    const myRecruitedPostInfo = await this.dataSource
+    const myAppliedPostInfo = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'member.id = post.member_id')
@@ -233,6 +238,51 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('post.deletedAt IS NULL')
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('post.created_at', paginationRequest.order)
+      .getRawMany();
+    return plainToInstance(GetAllPostListTuple, myAppliedPostInfo);
+  }
+
+  async getAllMyAppliedPostCount(memberId: number): Promise<number> {
+    return await this.getMyAppliedPostBaseQuery(memberId).getCount();
+  }
+
+  private getMyAppliedPostBaseQuery(memberId: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .where('team_member.member_id = :memberId', { memberId })
+      .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('post.deletedAt IS NULL')
+  }
+
+  async getAllMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number)
+    : Promise<GetAllPostListTuple[]> {
+    const myRecruitedPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -262,9 +312,105 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.deletedAt IS NULL')
+  }
+
+  async getAllMyOnGoingPost(paginationRequest: PaginationRequest, memberId: number)
+    : Promise<GetAllPostListTuple[]> {
+    const myOnGoingPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
-      .where('team_member.member_id = :memberId', { memberId })
-      .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.status = :status', { status: PostStatus.PROGRESS_END })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('post.created_at', paginationRequest.order)
+      .getRawMany();
+    return plainToInstance(GetAllPostListTuple, myOnGoingPostInfo);
+  }
+
+  async getAllMyOnGoingPostCount(memberId: number): Promise<number> {
+    return await this.getMyOnGoingPostBaseQuery(memberId).getCount();
+  }
+
+  private getMyOnGoingPostBaseQuery(memberId: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .where('post.status = :status', { status: PostStatus.PROGRESS_END })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
+  }
+
+  async getAllMyCompletedPost(paginationRequest: PaginationRequest, memberId: number)
+    : Promise<GetAllPostListTuple[]> {
+    const myCompletedPostInfo = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.status = :status', { status: PostStatus.DONE })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
+      .select([
+        'post.id as postId',
+        'post.type as type',
+        'post.recruitEndAt as recruitEndAt',
+        'post.progressWay as progressWay',
+        'post.title as title',
+        'post.position as positions',
+        'post.stack as stacks',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'post.viewCount as viewCount',
+        'post.commentCount as commentCount',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+      ])
+      .limit(paginationRequest.take)
+      .offset(paginationRequest.getSkip())
+      .orderBy('post.created_at', paginationRequest.order)
+      .getRawMany();
+    return plainToInstance(GetAllPostListTuple, myCompletedPostInfo);
+  }
+
+  async getAllMyCompletedPostCount(memberId: number): Promise<number> {
+    return await this.getMyCompletedPostBaseQuery(memberId).getCount();
+  }
+
+  private getMyCompletedPostBaseQuery(memberId: number) {
+    return this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .where('post.status = :status', { status: PostStatus.DONE })
+      .andWhere('(post.member_id = :memberId', { memberId })
+      .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
+      .andWhere('post.deletedAt IS NULL')
   }
 }
 

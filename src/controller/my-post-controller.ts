@@ -17,6 +17,19 @@ export class MyPostController {
   @ApiOperation({ summary: '내가 신청한 스터디 목록' })
   @ApiPaginatedResponse(PostListResponse)
   @Get('/apply/list')
+  async getMyAppliedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyAppliedPost, totalCount } = await this.postListService.getMyAppliedPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyAppliedPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
+  @ApiOperation({ summary: '내가 모집한 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/recruit/list')
   async getMyRecruitedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
     : Promise<PaginationResponse<PostListResponse>> {
     const { getMyRecruitedPost, totalCount } = await this.postListService.getMyRecruitedPost(paginationRequest, req.user.id);
@@ -26,4 +39,32 @@ export class MyPostController {
       totalCount
     })
   }
+
+  @ApiOperation({ summary: '내가 진행중인 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/on-going/list')
+  async getMyOnGoingPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyOnGoingPost, totalCount } = await this.postListService.getMyOnGoingPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyOnGoingPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
+  @ApiOperation({ summary: '내가 완료한 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/complete/list')
+  async getMyCompletedPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyCompletedPost, totalCount } = await this.postListService.getMyCompletedPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyCompletedPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
+
 }
