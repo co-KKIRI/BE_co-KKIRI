@@ -30,6 +30,7 @@ export class GetPostDetailDto {
       tuple.viewCount,
       tuple.scrapCount,
       tuple.commentCount,
+      tuple.teamInviteId,
     );
     return new GetPostDetailDto(postDetail, postApplyStatus);
   }
@@ -55,6 +56,7 @@ export class GetPostDetails {
   viewCount!: number;
   scrapCount!: number;
   commentCount: number;
+  teamInviteId?: number;
 
   constructor(
     postTitle: string,
@@ -76,6 +78,7 @@ export class GetPostDetails {
     viewCount: number,
     scrapCount: number,
     commentCount: number,
+    teamInviteId?: number
 
   ) {
     this.postTitle = postTitle;
@@ -97,5 +100,6 @@ export class GetPostDetails {
     this.viewCount = viewCount;
     this.scrapCount = scrapCount;
     this.commentCount = commentCount;
+    this.teamInviteId = teamInviteId;
   }
 }

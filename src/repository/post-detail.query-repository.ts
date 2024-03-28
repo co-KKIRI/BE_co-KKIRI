@@ -9,6 +9,7 @@ import { Member } from "src/entity/member.entity";
 import { PostScrap } from "src/entity/post-scrap.entity";
 import { PostView } from "src/entity/post-view.entity";
 import { Post } from "src/entity/post.entity";
+import { TeamInvite } from 'src/entity/team-invite.entity';
 import { TeamMember } from 'src/entity/team-member.entity';
 import { DataSource } from "typeorm";
 
@@ -21,6 +22,11 @@ export class PostDetailQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'post.member_id = member.id')
+      .leftJoin(
+        TeamInvite, `team_invite`, `
+        team_invite.send_member_id = post.member_id
+        AND team_invite.receive_member_id = :memberId
+        AND team_invite.post_id = :postId`, { memberId, postId })
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.id = :postId', { postId })
       .select([
@@ -43,8 +49,8 @@ export class PostDetailQueryRepository {
         'post.viewCount as viewCount',
         'post.scrapCount as scrapCount',
         'post.commentCount as commentCount',
+        'team_invite.id as teamInviteId'
       ])
-      .groupBy('post.id')
       .getRawOne();
     return plainToInstance(GetAllPostDetailTuple, postDetail);
   }
@@ -115,6 +121,7 @@ export class GetAllPostDetailTuple {
   stacks: string[];
   @Transform(({ value }) => value === '1')
   isScraped!: boolean;
+  teamInviteId?: number;
   @Transform(({ value }) => Number(value))
   @IsInt()
   viewCount: number;

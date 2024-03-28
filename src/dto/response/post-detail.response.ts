@@ -41,7 +41,8 @@ export class PostDetails {
   scrapCount!: number;
   @ApiProperty()
   commentCount!: number;
-
+  @ApiProperty()
+  teamInviteId?: number;
 
   constructor(
     postTitle: string,
@@ -63,6 +64,7 @@ export class PostDetails {
     viewCount: number,
     scrapCount: number,
     commentCount: number,
+    teamInviteId?: number,
 
   ) {
     this.postTitle = postTitle;
@@ -84,6 +86,7 @@ export class PostDetails {
     this.viewCount = viewCount;
     this.scrapCount = scrapCount;
     this.commentCount = commentCount;
+    this.teamInviteId = teamInviteId;
 
   }
 }
@@ -118,6 +121,7 @@ export class PostDetailResponse {
       dto.postDetail.viewCount,
       dto.postDetail.scrapCount,
       dto.postDetail.commentCount,
+      dto.postDetail.teamInviteId
     );
     return new PostDetailResponse(postDetails, dto.postApplyStatus);
   }
