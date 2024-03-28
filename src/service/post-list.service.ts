@@ -37,9 +37,10 @@ export class PostListService {
     const progressWay = searchPostList.progressWay;
     const stacks = searchPostList.stacks ?? [];
     const sortBy = searchPostList.sortBy;
+    const search = searchPostList.search;
 
-    const postListTuples = await this.postListQueryRepository.getAllPostList(searchPostList, stacks, memberId, meetingType, position, progressWay, sortBy);
-    const totalCount = await this.postListQueryRepository.getAllPostListTotalCount(searchPostList, stacks, meetingType, position, progressWay, sortBy);
+    const postListTuples = await this.postListQueryRepository.getAllPostList(searchPostList, stacks, memberId, meetingType, position, progressWay, sortBy, search);
+    const totalCount = await this.postListQueryRepository.getAllPostListTotalCount(searchPostList, stacks, meetingType, position, progressWay, sortBy, search);
     const postInfo = postListTuples.map((postList) =>
       GetPostedList.from(postList));
 

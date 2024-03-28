@@ -142,9 +142,10 @@ export class PostListQueryRepository {
     position?: string,
     progressWay?: string,
     sortBy?: PostListSortBy,
+    search?: string
   ): Promise<GetAllPostListTuple[]> {
     let query = this.getPostListBaseQuery(
-      paginationRequest, stacks, meetingType, position, progressWay, sortBy)
+      paginationRequest, stacks, meetingType, position, progressWay, sortBy, search)
       .innerJoin(Member, 'member', 'post.member_id = member.id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .select([
@@ -175,9 +176,10 @@ export class PostListQueryRepository {
     meetingType?: PostListType,
     position?: string,
     progressWay?: string,
-    sortBy?: PostListSortBy
+    sortBy?: PostListSortBy,
+    search?: string
   ) {
-    return await this.getPostListBaseQuery(paginationRequest, stacks, meetingType, position, progressWay, sortBy).getCount();
+    return await this.getPostListBaseQuery(paginationRequest, stacks, meetingType, position, progressWay, sortBy, search).getCount();
   }
 
   private getPostListBaseQuery(
@@ -186,7 +188,8 @@ export class PostListQueryRepository {
     meetingType?: PostListType,
     position?: string,
     progressWay?: string,
-    sortBy?: PostListSortBy
+    sortBy?: PostListSortBy,
+    search?: string
   ) {
     let query = this.dataSource.createQueryBuilder().from(Post, 'post')
       .where('post.status = :status', { status: PostStatus.READY })
@@ -223,6 +226,10 @@ export class PostListQueryRepository {
       else if (sortBy === PostListSortBy.BY_VIEW) {
         query = query.orderBy('post.viewCount', paginationRequest.order);
       }
+    }
+
+    if (search) {
+      query = query.where('post.title like :search', { search: `%${search}%` });
     }
 
     return query;
