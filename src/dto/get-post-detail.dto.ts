@@ -3,15 +3,13 @@ import { GetAllPostDetailTuple } from "src/repository/post-detail.query-reposito
 
 export class GetPostDetailDto {
   postDetail!: GetPostDetails;
-  isScraped!: boolean;
   postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetail: GetPostDetails, isScraped: boolean, postApplyStatus: PostApplyStatus) {
+  constructor(postDetail: GetPostDetails, postApplyStatus: PostApplyStatus) {
     this.postDetail = postDetail;
-    this.isScraped = isScraped;
     this.postApplyStatus = postApplyStatus;
   }
-  static from(tuple: GetAllPostDetailTuple, isScraped: boolean, postApplyStatus: PostApplyStatus) {
+  static from(tuple: GetAllPostDetailTuple, postApplyStatus: PostApplyStatus) {
     const postDetail = new GetPostDetails(
       tuple.postTitle,
       tuple.postMemberId,
@@ -28,11 +26,13 @@ export class GetPostDetailDto {
       tuple.positions,
       tuple.stacks,
       tuple.link,
+      tuple.isScraped,
       tuple.viewCount,
       tuple.scrapCount,
       tuple.commentCount,
+      tuple.teamInviteId,
     );
-    return new GetPostDetailDto(postDetail, isScraped, postApplyStatus);
+    return new GetPostDetailDto(postDetail, postApplyStatus);
   }
 }
 
@@ -52,9 +52,11 @@ export class GetPostDetails {
   positions: string[];
   stacks: string[];
   link: string;
+  isScraped!: boolean;
   viewCount!: number;
   scrapCount!: number;
   commentCount: number;
+  teamInviteId?: number;
 
   constructor(
     postTitle: string,
@@ -72,9 +74,12 @@ export class GetPostDetails {
     positions: string[],
     stack: string[],
     link: string,
+    isScraped: boolean,
     viewCount: number,
     scrapCount: number,
     commentCount: number,
+    teamInviteId?: number
+
   ) {
     this.postTitle = postTitle;
     this.postMemberId = postMemberId;
@@ -91,8 +96,10 @@ export class GetPostDetails {
     this.positions = positions;
     this.stacks = stack;
     this.link = link;
+    this.isScraped = isScraped;
     this.viewCount = viewCount;
     this.scrapCount = scrapCount;
     this.commentCount = commentCount;
+    this.teamInviteId = teamInviteId;
   }
 }
