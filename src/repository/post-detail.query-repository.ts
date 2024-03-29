@@ -17,7 +17,7 @@ import { DataSource } from "typeorm";
 export class PostDetailQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
-  async getAllPostDetails(postId: number, memberId: number): Promise<GetAllPostDetailTuple> {
+  async getAllPostDetails(postId: number, memberId?: number): Promise<GetAllPostDetailTuple> {
     const postDetail = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')

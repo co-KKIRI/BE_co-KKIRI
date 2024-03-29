@@ -25,7 +25,7 @@ export class PostDetailService {
     @InjectRepository(PostScrap) private readonly postScrapRepository: Repository<PostScrap>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
-  async getPostDetail(postId: number, memberId: number): Promise<GetPostDetailDto> {
+  async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId, memberId);
 
     const newViewCount = post.viewCount + 1;
