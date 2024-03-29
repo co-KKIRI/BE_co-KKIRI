@@ -28,7 +28,7 @@ export class GetPostManagementDto {
     this.status = post.status;
     this.contactWay = post.contactWay;
     this.capacity = post.capacity;
-    this.positions = post.position?.split(',') || [];
+    this.positions = post.position ? JSON.parse(post.position) : [];
     this.isLeader = isLeader;
     this.stacks = post.stack ? JSON.parse(post.stack) : [];
     this.recruitEndAt = post.recruitEndAt;
