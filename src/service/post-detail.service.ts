@@ -26,21 +26,18 @@ export class PostDetailService {
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
-    const post = await this.postDetailQueryRepository.getAllPostDetails(postId);
+    const post = await this.postDetailQueryRepository.getAllPostDetails(postId, memberId);
 
-    let isScraped = false;
-    if (typeof memberId !== 'undefined') {
-      const isScrapedMember = await this.postScrapRepository.findOneBy({ postId, memberId });
-      isScraped = isScrapedMember !== null;
-    }
     const newViewCount = post.viewCount + 1;
     await this.postDetailQueryRepository.updateView(postId, newViewCount);
 
-    await this.postViewRepository.save({
-      postId: postId,
-      memberId: memberId,
-    });
-    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, isScraped, await this.getPostApplyType(postId, memberId));
+    if (typeof memberId !== 'undefined') {
+      await this.postViewRepository.save({
+        postId: postId,
+        memberId: memberId,
+      });
+    }
+    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, await this.getPostApplyType(postId, memberId));
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {

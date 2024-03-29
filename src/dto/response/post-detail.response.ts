@@ -34,11 +34,15 @@ export class PostDetails {
   @ApiProperty()
   link: string;
   @ApiProperty()
+  isScraped!: boolean;
+  @ApiProperty()
   viewCount!: number;
   @ApiProperty()
   scrapCount!: number;
   @ApiProperty()
   commentCount!: number;
+  @ApiProperty()
+  teamInviteId?: number;
 
   constructor(
     postTitle: string,
@@ -56,9 +60,12 @@ export class PostDetails {
     positions: string[],
     stacks: string[],
     link: string,
+    isScraped: boolean,
     viewCount: number,
     scrapCount: number,
     commentCount: number,
+    teamInviteId?: number,
+
   ) {
     this.postTitle = postTitle;
     this.postMemberId = postMemberId;
@@ -75,20 +82,21 @@ export class PostDetails {
     this.positions = positions;
     this.stacks = stacks;
     this.link = link;
+    this.isScraped = isScraped;
     this.viewCount = viewCount;
     this.scrapCount = scrapCount;
     this.commentCount = commentCount;
+    this.teamInviteId = teamInviteId;
+
   }
 }
 export class PostDetailResponse {
   @ApiProperty({ type: PostDetails })
   postDetails!: PostDetails;
-  isScraped!: boolean;
   postApplyStatus!: PostApplyStatus;
 
-  constructor(postDetails: PostDetails, isScraped: boolean, postApplyStatus: PostApplyStatus) {
+  constructor(postDetails: PostDetails, postApplyStatus: PostApplyStatus) {
     this.postDetails = postDetails;
-    this.isScraped = isScraped;
     this.postApplyStatus = postApplyStatus;
   }
 
@@ -109,11 +117,13 @@ export class PostDetailResponse {
       dto.postDetail.positions,
       dto.postDetail.stacks,
       dto.postDetail.link,
+      dto.postDetail.isScraped,
       dto.postDetail.viewCount,
       dto.postDetail.scrapCount,
       dto.postDetail.commentCount,
+      dto.postDetail.teamInviteId
     );
-    return new PostDetailResponse(postDetails, dto.isScraped, dto.postApplyStatus);
+    return new PostDetailResponse(postDetails, dto.postApplyStatus);
   }
 
 }

@@ -9,20 +9,25 @@ import { Member } from "src/entity/member.entity";
 import { PostScrap } from "src/entity/post-scrap.entity";
 import { PostView } from "src/entity/post-view.entity";
 import { Post } from "src/entity/post.entity";
+import { TeamInvite } from 'src/entity/team-invite.entity';
+import { TeamMember } from 'src/entity/team-member.entity';
 import { DataSource } from "typeorm";
 
 @Injectable()
 export class PostDetailQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
-  async getAllPostDetails(postId: number) {
+  async getAllPostDetails(postId: number, memberId?: number): Promise<GetAllPostDetailTuple> {
     const postDetail = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'post.member_id = member.id')
-      .leftJoin(PostView, 'post_view', 'post_view.postId = post.id')
-      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id')
-      .leftJoin(Comment, 'comment', 'comment.post_id = post.id')
+      .leftJoin(
+        TeamInvite, `team_invite`, `
+        team_invite.send_member_id = post.member_id
+        AND team_invite.receive_member_id = :memberId
+        AND team_invite.post_id = :postId`, { memberId, postId })
+      .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.id = :postId', { postId })
       .select([
         'post.title as postTitle',
@@ -40,11 +45,12 @@ export class PostDetailQueryRepository {
         'post.position as positions',
         'post.stack as stacks',
         'post.link as link',
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped',
         'post.viewCount as viewCount',
         'post.scrapCount as scrapCount',
         'post.commentCount as commentCount',
+        'team_invite.id as teamInviteId'
       ])
-      .groupBy('post.id')
       .getRawOne();
     return plainToInstance(GetAllPostDetailTuple, postDetail);
   }
@@ -104,7 +110,6 @@ export class GetAllPostDetailTuple {
   createdAt!: Date;
   type!: Type;
   recruitEndAt: Date;
-  // TODO : 결정해지는 대로 enum으로 바꿔야함
   progressPeriod: string;
   progressWay: string;
   contactWay: string;
@@ -114,6 +119,9 @@ export class GetAllPostDetailTuple {
   positions: string[];
   @Transform(({ value }) => JSON.parse(value) || [])
   stacks: string[];
+  @Transform(({ value }) => value === '1')
+  isScraped!: boolean;
+  teamInviteId?: number;
   @Transform(({ value }) => Number(value))
   @IsInt()
   viewCount: number;
@@ -123,7 +131,6 @@ export class GetAllPostDetailTuple {
   @Transform(({ value }) => Number(value))
   @IsInt()
   commentCount: number;
-
 }
 
 export class GetAllPostCommentTuple {
