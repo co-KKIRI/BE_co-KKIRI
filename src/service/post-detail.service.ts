@@ -31,10 +31,12 @@ export class PostDetailService {
     const newViewCount = post.viewCount + 1;
     await this.postDetailQueryRepository.updateView(postId, newViewCount);
 
-    await this.postViewRepository.save({
-      postId: postId,
-      memberId: memberId,
-    });
+    if (typeof memberId !== 'undefined') {
+      await this.postViewRepository.save({
+        postId: postId,
+        memberId: memberId,
+      });
+    }
     return new GetPostDetailDto({ ...post, viewCount: newViewCount }, await this.getPostApplyType(postId, memberId));
   }
 
