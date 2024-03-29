@@ -156,6 +156,13 @@ export class PostDetailService {
       throw new UnauthorizedException('해당 댓글을 작성한 사용자가 아닙니다.');
     }
 
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    post.commentCount -= 1;
+    await this.postRepository.save(post);
+
     await this.commentRepository.remove(commentInfo);
   }
 
