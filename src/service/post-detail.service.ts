@@ -86,6 +86,7 @@ export class PostDetailService {
       postId: postId,
       memberId: memberId,
       status: TeamMemberStatus.READY,
+      inviteType: TeamInviteType.SELF
     })
   }
 
