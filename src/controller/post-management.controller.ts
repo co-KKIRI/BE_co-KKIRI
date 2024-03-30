@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Patch, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Patch, Query, Req, UseGuards } from '@nestjs/common';
 import { PostManagementResponse } from '../dto/response/post-management.response';
 import { PostApplyResponse } from '../dto/response/post-apply.response';
 import { PostManagementService } from '../service/post-management.service';
@@ -6,17 +6,19 @@ import { ApiCreatedResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { PaginationResponse } from '../common/pagination/pagination-response';
 import { ApiPaginatedResponse } from '../common/pagination/pagination.decorator';
+import { RolesGuard } from '../guard/roles.guard';
 
 @ApiTags('PostManagement')
 @Controller('post')
+@UseGuards(RolesGuard)
 export class PostManagementController {
   constructor(private readonly postManagementService: PostManagementService) {}
 
   @ApiOperation({ summary: '스터디 정보' })
   @ApiCreatedResponse({ type: PostManagementResponse })
   @Get(':postId/management')
-  async getPostManagement(@Param('postId', ParseIntPipe) postId: number): Promise<PostManagementResponse> {
-    const getPostManagementDto = await this.postManagementService.getPostManagement(postId);
+  async getPostManagement(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<PostManagementResponse> {
+    const getPostManagementDto = await this.postManagementService.getPostManagement(postId, req.user.id);
     return PostManagementResponse.from(getPostManagementDto);
   }
 
