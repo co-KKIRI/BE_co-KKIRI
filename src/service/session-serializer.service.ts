@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 
 @Injectable()
 export class SessionSerializerService extends PassportSerializer {
-  constructor(@InjectRepository(Member) private memberRepository: Repository<Member>) {
+  constructor(@InjectRepository(Member) private readonly memberRepository: Repository<Member>) {
     super();
   }
 
@@ -15,7 +15,7 @@ export class SessionSerializerService extends PassportSerializer {
   }
 
   async deserializeUser(payload: Member, done: (err: any, user?: any) => void): Promise<any> {
-    const member = await this.memberRepository.findOneBy({ externalId: payload.externalId });
+    const member = await this.memberRepository.findOneBy({ externalId: payload.externalId! });
     return done(null, member);
   }
 }

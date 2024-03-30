@@ -8,6 +8,18 @@ import { DataSource } from 'typeorm';
 export class MemberQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
+  async getMember(externalId: string): Promise<Member | undefined> {
+    const member = await this.dataSource
+      .createQueryBuilder()
+      .from(Member, 'member')
+      .where('member.externalId = :externalId', { externalId })
+      .andWhere('member.deletedAt IS NULL')
+      .select('member')
+      .getOne();
+
+    return plainToInstance(Member, member);
+  }
+
   async getMemberInfoSummary(id: number) {
     const memberInfoSummary = await this.dataSource
       .createQueryBuilder()
