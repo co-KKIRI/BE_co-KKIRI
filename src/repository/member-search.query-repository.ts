@@ -34,6 +34,7 @@ export class MemberSearchQueryRepository {
   private baseQuery(stacks: string[], position?: string, nickname?: string) {
     let query = this.dataSource.createQueryBuilder().from(Member, 'member');
 
+    query.where('member.isVisibleProfile = true');
     if (position) {
       query = query.where('member.position = :position', { position });
     }
