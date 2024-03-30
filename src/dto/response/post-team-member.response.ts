@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { GetPostTeamMember, GetPostTeamMemberDto } from '../get-post-team-member.dto';
+import { GetPostTeamMember } from '../get-post-team-member.dto';
 
 export class PostTeamMemberResponse {
   @ApiProperty()
