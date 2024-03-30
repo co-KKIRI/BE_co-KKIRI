@@ -56,7 +56,7 @@ export class PostManagementService {
       throw new BadRequestException('완료가 불가능한 상태입니다.');
     }
 
-    if (post.status) post.setStatus(PostStatus.DONE);
+    if (post.status) post.setStatus(PostStatus.PROGRESS_END);
     await this.postRepository.save(post);
   }
 

@@ -24,6 +24,8 @@ export class PostManagementResponse {
   @ApiProperty()
   stacks: string[];
   @ApiProperty()
+  link?: string;
+  @ApiProperty()
   recruitEndAt?: Date;
   @ApiProperty()
   progressPeriod?: string;
@@ -39,6 +41,7 @@ export class PostManagementResponse {
     positions: string[],
     isLeader: boolean,
     stacks: string[],
+    link?: string,
     recruitEndAt?: Date,
     progressPeriod?: string,
   ) {
@@ -52,6 +55,7 @@ export class PostManagementResponse {
     this.positions = positions;
     this.isLeader = isLeader;
     this.stacks = stacks;
+    this.link = link;
     this.recruitEndAt = recruitEndAt;
     this.progressPeriod = progressPeriod;
   }
@@ -68,6 +72,7 @@ export class PostManagementResponse {
       dto.positions,
       dto.isLeader,
       dto.stacks,
+      dto.link,
       dto.recruitEndAt,
       dto.progressPeriod,
     );
