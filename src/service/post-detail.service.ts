@@ -201,7 +201,7 @@ export class PostDetailService {
   }
 
   async cancelApplicationInfo(postId: number, memberId: number): Promise<void> {
-    const applicationInfo = await this.teamMemberRepository.findOneBy({ postId, memberId, status: TeamMemberStatus.READY });
+    const applicationInfo = await this.teamMemberRepository.findOneBy({ postId, memberId });
     if (applicationInfo === null) {
       throw new NotFoundException('해당 지원글을 찾을 수 없습니다.');
     }
@@ -251,7 +251,9 @@ export class PostDetailService {
     };
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
-    if (!teamMember || !memberId) {
+    if (
+      !teamMember || typeof (memberId) === 'undefined'
+      || (teamMember && teamMember.status === TeamMemberStatus.REJECT)) {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {
