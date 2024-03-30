@@ -1,5 +1,5 @@
 import { PaginationRequest } from './../common/pagination/pagination-request';
-import { ConflictException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
+import { ConflictException, GoneException, Injectable, NotFoundException, UnauthorizedException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { GetPostComment, GetPostCommentDto } from "src/dto/get-post-comment.dto";
 import { GetPostDetailDto } from "src/dto/get-post-detail.dto";
@@ -26,6 +26,14 @@ export class PostDetailService {
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
+    const isDeletedPost = await this.postRepository.findOneBy({ id: postId });
+    if (isDeletedPost === null) {
+      throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (isDeletedPost.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
+    }
+
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId, memberId);
 
     const newViewCount = post.viewCount + 1;
@@ -45,6 +53,9 @@ export class PostDetailService {
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
+    }
 
     const totalCount = await this.postDetailQueryRepository.getAllCommentsTotalCount(postId);
     const postCommentTuples = await this.postDetailQueryRepository.getAllComments(postId, paginationRequest);
@@ -59,6 +70,9 @@ export class PostDetailService {
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
     }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
+    }
 
     const isAlreadyTeamMember = await this.teamMemberRepository.findOneBy({
       postId: postId, memberId: memberId
@@ -72,6 +86,7 @@ export class PostDetailService {
       postId: postId,
       memberId: memberId,
       status: TeamMemberStatus.READY,
+      inviteType: TeamInviteType.SELF
     })
   }
 
@@ -79,6 +94,9 @@ export class PostDetailService {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
 
     await this.commentRepository.save({
@@ -94,6 +112,9 @@ export class PostDetailService {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
 
     if (post.memberId !== memberId) {
@@ -122,6 +143,15 @@ export class PostDetailService {
     memberId: number,
     content: string
   ): Promise<void> {
+
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
+    }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
+    }
+
     const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId });
     if (commentInfo === null) {
       throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
@@ -148,6 +178,7 @@ export class PostDetailService {
   }
 
   async deleteCommentInfo(postId: number, commentId: number, memberId: number): Promise<void> {
+
     const commentInfo = await this.commentRepository.findOneBy({ id: commentId, postId: postId });
     if (commentInfo === null) {
       throw new NotFoundException('해당 댓글을 찾을 수 없습니다.');
@@ -159,6 +190,9 @@ export class PostDetailService {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
     post.commentCount -= 1;
     await this.postRepository.save(post);
@@ -204,6 +238,9 @@ export class PostDetailService {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 포스트를 찾을 수 없습니다.');
+    }
+    if (post.deletedAt !== null) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
     if (post.status !== PostStatus.READY) {
       return PostApplyStatus.RECRUIT_CLOSED;

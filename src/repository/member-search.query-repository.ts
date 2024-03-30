@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { Brackets, DataSource } from 'typeorm';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { Member } from '../entity/member.entity';
 import { plainToInstance } from 'class-transformer';
@@ -9,8 +9,14 @@ import { plainToInstance } from 'class-transformer';
 export class MemberSearchQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async searchMember(request: PaginationRequest, stacks: string[], position?: string, nickname?: string) {
-    const searchedMember = await this.baseQuery(stacks, position, nickname)
+  async searchMember(
+    request: PaginationRequest,
+    mineMemberId: number,
+    stacks: string[],
+    position?: string,
+    nickname?: string,
+  ) {
+    const searchedMember = await this.baseQuery(stacks, mineMemberId, position, nickname)
       .select([
         'member.id as memberId',
         'member.nickname as nickname',
@@ -27,21 +33,30 @@ export class MemberSearchQueryRepository {
     return plainToInstance(SearchedMemberTuple, searchedMember);
   }
 
-  async searchMemberTotalCount(stacks: string[], position?: string, nickname?: string) {
-    return await this.baseQuery(stacks, position, nickname).getCount();
+  async searchMemberTotalCount(stacks: string[], mineMemberId: number, position?: string, nickname?: string) {
+    return await this.baseQuery(stacks, mineMemberId, position, nickname).getCount();
   }
 
-  private baseQuery(stacks: string[], position?: string, nickname?: string) {
+  private baseQuery(stacks: string[], mineMemberId: number, position?: string, nickname?: string) {
     let query = this.dataSource.createQueryBuilder().from(Member, 'member');
 
+    query.where('member.isVisibleProfile = true');
+    query.andWhere('member.id != :mineMemberId', { mineMemberId });
+
     if (position) {
-      query = query.where('member.position = :position', { position });
+      query.andWhere('member.position = :position', { position });
     }
     if (nickname) {
-      query = query.andWhere('member.nickname like :nickname', { nickname: `${nickname}%` });
+      query.andWhere('member.nickname like :nickname', { nickname: `%${nickname}%` });
     }
     if (stacks.length > 0) {
-      query = query.andWhere('member.stack in (:...stacks)', { stacks });
+      query.andWhere(
+        new Brackets((qb) => {
+          stacks.forEach((stack, _) => {
+            qb.orWhere('member.stack like :stack', { stack: `%${stack}%` });
+          });
+        }),
+      );
     }
     return query;
   }

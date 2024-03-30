@@ -7,19 +7,25 @@ import { SearchMemberRequest } from '../dto/request/search-member.request';
 export class MemberSearchService {
   constructor(private readonly memberSearchQueryRepository: MemberSearchQueryRepository) {}
 
-  async searchMember(searchMemberRequest: SearchMemberRequest) {
+  async searchMember(searchMemberRequest: SearchMemberRequest, mineMemberId: number) {
     const nickname = searchMemberRequest.nickname;
     const stacks = searchMemberRequest.stacks ?? [];
     const position = searchMemberRequest.position;
 
     const searchedMemberTuples = await this.memberSearchQueryRepository.searchMember(
       searchMemberRequest,
+      mineMemberId,
       stacks,
       position,
       nickname,
     );
 
-    const totalCount = await this.memberSearchQueryRepository.searchMemberTotalCount(stacks, position, nickname);
+    const totalCount = await this.memberSearchQueryRepository.searchMemberTotalCount(
+      stacks,
+      mineMemberId,
+      position,
+      nickname,
+    );
 
     const searchMemberProfileList = searchedMemberTuples.map((searchedMemberTuple) =>
       SearchMemberDto.from(searchedMemberTuple),

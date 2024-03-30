@@ -15,15 +15,13 @@ export class PostManagementService {
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
   ) {}
 
-  async getPostManagement(postId: number): Promise<GetPostManagementDto> {
+  async getPostManagement(postId: number, memberId: number): Promise<GetPostManagementDto> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
 
-    // TODO: 유저 인증 정보와 비교하여 리더 여부 확인해야함
-    const currentMemberId = post.memberId;
-    const isLeader = post.memberId == currentMemberId;
+    const isLeader = post.memberId == memberId;
 
     return new GetPostManagementDto({ post, isLeader: isLeader });
   }
@@ -56,7 +54,7 @@ export class PostManagementService {
       throw new BadRequestException('완료가 불가능한 상태입니다.');
     }
 
-    if (post.status) post.setStatus(PostStatus.DONE);
+    if (post.status) post.setStatus(PostStatus.PROGRESS_END);
     await this.postRepository.save(post);
   }
 
