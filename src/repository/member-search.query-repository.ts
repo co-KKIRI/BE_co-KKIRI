@@ -9,8 +9,14 @@ import { plainToInstance } from 'class-transformer';
 export class MemberSearchQueryRepository {
   constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
 
-  async searchMember(request: PaginationRequest, stacks: string[], position?: string, nickname?: string) {
-    const searchedMember = await this.baseQuery(stacks, position, nickname)
+  async searchMember(
+    request: PaginationRequest,
+    mineMemberId: number,
+    stacks: string[],
+    position?: string,
+    nickname?: string,
+  ) {
+    const searchedMember = await this.baseQuery(stacks, mineMemberId, position, nickname)
       .select([
         'member.id as memberId',
         'member.nickname as nickname',
@@ -27,14 +33,15 @@ export class MemberSearchQueryRepository {
     return plainToInstance(SearchedMemberTuple, searchedMember);
   }
 
-  async searchMemberTotalCount(stacks: string[], position?: string, nickname?: string) {
-    return await this.baseQuery(stacks, position, nickname).getCount();
+  async searchMemberTotalCount(stacks: string[], mineMemberId: number, position?: string, nickname?: string) {
+    return await this.baseQuery(stacks, mineMemberId, position, nickname).getCount();
   }
 
-  private baseQuery(stacks: string[], position?: string, nickname?: string) {
+  private baseQuery(stacks: string[], mineMemberId: number, position?: string, nickname?: string) {
     let query = this.dataSource.createQueryBuilder().from(Member, 'member');
 
     query.where('member.isVisibleProfile = true');
+    query.andWhere('member.id != :mineMemberId', { mineMemberId });
 
     if (position) {
       query.andWhere('member.position = :position', { position });
