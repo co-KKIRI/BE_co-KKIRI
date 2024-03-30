@@ -220,8 +220,8 @@ export class PostListQueryRepository {
         query = query.orderBy('post.createdAt', paginationRequest.order);
       }
       else if (sortBy === PostListSortBy.BY_DEADLINE) {
-        query = query.andWhere('DATEDIFF(post.recruitEndAt, CURRENT_DATE()) > 0');
-        query = query.orderBy('DATEDIFF(post.recruitEndAt, CURRENT_DATE())');
+        query = query.andWhere('DATEDIFF(post.recruitEndAt, Now()) > 0');
+        query = query.orderBy('post.recruitEndAt', 'ASC');
       }
       else if (sortBy === PostListSortBy.BY_VIEW) {
         query = query.orderBy('post.viewCount', paginationRequest.order);
