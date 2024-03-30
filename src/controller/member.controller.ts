@@ -26,9 +26,11 @@ export class MemberController {
 
   @ApiOperation({ summary: '유저 검색' })
   @Get('/search')
-  @Roles('anyone')
-  async searchMember(@Query() searchMemberRequest: SearchMemberRequest) {
-    const { searchMemberProfileList, totalCount } = await this.memberSearchService.searchMember(searchMemberRequest);
+  async searchMember(@Query() searchMemberRequest: SearchMemberRequest, @Req() req) {
+    const { searchMemberProfileList, totalCount } = await this.memberSearchService.searchMember(
+      searchMemberRequest,
+      req.user.id,
+    );
 
     return PaginationResponse.of({
       data: SearchMemberResponse.fromList(searchMemberProfileList),
