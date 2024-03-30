@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Patch, Query, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Patch, Query, Req, Res, UseGuards } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PaginationResponse } from 'src/common/pagination/pagination-response';
@@ -15,7 +16,10 @@ import { MyPageService } from 'src/service/my-page.service';
 @Controller('my-page')
 @UseGuards(RolesGuard)
 export class MyPageController {
-  constructor(private readonly mypageService: MyPageService) {}
+  constructor(
+    private readonly mypageService: MyPageService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @ApiOperation({ summary: '유저 정보' })
   @Get('/info')
@@ -31,8 +35,11 @@ export class MyPageController {
 
   @ApiOperation({ summary: '유저 탈퇴' })
   @Delete('/info')
-  async deleteMyInfo(@Req() req): Promise<void> {
+  async deleteMyInfo(@Req() req, @Res() res): Promise<void> {
     await this.mypageService.deleteMyPageInfo(req.user.id);
+    
+    res.clearCookie(this.configService.get('COOKIE_NAME'));
+    res.status(200).send();
   }
 
   @ApiOperation({ summary: '팀 초대된 목록' })

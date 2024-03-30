@@ -35,8 +35,8 @@ export class Member {
   @Column({ name: 'social_provider', type: 'enum', enum: SocialProvider, nullable: false })
   socialProvider!: SocialProvider;
 
-  @Column({ name: 'external_id', length: 100, nullable: false })
-  externalId!: string;
+  @Column({ name: 'external_id', length: 100, nullable: true, type: 'varchar' })
+  externalId: string | null;
 
   @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt?: Date;
@@ -74,7 +74,8 @@ export class Member {
     this.isVisibleProfile = isVisibleProfile;
   }
 
-  setDeletedAt(deletedAt: Date) {
+  setDelete(deletedAt: Date) {
+    this.externalId = null;
     this.deletedAt = deletedAt;
   }
 }
