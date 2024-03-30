@@ -38,7 +38,7 @@ export class MemberSearchQueryRepository {
       query = query.where('member.position = :position', { position });
     }
     if (nickname) {
-      query = query.andWhere('member.nickname like :nickname', { nickname: `${nickname}%` });
+      query = query.andWhere('member.nickname like :nickname', { nickname: `%${nickname}%` });
     }
     if (stacks.length > 0) {
       query = query.andWhere('member.stack in (:...stacks)', { stacks });
