@@ -78,16 +78,23 @@ export class PostDetailService {
       postId: postId, memberId: memberId
     });
 
-    if (isAlreadyTeamMember !== null) {
+    if (isAlreadyTeamMember !== null && isAlreadyTeamMember.status !== TeamMemberStatus.REJECT) {
       throw new ConflictException('해당 포스트에 이미 존재하는 유저입니다.');
     }
 
-    await this.teamMemberRepository.save({
-      postId: postId,
-      memberId: memberId,
-      status: TeamMemberStatus.READY,
-      inviteType: TeamInviteType.SELF
-    })
+    const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId, status: TeamMemberStatus.REJECT });
+    if (teamMember) {
+      teamMember.status = TeamMemberStatus.READY;
+      await this.teamMemberRepository.save(teamMember);
+    }
+    else {
+      await this.teamMemberRepository.save({
+        postId: postId,
+        memberId: memberId,
+        status: TeamMemberStatus.READY,
+        inviteType: TeamInviteType.SELF
+      })
+    }
   }
 
   async writeComment(postId: number, memberId: number, content: string): Promise<void> {
@@ -252,7 +259,7 @@ export class PostDetailService {
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
     if (
-      !teamMember || typeof (memberId) === 'undefined'
+      !teamMember || !memberId
       || (teamMember && teamMember.status === TeamMemberStatus.REJECT)) {
       return PostApplyStatus.NOT_APPLIED;
     }
