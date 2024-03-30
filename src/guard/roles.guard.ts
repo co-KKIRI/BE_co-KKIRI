@@ -16,6 +16,8 @@ export class RolesGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
+    console.log('guard user', user);
+
     if (!user) {
       throw new UnauthorizedException('인증되지 않은 사용자 입니다.');
     }

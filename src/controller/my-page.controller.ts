@@ -32,6 +32,7 @@ export class MyPageController {
   @ApiOperation({ summary: '유저 탈퇴' })
   @Delete('/info')
   async deleteMyInfo(@Req() req): Promise<void> {
+    console.log('/info', req.user);
     await this.mypageService.deleteMyPageInfo(req.user.id);
   }
 

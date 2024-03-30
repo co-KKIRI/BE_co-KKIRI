@@ -1,4 +1,4 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/common/roles/roles.decorator';
 import { GoogleAuthGuard } from 'src/guard/google-auth.guard';
@@ -21,7 +21,9 @@ export class GoogleAuthenticationController {
   @ApiOperation({ summary: '구글 로그인 후 처리' })
   @Post('/redirect')
   @UseGuards(GoogleAuthGuard)
-  async handleRedirect() {}
+  async handleRedirect(@Req() req) {
+    console.log('/redirect', req.user);
+  }
 
   // roles guard test
   @Get('/test')

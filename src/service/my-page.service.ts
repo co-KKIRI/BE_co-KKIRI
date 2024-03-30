@@ -58,7 +58,7 @@ export class MyPageService {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    member.setDeletedAt(new Date());
+    member.setDelete(new Date());
 
     await this.memberRepository.save(member);
   }
