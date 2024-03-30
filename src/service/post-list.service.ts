@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PaginationRequest } from "src/common/pagination/pagination-request";
+import { GetCompletePostedList } from "src/dto/get-post-complete.dto";
 import { GetPostListDto, GetPostedList } from "src/dto/get-post-list.dto";
 import { SearchPostList } from "src/dto/request/search-post-list.request";
 import { Post } from "src/entity/post.entity";
@@ -79,7 +80,7 @@ export class PostListService {
     const totalCount = await this.postListQueryRepository.getAllMyCompletedPostCount(memberId);
 
     const getMyCompletedPost = myCompletedPostTuples.map((postList) =>
-      GetPostedList.from(postList));
+      GetCompletePostedList.from(postList));
     return { getMyCompletedPost, totalCount };
   }
 }
