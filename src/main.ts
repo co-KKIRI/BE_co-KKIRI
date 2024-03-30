@@ -38,7 +38,8 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: 'co-kkiri',
+      name: configService.get('COOKIE_NAME'),
+      secret: configService.get('COOKIE_SECRET'),
       store: redisStore,
       resave: false,
       saveUninitialized: false,

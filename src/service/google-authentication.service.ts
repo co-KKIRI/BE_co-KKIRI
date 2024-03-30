@@ -20,7 +20,7 @@ export class GoogleAuthenticationService {
       member.setProfileInfo(nickname, profileImageUrl);
 
       const updatedMember = await this.memberRepository.save(member);
-      
+
       return updatedMember;
     } else {
       const newMember = new Member();

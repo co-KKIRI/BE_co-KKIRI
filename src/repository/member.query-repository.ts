@@ -14,7 +14,8 @@ export class MemberQueryRepository {
       .from(Member, 'member')
       .where('member.externalId = :externalId', { externalId })
       .andWhere('member.deletedAt IS NULL')
-      .getRawOne();
+      .select('member')
+      .getOne();
 
     return plainToInstance(Member, member);
   }

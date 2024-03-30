@@ -21,9 +21,7 @@ export class GoogleAuthenticationController {
   @ApiOperation({ summary: '구글 로그인 후 처리' })
   @Post('/redirect')
   @UseGuards(GoogleAuthGuard)
-  async handleRedirect(@Req() req) {
-    console.log('/redirect', req.user);
-  }
+  async handleRedirect() {}
 
   // roles guard test
   @Get('/test')

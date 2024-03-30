@@ -36,7 +36,7 @@ export class Member {
   socialProvider!: SocialProvider;
 
   @Column({ name: 'external_id', length: 100, nullable: true, type: 'varchar' })
-  externalId!: string | null;
+  externalId: string | null;
 
   @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt?: Date;
