@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
-import { DataSource } from 'typeorm';
+import { Brackets, DataSource } from 'typeorm';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { Member } from '../entity/member.entity';
 import { plainToInstance } from 'class-transformer';
@@ -34,14 +34,22 @@ export class MemberSearchQueryRepository {
   private baseQuery(stacks: string[], position?: string, nickname?: string) {
     let query = this.dataSource.createQueryBuilder().from(Member, 'member');
 
+    query.where('member.isVisibleProfile = true');
+
     if (position) {
-      query = query.where('member.position = :position', { position });
+      query.andWhere('member.position = :position', { position });
     }
     if (nickname) {
-      query = query.andWhere('member.nickname like :nickname', { nickname: `%${nickname}%` });
+      query.andWhere('member.nickname like :nickname', { nickname: `%${nickname}%` });
     }
     if (stacks.length > 0) {
-      query = query.andWhere('member.stack in (:...stacks)', { stacks });
+      query.andWhere(
+        new Brackets((qb) => {
+          stacks.forEach((stack, _) => {
+            qb.orWhere('member.stack like :stack', { stack: `%${stack}%` });
+          });
+        }),
+      );
     }
     return query;
   }
