@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { Member } from 'src/entity/member.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { MemberQueryRepository } from '../repository/member.query-repository';
 
 @Injectable()
 export class SessionSerializerService extends PassportSerializer {
-  constructor(@InjectRepository(Member) private readonly memberRepository: Repository<Member>) {
+  constructor(private readonly memberQueryRepository: MemberQueryRepository) {
     super();
   }
 
@@ -15,7 +16,7 @@ export class SessionSerializerService extends PassportSerializer {
   }
 
   async deserializeUser(payload: Member, done: (err: any, user?: any) => void): Promise<any> {
-    const member = await this.memberRepository.findOneBy({ externalId: payload.externalId! });
+    const member = await this.memberQueryRepository.getMember(payload.externalId!);
     return done(null, member);
   }
 }
