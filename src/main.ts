@@ -45,7 +45,7 @@ async function bootstrap() {
       saveUninitialized: false,
       cookie: {
         maxAge: 1000 * 60 * 60 * 24,
-        domain: 'localhost',
+        domain: configService.get('SESSION_COOKIE_DOMAIN'),
         path: '/',
         httpOnly: false,
       },
@@ -56,7 +56,7 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.enableCors({
-    origin: ['http://localhost', 'http://127.0.0.1'],
+    origin: ['http://localhost', 'http://127.0.0.1', 'https://dev.co-kkiri.com'],
     credentials: true,
   });
 
