@@ -264,7 +264,8 @@ export class PostDetailService {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {
-      if (teamMember.inviteType === TeamInviteType.SELF) {
+      if (teamMember.inviteType === TeamInviteType.SELF ||
+        (teamMember.inviteType === TeamInviteType.OTHERS && teamMember.status === TeamMemberStatus.ACCEPT)) {
         return PostApplyStatus.APPLIED;
       }
       else {
