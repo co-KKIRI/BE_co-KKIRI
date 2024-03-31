@@ -1,4 +1,4 @@
-import { IsArray, IsOptional, IsString } from 'class-validator';
+import { IsArray, IsInt, IsOptional, IsString } from 'class-validator';
 
 export class PatchMyPageInfoDto {
   @IsOptional()
@@ -14,7 +14,7 @@ export class PatchMyPageInfoDto {
   position?: string;
 
   @IsOptional()
-  @IsString()
+  @IsInt()
   career?: number;
 
   @IsOptional()
