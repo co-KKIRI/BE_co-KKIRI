@@ -11,6 +11,9 @@ export class TeamInvite {
   @Column({ name: 'receive_member_id', nullable: false })
   receiveMemberId: number;
 
+  @Column({ name: 'post_id', nullable: false })
+  postId: number;
+
   @Column({ length: 200 })
   message: string;
 
@@ -20,10 +23,11 @@ export class TeamInvite {
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
   updatedAt: Date;
 
-  static invite(sendMemberId: number, receiveMemberId: number, message: string): TeamInvite {
+  static invite(sendMemberId: number, receiveMemberId: number, postId: number, message: string): TeamInvite {
     const teamInvite = new TeamInvite();
     teamInvite.sendMemberId = sendMemberId;
     teamInvite.receiveMemberId = receiveMemberId;
+    teamInvite.postId = postId;
     teamInvite.message = message;
     return teamInvite;
   }
