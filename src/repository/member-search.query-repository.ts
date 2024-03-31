@@ -42,6 +42,7 @@ export class MemberSearchQueryRepository {
 
     query.where('member.isVisibleProfile = true');
     query.andWhere('member.id != :mineMemberId', { mineMemberId });
+    query.andWhere('member.deletedAt is null');
 
     if (position) {
       query.andWhere('member.position = :position', { position });
