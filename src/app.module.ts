@@ -61,6 +61,8 @@ import { GithubStrategy } from './strategy/github-strategy';
 import { PostReview } from './entity/post-review.entity';
 import { MemberReview } from './entity/member-review.entity';
 import { MemberReviewComment } from './entity/member-review-comment-entity';
+import { ReviewController } from './controller/review.controller';
+import { ReviewService } from './service/review.service';
 
 @Module({
   imports: [
@@ -103,6 +105,7 @@ import { MemberReviewComment } from './entity/member-review-comment-entity';
     PostController,
     ScoutController,
     MyPostController,
+    ReviewController,
   ],
   providers: [
     // Service
@@ -122,6 +125,7 @@ import { MemberReviewComment } from './entity/member-review-comment-entity';
     MemberSearchService,
     PostService,
     ScoutService,
+    ReviewService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -146,4 +150,4 @@ import { MemberReviewComment } from './entity/member-review-comment-entity';
     Logger,
   ],
 })
-export class AppModule { }
+export class AppModule {}
