@@ -29,8 +29,8 @@ export class Member {
   @Column({ name: 'link', type: 'text', nullable: true })
   link?: string;
 
-  @Column({ name: 'is_visible_profile', type: 'boolean', nullable: true })
-  isVisibleProfile: boolean | null;
+  @Column({ name: 'is_visible_profile', type: 'boolean', nullable: false })
+  isVisibleProfile: boolean;
 
   @Column({ name: 'social_provider', type: 'enum', enum: SocialProvider, nullable: false })
   socialProvider!: SocialProvider;
