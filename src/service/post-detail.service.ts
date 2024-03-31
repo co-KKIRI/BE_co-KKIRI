@@ -11,6 +11,7 @@ import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { PostView } from 'src/entity/post-view.entity';
 import { Post } from "src/entity/post.entity";
+import { TeamInvite } from 'src/entity/team-invite.entity';
 import { TeamMember } from "src/entity/team-member.entity";
 import { GetAllPostDetailTuple, PostDetailQueryRepository } from "src/repository/post-detail.query-repository";
 import { Repository } from "typeorm";
@@ -23,6 +24,7 @@ export class PostDetailService {
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     @InjectRepository(PostScrap) private readonly postScrapRepository: Repository<PostScrap>,
+    @InjectRepository(TeamInvite) private readonly teamInviteRepository: Repository<TeamInvite>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
@@ -212,7 +214,18 @@ export class PostDetailService {
     if (applicationInfo === null) {
       throw new NotFoundException('해당 지원글을 찾을 수 없습니다.');
     }
+    const teamInviteId = applicationInfo.teamInviteId
+    if (applicationInfo.inviteType === TeamInviteType.OTHERS && teamInviteId !== null) {
+      const teamInviteInfo = await this.teamInviteRepository.findOneBy({ id: teamInviteId });
+
+      if (teamInviteInfo === null) {
+        throw new NotFoundException('해당 초대를 찾을 수 없습니다.');
+      }
+      await this.teamInviteRepository.remove(teamInviteInfo);
+    }
     await this.teamMemberRepository.remove(applicationInfo);
+
+
   }
 
 
