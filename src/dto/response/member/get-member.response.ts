@@ -10,10 +10,12 @@ export class GetMemberResponse {
   gauge?: number;
   link?: string;
   introduce?: string;
+  isVisibleProfile: boolean;
 
   constructor(
     memberId: number,
     stacks: string[],
+    isVisibleProfile: boolean,
     nickname?: string,
     profileImageUrl?: string,
     career?: number,
@@ -31,12 +33,14 @@ export class GetMemberResponse {
     this.gauge = gauge;
     this.link = link;
     this.introduce = introduce;
+    this.isVisibleProfile = isVisibleProfile;
   }
 
   static from(memberDto: MemberDto) {
     return new GetMemberResponse(
       memberDto.memberId,
       memberDto.stacks,
+      memberDto.isVisibleProfile,
       memberDto.nickname,
       memberDto.profileImageUrl,
       memberDto.career,
