@@ -218,10 +218,10 @@ export class PostDetailService {
     if (applicationInfo.inviteType === TeamInviteType.OTHERS && teamInviteId !== null) {
       const teamInviteInfo = await this.teamInviteRepository.findOneBy({ id: teamInviteId });
 
-      if (teamInviteInfo === null) {
-        throw new NotFoundException('해당 초대를 찾을 수 없습니다.');
+      if (teamInviteInfo) {
+        await this.teamInviteRepository.remove(teamInviteInfo);
       }
-      await this.teamInviteRepository.remove(teamInviteInfo);
+
     }
     await this.teamMemberRepository.remove(applicationInfo);
 
