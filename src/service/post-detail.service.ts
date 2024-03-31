@@ -11,6 +11,7 @@ import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { PostView } from 'src/entity/post-view.entity';
 import { Post } from "src/entity/post.entity";
+import { TeamInvite } from 'src/entity/team-invite.entity';
 import { TeamMember } from "src/entity/team-member.entity";
 import { GetAllPostDetailTuple, PostDetailQueryRepository } from "src/repository/post-detail.query-repository";
 import { Repository } from "typeorm";
@@ -23,6 +24,7 @@ export class PostDetailService {
     @InjectRepository(PostView) private readonly postViewRepository: Repository<PostView>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     @InjectRepository(PostScrap) private readonly postScrapRepository: Repository<PostScrap>,
+    @InjectRepository(TeamInvite) private readonly teamInviteRepository: Repository<TeamInvite>,
     private readonly postDetailQueryRepository: PostDetailQueryRepository) { }
 
   async getPostDetail(postId: number, memberId?: number): Promise<GetPostDetailDto> {
@@ -78,16 +80,23 @@ export class PostDetailService {
       postId: postId, memberId: memberId
     });
 
-    if (isAlreadyTeamMember !== null) {
+    if (isAlreadyTeamMember !== null && isAlreadyTeamMember.status !== TeamMemberStatus.REJECT) {
       throw new ConflictException('해당 포스트에 이미 존재하는 유저입니다.');
     }
 
-    await this.teamMemberRepository.save({
-      postId: postId,
-      memberId: memberId,
-      status: TeamMemberStatus.READY,
-      inviteType: TeamInviteType.SELF
-    })
+    const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId, status: TeamMemberStatus.REJECT });
+    if (teamMember) {
+      teamMember.status = TeamMemberStatus.READY;
+      await this.teamMemberRepository.save(teamMember);
+    }
+    else {
+      await this.teamMemberRepository.save({
+        postId: postId,
+        memberId: memberId,
+        status: TeamMemberStatus.READY,
+        inviteType: TeamInviteType.SELF
+      })
+    }
   }
 
   async writeComment(postId: number, memberId: number, content: string): Promise<void> {
@@ -201,11 +210,22 @@ export class PostDetailService {
   }
 
   async cancelApplicationInfo(postId: number, memberId: number): Promise<void> {
-    const applicationInfo = await this.teamMemberRepository.findOneBy({ postId, memberId, status: TeamMemberStatus.READY });
+    const applicationInfo = await this.teamMemberRepository.findOneBy({ postId, memberId });
     if (applicationInfo === null) {
       throw new NotFoundException('해당 지원글을 찾을 수 없습니다.');
     }
+    const teamInviteId = applicationInfo.teamInviteId
+    if (applicationInfo.inviteType === TeamInviteType.OTHERS && teamInviteId !== null) {
+      const teamInviteInfo = await this.teamInviteRepository.findOneBy({ id: teamInviteId });
+
+      if (teamInviteInfo) {
+        await this.teamInviteRepository.remove(teamInviteInfo);
+      }
+
+    }
     await this.teamMemberRepository.remove(applicationInfo);
+
+
   }
 
 
@@ -251,11 +271,14 @@ export class PostDetailService {
     };
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
-    if (!teamMember || !memberId) {
+    if (
+      !teamMember || !memberId
+      || (teamMember && teamMember.status === TeamMemberStatus.REJECT)) {
       return PostApplyStatus.NOT_APPLIED;
     }
     else {
-      if (teamMember.inviteType === TeamInviteType.SELF) {
+      if (teamMember.inviteType === TeamInviteType.SELF ||
+        (teamMember.inviteType === TeamInviteType.OTHERS && teamMember.status === TeamMemberStatus.ACCEPT)) {
         return PostApplyStatus.APPLIED;
       }
       else {
