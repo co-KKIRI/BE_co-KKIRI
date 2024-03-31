@@ -112,6 +112,15 @@ export class PostDetailController {
     return this.postDetailService.cancelApplicationInfo(postId, req.user.id);
   }
 
+  @Roles('anyone')
+  @ApiOperation({ summary: '스터디 조회수 증가' })
+  @Post('post/:postId/view-count/increase')
+  async increaseViewCount(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Req() req): Promise<void> {
+    const userId = req.user?.id;
+    return this.postDetailService.increaseViewCountInfo(postId, userId);
+  }
 
   @ApiOperation({ summary: '스터디 모집' })
   @Post('post/recruit')

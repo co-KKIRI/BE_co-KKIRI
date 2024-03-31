@@ -58,6 +58,11 @@ import { GithubAuthenticationController } from './controller/github-auth.control
 import { GithubAuthenticationService } from './service/github-authentication.service';
 import { GithubAuthGuard } from './guard/github-auth.guard';
 import { GithubStrategy } from './strategy/github-strategy';
+import { PostReview } from './entity/post-review.entity';
+import { MemberReview } from './entity/member-review.entity';
+import { MemberReviewComment } from './entity/member-review-comment-entity';
+import { ReviewController } from './controller/review.controller';
+import { ReviewService } from './service/review.service';
 
 @Module({
   imports: [
@@ -67,7 +72,18 @@ import { GithubStrategy } from './strategy/github-strategy';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap, TeamInvite]),
+    TypeOrmModule.forFeature([
+      Post,
+      TeamMember,
+      Member,
+      PostView,
+      Comment,
+      PostScrap,
+      TeamInvite,
+      PostReview,
+      MemberReview,
+      MemberReviewComment,
+    ]),
     TestModule,
     PassportModule.register({
       session: true,
@@ -89,6 +105,7 @@ import { GithubStrategy } from './strategy/github-strategy';
     PostController,
     ScoutController,
     MyPostController,
+    ReviewController,
   ],
   providers: [
     // Service
@@ -108,6 +125,7 @@ import { GithubStrategy } from './strategy/github-strategy';
     MemberSearchService,
     PostService,
     ScoutService,
+    ReviewService,
 
     // QueryRepository
     PostListQueryRepository,

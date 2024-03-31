@@ -26,17 +26,22 @@ export enum PostApplyStatus {
   INVITED = 'INVITED',
   NOT_APPLIED = 'NOT_APPLIED',
   APPLIED = 'APPLIED',
-  RECRUIT_CLOSED = 'RECRUIT_CLOSED'
+  RECRUIT_CLOSED = 'RECRUIT_CLOSED',
 }
 
 export enum PostListType {
   ALL = 'ALL',
   PROJECT = 'PROJECT',
-  STUDY = 'STUDY'
+  STUDY = 'STUDY',
 }
 
-export enum PostListSortBy{
+export enum PostListSortBy {
   LATEST = 'LATEST',
   BY_DEADLINE = 'BY_DEADLINE',
-  BY_VIEW = 'BY_VIEW'
+  BY_VIEW = 'BY_VIEW',
+}
+
+export enum ReviewType {
+  COMPLIMENT = 'COMPLIMENT',
+  IMPROVEMENT = 'IMPROVEMENT',
 }
