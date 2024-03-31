@@ -10,10 +10,12 @@ export class MemberDto {
   gauge?: number;
   link?: string;
   introduce?: string;
+  isVisibleProfile: boolean;
 
   constructor(
     memberId: number,
     stacks: string[],
+    isVisibleProfile: boolean,
     nickname?: string,
     profileImageUrl?: string,
     career?: number,
@@ -31,12 +33,14 @@ export class MemberDto {
     this.gauge = gauge;
     this.link = link;
     this.introduce = introduce;
+    this.isVisibleProfile = isVisibleProfile;
   }
 
   static from(member: Member) {
     return new MemberDto(
       member.id,
       member.stack ? JSON.parse(member.stack) : [],
+      member.isVisibleProfile,
       member.nickname,
       member.profileImageUrl,
       member.career,
