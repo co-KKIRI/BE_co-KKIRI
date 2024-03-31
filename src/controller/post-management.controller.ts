@@ -42,13 +42,19 @@ export class PostManagementController {
 
   @ApiOperation({ summary: '스터디 시작' })
   @Patch(':postId/start')
-  async start(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
-    await this.postManagementService.start(postId);
+  async start(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<void> {
+    await this.postManagementService.start(postId, req.user.id);
   }
 
   @ApiOperation({ summary: '스터디 완료' })
   @Patch(':postId/end')
-  async recruitComplete(@Param('postId', ParseIntPipe) postId: number): Promise<void> {
-    await this.postManagementService.end(postId);
+  async recruitComplete(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<void> {
+    await this.postManagementService.end(postId, req.user.id);
+  }
+
+  @ApiOperation({ summary: '스터디 리뷰 마감' })
+  @Patch(':postId/review-end')
+  async reviewEnd(@Param('postId', ParseIntPipe) postId: number, @Req() req): Promise<void> {
+    await this.postManagementService.reviewEnd(postId, req.user.id);
   }
 }
