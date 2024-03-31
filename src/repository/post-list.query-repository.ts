@@ -289,6 +289,7 @@ export class PostListQueryRepository {
       .innerJoin(Member, 'member', 'member.id = post.member_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
       .select([
         'post.id as postId',
@@ -320,6 +321,7 @@ export class PostListQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .where('post.member_id = :memberId', { memberId })
+      .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
   }
 
@@ -331,7 +333,7 @@ export class PostListQueryRepository {
       .innerJoin(Member, 'member', 'member.id = post.member_id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
-      .where('post.status = :status', { status: PostStatus.PROGRESS_END })
+      .where('post.status = :status', { status: PostStatus.PROGRESS })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
@@ -365,21 +367,21 @@ export class PostListQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
-      .where('post.status = :status', { status: PostStatus.PROGRESS_END })
+      .where('post.status = :status', { status: PostStatus.PROGRESS })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
   }
 
   async getAllMyCompletedPost(paginationRequest: PaginationRequest, memberId: number)
-    : Promise<GetAllPostListTuple[]> {
+    : Promise<GetAllCompletePostListTuple[]> {
     const myCompletedPostInfo = await this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'post.member_id = member.id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
-      .where('post.status = :status', { status: PostStatus.DONE })
+      .where('(post.status = :endStatus OR post.status = :doneStatus)', { endStatus: PostStatus.PROGRESS_END, doneStatus: PostStatus.DONE })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
@@ -395,13 +397,14 @@ export class PostListQueryRepository {
         'member.profileImageUrl as profileImageUrl',
         'post.viewCount as viewCount',
         'post.commentCount as commentCount',
-        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped'
+        'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped',
+        'post.status as postStatus'
       ])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
       .orderBy('post.created_at', paginationRequest.order)
       .getRawMany();
-    return plainToInstance(GetAllPostListTuple, myCompletedPostInfo);
+    return plainToInstance(GetAllCompletePostListTuple, myCompletedPostInfo);
   }
 
   async getAllMyCompletedPostCount(memberId: number): Promise<number> {
@@ -414,7 +417,7 @@ export class PostListQueryRepository {
       .from(Post, 'post')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
-      .where('post.status = :status', { status: PostStatus.DONE })
+      .where('(post.status = :endStatus OR post.status = :doneStatus)', { endStatus: PostStatus.PROGRESS_END, doneStatus: PostStatus.DONE })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
@@ -441,6 +444,31 @@ export class GetAllPostListTuple {
   @Transform(({ value }) => Number(value))
   @IsInt()
   commentCount!: number;
-  @Transform(({ value }) => value === '1')
+  @Transform(({ value }) => value === 1)
   isScraped!: boolean;
+}
+
+export class GetAllCompletePostListTuple {
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  postId!: number;
+  type!: Type;
+  recruitEndAt: Date;
+  progressWay!: string;
+  title!: string;
+  @Transform(({ value }) => JSON.parse(value) || [])
+  positions: string[];
+  @Transform(({ value }) => JSON.parse(value) || [])
+  stacks: string[];
+  nickname: string;
+  profileImageUrl: string;
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  viewCount!: number;
+  @Transform(({ value }) => Number(value))
+  @IsInt()
+  commentCount!: number;
+  @Transform(({ value }) => value === 1)
+  isScraped!: boolean;
+  postStatus!: string;
 }

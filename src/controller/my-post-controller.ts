@@ -4,6 +4,7 @@ import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { PaginationResponse } from "src/common/pagination/pagination-response";
 import { ApiPaginatedResponse } from "src/common/pagination/pagination.decorator";
 import { Roles } from "src/common/roles/roles.decorator";
+import { PostCompleteListResponse } from "src/dto/response/post-complete-list.response";
 import { PostListResponse } from "src/dto/response/post-list-response";
 import { RolesGuard } from "src/guard/roles.guard";
 import { PostListService } from "src/service/post-list.service";
@@ -60,7 +61,7 @@ export class MyPostController {
     : Promise<PaginationResponse<PostListResponse>> {
     const { getMyCompletedPost, totalCount } = await this.postListService.getMyCompletedPost(paginationRequest, req.user.id);
     return PaginationResponse.of({
-      data: PostListResponse.from(getMyCompletedPost),
+      data: PostCompleteListResponse.from(getMyCompletedPost),
       options: paginationRequest,
       totalCount
     })
