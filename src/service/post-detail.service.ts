@@ -38,16 +38,7 @@ export class PostDetailService {
 
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId, memberId);
 
-    const newViewCount = post.viewCount + 1;
-    await this.postDetailQueryRepository.updateView(postId, newViewCount);
-
-    if (typeof memberId !== 'undefined') {
-      await this.postViewRepository.save({
-        postId: postId,
-        memberId: memberId,
-      });
-    }
-    return new GetPostDetailDto({ ...post, viewCount: newViewCount }, await this.getPostApplyType(postId, memberId));
+    return new GetPostDetailDto(post, await this.getPostApplyType(postId, memberId));
   }
 
   async getPostComments(postId: number, paginationRequest: PaginationRequest, memberId: number) {
@@ -221,13 +212,27 @@ export class PostDetailService {
       if (teamInviteInfo) {
         await this.teamInviteRepository.remove(teamInviteInfo);
       }
-
     }
     await this.teamMemberRepository.remove(applicationInfo);
-
-
   }
 
+  async increaseViewCountInfo(postId: number, memberId?: number): Promise<void> {
+    const postInfo = await this.postRepository.findOneBy({ id: postId });
+    if (postInfo === null) {
+      throw new NotFoundException('해당 지원글을 찾을 수 없습니다.');
+    }
+    if (postInfo.deletedAt) {
+      throw new GoneException('해당 포스트는 삭제되었습니다.')
+    }
+    if (memberId) {
+      await this.postViewRepository.save({
+        postId,
+        memberId,
+      })
+    }
+    postInfo.viewCount += 1;
+    await this.postRepository.save(postInfo);
+  }
 
 
   async recruitPost(memberId: number, dto: RecruitedPostInfoDto): Promise<RecruitPostResponse> {
