@@ -54,6 +54,10 @@ import { ScoutController } from './controller/scout.controller';
 import { ScoutService } from './service/scout.service';
 import { ScoutQueryRepository } from './repository/scout.query-repository';
 import { MyPostController } from './controller/my-post-controller';
+import { GithubAuthenticationController } from './controller/github-auth.controller';
+import { GithubAuthenticationService } from './service/github-authentication.service';
+import { GithubAuthGuard } from './guard/github-auth.guard';
+import { GithubStrategy } from './strategy/github-strategy';
 
 @Module({
   imports: [
@@ -75,6 +79,7 @@ import { MyPostController } from './controller/my-post-controller';
     PostListController,
     MemberController,
     GoogleAuthenticationController,
+    GithubAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
     PostDetailController,
@@ -83,7 +88,7 @@ import { MyPostController } from './controller/my-post-controller';
     TeamController,
     PostController,
     ScoutController,
-    MyPostController
+    MyPostController,
   ],
   providers: [
     // Service
@@ -93,6 +98,7 @@ import { MyPostController } from './controller/my-post-controller';
     MemberService,
     PostManagementService,
     GoogleAuthenticationService,
+    GithubAuthenticationService,
     SessionSerializerService,
     PostTeamMemberService,
     MyPageService,
@@ -115,13 +121,15 @@ import { MyPostController } from './controller/my-post-controller';
 
     // Strategy
     GoogleStrategy,
+    GithubStrategy,
 
     // Guard
     GoogleAuthGuard,
+    GithubAuthGuard,
     RolesGuard,
 
     // ETC
     Logger,
   ],
 })
-export class AppModule { }
+export class AppModule {}
