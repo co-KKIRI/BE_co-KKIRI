@@ -12,11 +12,7 @@ export class GoogleAuthenticationController {
   @ApiOperation({ summary: '구글 로그인 시도' })
   @Get('/login')
   @UseGuards(GoogleAuthGuard)
-  async handleLogin() {
-    return {
-      msg: 'Google Authentication',
-    };
-  }
+  async handleLogin() {}
 
   @ApiOperation({ summary: '구글 로그인 후 처리' })
   @Post('/redirect')
