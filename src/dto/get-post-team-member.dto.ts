@@ -8,6 +8,7 @@ export class GetPostTeamMember {
   position?: string;
   profileImageUrl?: string;
   isLeader!: boolean;
+  isReviewed!: boolean;
 
   constructor(
     teamMemberId: number,
@@ -16,6 +17,7 @@ export class GetPostTeamMember {
     position?: string,
     profileImageUrl?: string,
     isLeader: boolean = false,
+    isReviewed: boolean = false,
   ) {
     this.teamMemberId = teamMemberId;
     this.memberId = memberId;
@@ -23,6 +25,7 @@ export class GetPostTeamMember {
     this.position = position;
     this.profileImageUrl = profileImageUrl;
     this.isLeader = isLeader;
+    this.isReviewed = isReviewed;
   }
 
   static from(tuple: GetAllTeamMembersTuple) {
@@ -32,10 +35,12 @@ export class GetPostTeamMember {
       tuple.nickname,
       tuple.position,
       tuple.profileImageUrl,
+      false,
+      tuple.postReviewId !== null,
     );
   }
 
-  static fromLeader(leaderMember: Member) {
+  static fromLeader(leaderMember: Member, postReviewId?: number) {
     return new GetPostTeamMember(
       0,
       leaderMember.id,
@@ -43,6 +48,7 @@ export class GetPostTeamMember {
       leaderMember.position,
       leaderMember.profileImageUrl,
       true,
+      !!postReviewId,
     );
   }
 }

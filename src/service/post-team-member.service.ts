@@ -8,6 +8,7 @@ import { GetPostTeamMember } from '../dto/get-post-team-member.dto';
 import { Post } from '../entity/post.entity';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { Member } from '../entity/member.entity';
+import { PostReview } from '../entity/post-review.entity';
 
 @Injectable()
 export class PostTeamMemberService {
@@ -15,6 +16,7 @@ export class PostTeamMemberService {
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
+    @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
   ) {}
 
@@ -72,9 +74,10 @@ export class PostTeamMemberService {
       postId,
       TeamMemberStatus.ACCEPT,
     );
+    const leaderPostReview = await this.postReviewRepository.findOneBy({ postId, memberId: leaderMember.id });
 
     const getPostTeamMembers = teamMembersTuples.map((teamMember) => GetPostTeamMember.from(teamMember));
-    const leaderTeamMember = GetPostTeamMember.fromLeader(leaderMember);
+    const leaderTeamMember = GetPostTeamMember.fromLeader(leaderMember, leaderPostReview?.id);
 
     return { getPostTeamMembers: [...getPostTeamMembers, leaderTeamMember], totalCount };
   }

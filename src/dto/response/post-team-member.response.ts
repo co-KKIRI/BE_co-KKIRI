@@ -14,11 +14,14 @@ export class PostTeamMemberResponse {
   profileImageUrl?: string;
   @ApiProperty()
   isLeader!: boolean;
+  @ApiProperty()
+  isReviewed!: boolean;
 
   constructor(
     isLeader: boolean,
     teamMemberId: number,
     memberId: number,
+    isReviewed: boolean,
     nickname?: string,
     position?: string,
     profileImageUrl?: string,
@@ -29,6 +32,7 @@ export class PostTeamMemberResponse {
     this.nickname = nickname;
     this.position = position;
     this.profileImageUrl = profileImageUrl;
+    this.isReviewed = isReviewed;
   }
 
   static fromList(getPostTeamMember: GetPostTeamMember[]) {
@@ -38,6 +42,7 @@ export class PostTeamMemberResponse {
           getPostTeamMember.isLeader,
           getPostTeamMember.teamMemberId,
           getPostTeamMember.memberId,
+          getPostTeamMember.isReviewed,
           getPostTeamMember.nickname,
           getPostTeamMember.position,
           getPostTeamMember.profileImageUrl,
