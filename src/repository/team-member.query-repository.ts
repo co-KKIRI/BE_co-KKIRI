@@ -6,6 +6,7 @@ import { plainToInstance } from 'class-transformer';
 import { TeamMemberStatus } from '../entity/common/Enums';
 import { Member } from '../entity/member.entity';
 import { PaginationRequest } from '../common/pagination/pagination-request';
+import { PostReview } from '../entity/post-review.entity';
 
 @Injectable()
 export class TeamMemberQueryRepository {
@@ -23,6 +24,7 @@ export class TeamMemberQueryRepository {
         'member.nickname as nickname',
         'member.position as position',
         'member.profileImageUrl as profileImageUrl',
+        'post_review.id as postReviewId',
       ])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
@@ -40,6 +42,11 @@ export class TeamMemberQueryRepository {
       .createQueryBuilder()
       .from(TeamMember, 'team_member')
       .innerJoin(Member, 'member', 'team_member.memberId = member.id')
+      .leftJoin(
+        PostReview,
+        'post_review',
+        'team_member.memberId = post_review.memberId AND team_member.postId = post_review.postId',
+      )
       .where('team_member.postId = :postId', { postId })
       .andWhere('team_member.status = :status', { status });
   }
@@ -51,4 +58,5 @@ export class GetAllTeamMembersTuple {
   nickname?: string;
   position?: string;
   profileImageUrl?: string;
+  postReviewId?: number;
 }
