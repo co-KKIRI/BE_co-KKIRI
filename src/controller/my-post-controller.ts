@@ -67,5 +67,18 @@ export class MyPostController {
     })
   }
 
+  @ApiOperation({ summary: '내가 대기중인 스터디 목록' })
+  @ApiPaginatedResponse(PostListResponse)
+  @Get('/waiting/list')
+  async getMyWaitingPost(@Query() paginationRequest: PaginationRequest, @Req() req)
+    : Promise<PaginationResponse<PostListResponse>> {
+    const { getMyWaitingPost, totalCount } = await this.postListService.getMyWaitingPost(paginationRequest, req.user.id);
+    return PaginationResponse.of({
+      data: PostListResponse.from(getMyWaitingPost),
+      options: paginationRequest,
+      totalCount
+    })
+  }
+
 
 }
