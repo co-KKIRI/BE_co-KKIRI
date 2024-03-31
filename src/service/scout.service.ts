@@ -41,13 +41,14 @@ export class ScoutService {
     }
 
     const isExistTeamMember = await this.teamMemberRepository.existsBy({ postId, memberId: receiveMemberId });
-    if (!isExistTeamMember) {
+    if (isExistTeamMember) {
       throw new BadRequestException('이미 팀 멤버입니다.');
     }
 
-    const teamInvite = TeamInvite.invite(sendMemberId, receiveMemberId, message);
-    await this.teamInviteRepository.save(teamInvite);
-    TeamMember.invite(postId, receiveMemberId, teamInvite.id);
-    await this.teamMemberRepository.save(teamInvite);
+    const teamInvite = await this.teamInviteRepository.save(
+      TeamInvite.invite(sendMemberId, receiveMemberId, postId, message),
+    );
+    const teamMember = TeamMember.invite(postId, receiveMemberId, teamInvite.id);
+    await this.teamMemberRepository.save(teamMember);
   }
 }
