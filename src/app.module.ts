@@ -60,6 +60,7 @@ import { GithubAuthGuard } from './guard/github-auth.guard';
 import { GithubStrategy } from './strategy/github-strategy';
 import { PostReview } from './entity/post-review.entity';
 import { MemberReview } from './entity/member-review.entity';
+import { MemberReviewComment } from './entity/member-review-comment-entity';
 
 @Module({
   imports: [
@@ -79,6 +80,7 @@ import { MemberReview } from './entity/member-review.entity';
       TeamInvite,
       PostReview,
       MemberReview,
+      MemberReviewComment,
     ]),
     TestModule,
     PassportModule.register({
@@ -144,4 +146,4 @@ import { MemberReview } from './entity/member-review.entity';
     Logger,
   ],
 })
-export class AppModule {}
+export class AppModule { }
