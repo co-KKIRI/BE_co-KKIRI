@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
@@ -38,8 +38,9 @@ export class PostManagementService {
     return { getAppliedPostMembers, totalCount };
   }
 
-  async start(postId: number): Promise<void> {
+  async start(postId: number, memberId: number): Promise<void> {
     const post = await this.getPost(postId);
+    this.checkLeaderMember(post, memberId);
     if (!post.isModifiableStart()) {
       throw new BadRequestException('시작이 불가능한 상태입니다.');
     }
@@ -48,13 +49,25 @@ export class PostManagementService {
     await this.postRepository.save(post);
   }
 
-  async end(postId: number): Promise<void> {
+  async end(postId: number, memberId: number): Promise<void> {
     const post = await this.getPost(postId);
+    this.checkLeaderMember(post, memberId);
     if (!post.isModifiableEnd()) {
       throw new BadRequestException('완료가 불가능한 상태입니다.');
     }
 
     if (post.status) post.setStatus(PostStatus.PROGRESS_END);
+    await this.postRepository.save(post);
+  }
+
+  async reviewEnd(postId: number, memberId: number): Promise<void> {
+    const post = await this.getPost(postId);
+    this.checkLeaderMember(post, memberId);
+    if (!post.isModifiableReviewEnd()) {
+      throw new BadRequestException('리뷰 마감이 불가능한 상태입니다.');
+    }
+
+    if (post.status) post.setStatus(PostStatus.DONE);
     await this.postRepository.save(post);
   }
 
@@ -64,5 +77,11 @@ export class PostManagementService {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
     return post;
+  }
+
+  private checkLeaderMember(post: Post, memberId: number): void {
+    if (post.memberId !== memberId) {
+      throw new ForbiddenException('권한이 없습니다.');
+    }
   }
 }

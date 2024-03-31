@@ -83,6 +83,10 @@ export class Post {
     return [PostStatus.READY, PostStatus.PROGRESS].includes(this.status);
   }
 
+  isModifiableReviewEnd() {
+    return [PostStatus.PROGRESS_END].includes(this.status);
+  }
+
   setPostInfo(
     type: Type,
     recruitEndAt: Date,
@@ -109,5 +113,7 @@ export class Post {
     this.link = link;
   }
 
-  deletePostInfo(deletedAt?: Date) { this.deletedAt = deletedAt };
+  deletePostInfo(deletedAt?: Date) {
+    this.deletedAt = deletedAt;
+  }
 }
