@@ -58,6 +58,8 @@ import { GithubAuthenticationController } from './controller/github-auth.control
 import { GithubAuthenticationService } from './service/github-authentication.service';
 import { GithubAuthGuard } from './guard/github-auth.guard';
 import { GithubStrategy } from './strategy/github-strategy';
+import { PostReview } from './entity/post-review.entity';
+import { MemberReview } from './entity/member-review.entity';
 
 @Module({
   imports: [
@@ -67,7 +69,17 @@ import { GithubStrategy } from './strategy/github-strategy';
       imports: [ConfigModule],
       useClass: TypeORMConfigService,
     }),
-    TypeOrmModule.forFeature([Post, TeamMember, Member, PostView, Comment, PostScrap, TeamInvite]),
+    TypeOrmModule.forFeature([
+      Post,
+      TeamMember,
+      Member,
+      PostView,
+      Comment,
+      PostScrap,
+      TeamInvite,
+      PostReview,
+      MemberReview,
+    ]),
     TestModule,
     PassportModule.register({
       session: true,
