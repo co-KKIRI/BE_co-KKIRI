@@ -13,9 +13,17 @@ export class TeamService {
   ) {}
 
   async getTeamInviteInfo(id: number, teamInviteId: number): Promise<GetTeamInviteInfoResponse> {
-    const { sendMemberId, sendMemberNickname, postId, postTitle, message, teamMemberId } =
+    const { sendMemberId, sendMemberNickname, sendMemberProfileImageUrl, postId, postTitle, message, teamMemberId } =
       await this.teamInviteQueryRepository.getTeamInviteInfo(id, teamInviteId);
 
-    return new GetTeamInviteInfoResponse(sendMemberId, sendMemberNickname, postId, postTitle, message, teamMemberId);
+    return new GetTeamInviteInfoResponse(
+      sendMemberId,
+      sendMemberNickname,
+      postId,
+      postTitle,
+      message,
+      teamMemberId,
+      sendMemberProfileImageUrl,
+    );
   }
 }
