@@ -282,6 +282,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
@@ -329,6 +330,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
       .where('post.member_id = :memberId', { memberId })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
@@ -377,6 +379,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
       .leftJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('post.status = :status', { status: PostStatus.PROGRESS })
       .andWhere('(post.member_id = :memberId', { memberId })
@@ -428,6 +431,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('(post.status = :endStatus OR post.status = :doneStatus)', { endStatus: PostStatus.PROGRESS_END, doneStatus: PostStatus.DONE })
@@ -479,6 +483,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
+      .innerJoin(Member, 'member', 'member.id = post.member_id')
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('post.status = :status', { status: PostStatus.READY })
       .andWhere('(post.member_id = :memberId', { memberId })
