@@ -2,13 +2,14 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TeamMember } from '../entity/team-member.entity';
-import { TeamMemberStatus } from '../entity/common/Enums';
+import { TeamInviteType, TeamMemberStatus } from '../entity/common/Enums';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
 import { GetPostTeamMember } from '../dto/get-post-team-member.dto';
 import { Post } from '../entity/post.entity';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { Member } from '../entity/member.entity';
 import { PostReview } from '../entity/post-review.entity';
+import { TeamInvite } from 'src/entity/team-invite.entity';
 
 @Injectable()
 export class PostTeamMemberService {
@@ -17,8 +18,9 @@ export class PostTeamMemberService {
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
+    @InjectRepository(TeamInvite) private readonly teamInviteRepository: Repository<TeamInvite>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
-  ) {}
+  ) { }
 
   async acceptTeamMember(teamMemberId: number): Promise<void> {
     const teamMember = await this.getTeamMember(teamMemberId);
@@ -88,7 +90,16 @@ export class PostTeamMemberService {
       throw new NotFoundException('해당 팀원을 찾을 수 없습니다.');
     }
 
-    teamMember.setStatus(TeamMemberStatus.READY);
+    if (teamMember.teamInviteId) {
+      const teamInvitation = await this.teamInviteRepository.findOneBy({ id: teamMember.teamInviteId });
+      if (teamInvitation) {
+        await this.teamInviteRepository.remove(teamInvitation);
+      }
+    }
+
+    teamMember.setDeletedUserStatus(TeamMemberStatus.READY, TeamInviteType.SELF);
     await this.teamMemberRepository.save(teamMember);
+
+
   }
 }

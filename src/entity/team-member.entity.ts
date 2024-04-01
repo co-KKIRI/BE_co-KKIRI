@@ -14,8 +14,8 @@ export class TeamMember {
   @Column({ name: 'member_id', nullable: false })
   memberId: number;
 
-  @Column({ name: 'team_invite_id', nullable: true })
-  teamInviteId: number;
+  @Column({ type: 'int', name: 'team_invite_id', nullable: true })
+  teamInviteId: number | null;
 
   @Column({ type: 'enum', enum: TeamMemberStatus })
   status: TeamMemberStatus;
@@ -41,5 +41,10 @@ export class TeamMember {
 
   setStatus(status: TeamMemberStatus): void {
     this.status = status;
+  }
+  setDeletedUserStatus(status: TeamMemberStatus, inviteType: TeamInviteType): void {
+    this.status = status;
+    this.inviteType = inviteType;
+    this.teamInviteId = null;
   }
 }
