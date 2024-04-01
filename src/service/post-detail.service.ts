@@ -38,6 +38,9 @@ export class PostDetailService {
 
     const post = await this.postDetailQueryRepository.getAllPostDetails(postId, memberId);
 
+    if (post.deletedAt) {
+      throw new GoneException('해당 포스트의 작성자가 존재하지 않습니다.');
+    }
     return new GetPostDetailDto(post, await this.getPostApplyType(postId, memberId));
   }
 

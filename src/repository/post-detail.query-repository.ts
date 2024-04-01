@@ -49,7 +49,8 @@ export class PostDetailQueryRepository {
         'post.viewCount as viewCount',
         'post.scrapCount as scrapCount',
         'post.commentCount as commentCount',
-        'team_invite.id as teamInviteId'
+        'team_invite.id as teamInviteId',
+        'member.deletedAt as deletedAt'
       ])
       .getRawOne();
     return plainToInstance(GetAllPostDetailTuple, postDetail);
@@ -131,6 +132,7 @@ export class GetAllPostDetailTuple {
   @Transform(({ value }) => Number(value))
   @IsInt()
   commentCount: number;
+  deletedAt: Date;
 }
 
 export class GetAllPostCommentTuple {
