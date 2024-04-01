@@ -351,7 +351,7 @@ export class PostListQueryRepository {
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
       .select([
-        'post.id as postId',
+        'DISTINCT post.id as postId',
         'post.type as type',
         'post.recruitEndAt as recruitEndAt',
         'post.progressWay as progressWay',
@@ -402,7 +402,7 @@ export class PostListQueryRepository {
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
       .select([
-        'post.id as postId',
+        'DISTINCT post.id as postId',
         'post.type as type',
         'post.recruitEndAt as recruitEndAt',
         'post.progressWay as progressWay',
@@ -455,7 +455,7 @@ export class PostListQueryRepository {
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
       .select([
-        'post.id as postId',
+        'DISTINCT post.id as postId',
         'post.type as type',
         'post.recruitEndAt as recruitEndAt',
         'post.progressWay as progressWay',
