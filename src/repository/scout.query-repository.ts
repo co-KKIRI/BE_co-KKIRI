@@ -6,6 +6,7 @@ import { PaginationRequest } from '../common/pagination/pagination-request';
 import { plainToInstance } from 'class-transformer';
 import { TeamMember } from '../entity/team-member.entity';
 import { TeamInvite } from '../entity/team-invite.entity';
+import { PostStatus } from '../entity/common/Enums';
 
 @Injectable()
 export class ScoutQueryRepository {
@@ -31,7 +32,7 @@ export class ScoutQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .where('post.memberId = :memberId', { memberId })
-      .select(['post.id as postId', 'post.title as title']);
+      .where('post.status = :status', { status: PostStatus.READY });
   }
 
   async isExistTeamInviteMember(postId: number, sendMemberId: number, receiveMemberId: number): Promise<boolean> {
