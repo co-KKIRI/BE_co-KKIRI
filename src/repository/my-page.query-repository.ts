@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Transform, plainToInstance } from 'class-transformer';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
-import { TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
+import { ReviewType, TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { Post } from 'src/entity/post.entity';
@@ -106,6 +106,18 @@ export class MyPageQueryRepository {
 
     return plainToInstance(GetMyPageVisibleProfileTuple, isVisibleProfile);
   }
+
+  async getMyPageReviewList(id: number): Promise<GetMyPageReviewTuple[]> {
+    const reviewList = await this.dataSource
+      .createQueryBuilder()
+      .from('member_review', 'mr')
+      .where('reviewee_member_id = :id', { id })
+      .select(['type', 'content', 'COUNT(*) count'])
+      .groupBy('content')
+      .getRawMany();
+
+    return plainToInstance(GetMyPageReviewTuple, reviewList);
+  }
 }
 
 export class GetMyPageInfoTuple {
@@ -143,4 +155,10 @@ export class GetMyPageInviteTuple {
 export class GetMyPageVisibleProfileTuple {
   @Transform(({ value }) => Boolean(value))
   isVisibleProflie: boolean;
+}
+
+export class GetMyPageReviewTuple {
+  type: ReviewType;
+  content: string;
+  count: number;
 }

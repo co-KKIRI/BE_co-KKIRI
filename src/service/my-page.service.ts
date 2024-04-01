@@ -4,6 +4,7 @@ import { PaginationRequest } from 'src/common/pagination/pagination-request';
 import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.dto';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
+import { GetMyPageReviewResponse } from 'src/dto/response/my-page/get-my-page-review.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
 import { GetMyPageVisibleProfileResponse } from 'src/dto/response/my-page/get-my-page-visible-profile.response';
 import { Member } from 'src/entity/member.entity';
@@ -103,5 +104,11 @@ export class MyPageService {
     member.setIsVisibleProfile(isVisibleProfile);
 
     await this.memberRepository.save(member);
+  }
+
+  async getMyPageReviewList(id: number): Promise<GetMyPageReviewResponse[]> {
+    const reviewListTuple = await this.mypageQueryRepository.getMyPageReviewList(id);
+
+    return reviewListTuple.map((review) => GetMyPageReviewResponse.from(review));
   }
 }
