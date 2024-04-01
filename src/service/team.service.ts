@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetTeamInviteInfoResponse } from 'src/dto/response/team/get-team-invite-info.response';
 import { TeamMember } from 'src/entity/team-member.entity';
@@ -13,8 +13,13 @@ export class TeamService {
   ) {}
 
   async getTeamInviteInfo(id: number, teamInviteId: number): Promise<GetTeamInviteInfoResponse> {
+    const tuple = await this.teamInviteQueryRepository.getTeamInviteInfo(id, teamInviteId);
+    if (!tuple) {
+      throw new NotFoundException('팀 초대 정보를 찾을 수 없습니다.');
+    }
+
     const { sendMemberId, sendMemberNickname, sendMemberProfileImageUrl, postId, postTitle, message, teamMemberId } =
-      await this.teamInviteQueryRepository.getTeamInviteInfo(id, teamInviteId);
+      tuple;
 
     return new GetTeamInviteInfoResponse(
       sendMemberId,
