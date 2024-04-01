@@ -26,12 +26,12 @@ export class MemberService {
     return new GetMemberInfoSummaryResponse(nickname, profileImageUrl);
   }
 
-  async getMember(memberId: number) {
+  async getMember(memberId: number, currentMemberId: number) {
     const member = await this.memberRepository.findOneBy({ id: memberId });
     if (!member) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }
 
-    return MemberDto.from(member);
+    return MemberDto.from(member, currentMemberId);
   }
 }
