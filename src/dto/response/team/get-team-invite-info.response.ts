@@ -5,6 +5,7 @@ export class GetTeamInviteInfoResponse {
   postTitle: string;
   message: string;
   teamMemberId: number;
+  sendMemberProfileImageUrl?: string;
 
   constructor(
     sendMemberId: number,
@@ -13,6 +14,7 @@ export class GetTeamInviteInfoResponse {
     postTitle: string,
     message: string,
     teamMemberId: number,
+    sendMemberProfileImageUrl?: string,
   ) {
     this.sendMemberId = sendMemberId;
     this.sendMemberNickname = sendMemberNickname;
@@ -20,5 +22,6 @@ export class GetTeamInviteInfoResponse {
     this.postTitle = postTitle;
     this.message = message;
     this.teamMemberId = teamMemberId;
+    this.sendMemberProfileImageUrl = sendMemberProfileImageUrl;
   }
 }

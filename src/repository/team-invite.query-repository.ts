@@ -17,6 +17,7 @@ export class TeamInviteQueryRepository {
       .select([
         'm.id as sendMemberId',
         'm.nickname as sendMemberNickname',
+        'm.profileImageUrl as sendMemberProfileImageUrl',
         'p.id as postId',
         'p.title as postTitle',
         'ti.message as message',
@@ -37,6 +38,7 @@ export class TeamInviteQueryRepository {
 export class GetTeamInviteInfoTuple {
   sendMemberId: number;
   sendMemberNickname: string;
+  sendMemberProfileImageUrl?: string;
   postId: string;
   postTitle: string;
   message: string;
