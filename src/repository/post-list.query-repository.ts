@@ -331,7 +331,7 @@ export class PostListQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'member.id = post.member_id')
-      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('post.status = :status', { status: PostStatus.PROGRESS })
       .andWhere('(post.member_id = :memberId', { memberId })
@@ -366,7 +366,7 @@ export class PostListQueryRepository {
     return this.dataSource
       .createQueryBuilder()
       .from(Post, 'post')
-      .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
+      .leftJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('post.status = :status', { status: PostStatus.PROGRESS })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
