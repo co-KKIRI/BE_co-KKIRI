@@ -25,6 +25,7 @@ export class PostListQueryRepository {
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -55,6 +56,7 @@ export class PostListQueryRepository {
       .where('post.type = :type', { type: Type.STUDY })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -84,6 +86,7 @@ export class PostListQueryRepository {
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -113,6 +116,7 @@ export class PostListQueryRepository {
       .where('post.type = :type', { type: Type.PROJECT })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -146,7 +150,6 @@ export class PostListQueryRepository {
   ): Promise<GetAllPostListTuple[]> {
     let query = this.getPostListBaseQuery(
       paginationRequest, stacks, meetingType, position, progressWay, sortBy, search)
-      .innerJoin(Member, 'member', 'post.member_id = member.id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .select([
         'post.id as postId',
@@ -192,8 +195,11 @@ export class PostListQueryRepository {
     search?: string
   ) {
     let query = this.dataSource.createQueryBuilder().from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.member_id = member.id')
       .where('post.status = :status', { status: PostStatus.READY })
-      .andWhere('post.deletedAt IS NULL');
+      .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL');
+
 
     if (meetingType && meetingType !== PostListType.ALL) {
       query = query.andWhere('post.type= :type', { type: meetingType });
@@ -246,6 +252,7 @@ export class PostListQueryRepository {
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -279,6 +286,7 @@ export class PostListQueryRepository {
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
   }
 
   async getAllMyRecruitedPost(paginationRequest: PaginationRequest, memberId: number)
@@ -291,6 +299,7 @@ export class PostListQueryRepository {
       .where('post.member_id = :memberId', { memberId })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -323,6 +332,7 @@ export class PostListQueryRepository {
       .where('post.member_id = :memberId', { memberId })
       .andWhere('post.status = :status', { status: PostStatus.READY })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
   }
 
   async getAllMyOnGoingPost(paginationRequest: PaginationRequest, memberId: number)
@@ -337,6 +347,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -371,6 +382,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
   }
 
   async getAllMyCompletedPost(paginationRequest: PaginationRequest, memberId: number)
@@ -385,6 +397,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -421,6 +434,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
   }
 
   async getAllMyWaitingPost(paginationRequest: PaginationRequest, memberId: number)
@@ -435,6 +449,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
       .select([
         'post.id as postId',
         'post.type as type',
@@ -469,6 +484,7 @@ export class PostListQueryRepository {
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
       .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
   }
 
 }
