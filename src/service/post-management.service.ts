@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { GetPostManagementDto } from '../dto/get-post-management.dto';
 import { GetAppliedPostMember } from '../dto/get-post-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
-import { PostStatus, TeamMemberStatus } from '../entity/common/Enums';
+import { PostStatus, TeamInviteType, TeamMemberStatus } from '../entity/common/Enums';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 
 @Injectable()
@@ -31,6 +31,7 @@ export class PostManagementService {
       postId,
       TeamMemberStatus.READY,
       paginationRequest,
+      TeamInviteType.SELF,
     );
     const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(postId, TeamMemberStatus.READY);
 
