@@ -7,6 +7,7 @@ import { PatchMyPageInfoDto } from 'src/dto/request/my-page/patch-my-page-info.d
 import { PatchMyPageVisibleProfileRequest } from 'src/dto/request/my-page/patch-my-page-visible-profile';
 import { GetMyPageInfoResponse } from 'src/dto/response/my-page/get-my-page-info.response';
 import { GetMyPageInviteResponse } from 'src/dto/response/my-page/get-my-page-invite.response';
+import { GetMyPageReviewResponse } from 'src/dto/response/my-page/get-my-page-review.response';
 import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scrap.response';
 import { GetMyPageVisibleProfileResponse } from 'src/dto/response/my-page/get-my-page-visible-profile.response';
 import { RolesGuard } from 'src/guard/roles.guard';
@@ -37,8 +38,8 @@ export class MyPageController {
   @Delete('/info')
   async deleteMyInfo(@Req() req, @Res() res): Promise<void> {
     await this.mypageService.deleteMyPageInfo(req.user.id);
-    
-    res.clearCookie(this.configService.get('COOKIE_NAME'), {domain: this.configService.get('SESSION_COOKIE_DOMAIN')});
+
+    res.clearCookie(this.configService.get('COOKIE_NAME'), { domain: this.configService.get('SESSION_COOKIE_DOMAIN') });
     res.status(200).send();
   }
 
@@ -82,5 +83,11 @@ export class MyPageController {
   @Patch('/visible-profile')
   async patchVisibleProfile(@Req() req, @Body() body: PatchMyPageVisibleProfileRequest): Promise<void> {
     return this.mypageService.patchVisibleProfile(req.user.id, body.isVisibleProfile);
+  }
+
+  @ApiOperation({ summary: '내가 받은 리뷰 목록' })
+  @Get('/review/list')
+  async getReviewList(@Req() req): Promise<GetMyPageReviewResponse[]> {
+    return this.mypageService.getMyPageReviewList(req.user.id);
   }
 }
