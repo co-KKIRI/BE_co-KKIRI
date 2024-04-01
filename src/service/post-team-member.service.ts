@@ -89,17 +89,16 @@ export class PostTeamMemberService {
     if (teamMember === null) {
       throw new NotFoundException('해당 팀원을 찾을 수 없습니다.');
     }
-
-    if (teamMember.teamInviteId) {
-      const teamInvitation = await this.teamInviteRepository.findOneBy({ id: teamMember.teamInviteId });
-      if (teamInvitation) {
-        await this.teamInviteRepository.remove(teamInvitation);
-      }
-    }
-
+    const teamInvitationId = teamMember.teamInviteId;
     teamMember.setDeletedUserStatus(TeamMemberStatus.READY, TeamInviteType.SELF);
     await this.teamMemberRepository.save(teamMember);
 
-
+    if (teamInvitationId) {
+      const teamInvitation = await this.teamInviteRepository.findOneBy({ id: teamInvitationId });
+      if (!teamInvitation) {
+        throw new NotFoundException('해당 초대를 찾을 수 없습니다.');
+      }
+      await this.teamInviteRepository.remove(teamInvitation);
+    }
   }
 }
