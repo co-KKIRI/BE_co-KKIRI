@@ -38,7 +38,7 @@ export class MyPageController {
   async deleteMyInfo(@Req() req, @Res() res): Promise<void> {
     await this.mypageService.deleteMyPageInfo(req.user.id);
     
-    res.clearCookie(this.configService.get('COOKIE_NAME'));
+    res.clearCookie(this.configService.get('COOKIE_NAME'), {domain: this.configService.get('SESSION_COOKIE_DOMAIN')});
     res.status(200).send();
   }
 

@@ -51,7 +51,7 @@ export class MemberController {
   @ApiOperation({ summary: '유저 로그아웃' })
   @Post('/logout')
   async handleRedirect(@Res() res) {
-    res.clearCookie(this.configService.get('COOKIE_NAME'));
+    res.clearCookie(this.configService.get('COOKIE_NAME'), {domain: this.configService.get('SESSION_COOKIE_DOMAIN')});
     res.status(200).send();
   }
 }
