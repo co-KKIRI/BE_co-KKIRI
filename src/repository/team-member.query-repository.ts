@@ -50,6 +50,25 @@ export class TeamMemberQueryRepository {
       .where('team_member.postId = :postId', { postId })
       .andWhere('team_member.status = :status', { status });
   }
+
+  async getReviewMember(postId: number, memberId: number): Promise<GetReviewMemberTuple[]> {
+    const reviewMemberList = await this.dataSource
+      .createQueryBuilder()
+      .from(TeamMember, 'team_member')
+      .innerJoin(Member, 'member', 'team_member.memberId = member.id')
+      .where('team_member.postId = :postId', { postId })
+      .andWhere('team_member.memberId != :memberId', { memberId })
+      .andWhere('team_member.status = :status', { status: TeamMemberStatus.ACCEPT })
+      .andWhere('member.deletedAt IS NULL')
+      .select([
+        'team_member.memberId as memberId',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+      ])
+      .getRawMany();
+
+    return plainToInstance(GetReviewMemberTuple, reviewMemberList);
+  }
 }
 
 export class GetAllTeamMembersTuple {
@@ -59,4 +78,10 @@ export class GetAllTeamMembersTuple {
   position?: string;
   profileImageUrl?: string;
   postReviewId?: number;
+}
+
+export class GetReviewMemberTuple {
+  memberId!: number;
+  nickname?: string;
+  profileImageUrl?: string;
 }

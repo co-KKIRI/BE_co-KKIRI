@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PostReviewRequest } from 'src/dto/request/review/post-review.requset';
+import { GetReviewMemberResponse } from 'src/dto/response/review/get-review-member.response';
 import { MemberReviewComment } from 'src/entity/member-review-comment-entity';
 import { MemberReview } from 'src/entity/member-review.entity';
 import { PostReview } from 'src/entity/post-review.entity';
-import { Repository } from 'typeorm';
+import { TeamMember } from 'src/entity/team-member.entity';
+import { TeamMemberQueryRepository } from 'src/repository/team-member.query-repository';
+import { Not, Repository } from 'typeorm';
 
 @Injectable()
 export class ReviewService {
@@ -13,6 +16,7 @@ export class ReviewService {
     @InjectRepository(MemberReview) private readonly memberReviewRepository: Repository<MemberReview>,
     @InjectRepository(MemberReviewComment)
     private readonly memberReviewCommentRepository: Repository<MemberReviewComment>,
+    private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
   ) {}
 
   async postReview(reviewerId: number, reviewContent: PostReviewRequest) {
@@ -55,5 +59,11 @@ export class ReviewService {
     });
 
     await this.memberReviewCommentRepository.save(memberReviewCommentList);
+  }
+
+  async getReviewMember(postId: number, memberId: number) {
+    const teamMember = await this.teamMemberQueryRepository.getReviewMember(postId, memberId);
+
+    return teamMember.map((member) => GetReviewMemberResponse.from(member));
   }
 }
