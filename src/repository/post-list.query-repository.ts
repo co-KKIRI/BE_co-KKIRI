@@ -229,7 +229,7 @@ export class PostListQueryRepository {
     }
 
     if (search) {
-      query = query.where('post.title like :search', { search: `%${search}%` });
+      query = query.andWhere('post.title like :search', { search: `%${search}%` });
     }
 
     return query;
