@@ -17,11 +17,7 @@ export class GoogleAuthenticationService {
     const member = await this.memberQueryRepository.getMember(externalId);
 
     if (member) {
-      member.setProfileInfo(nickname, profileImageUrl);
-
-      const updatedMember = await this.memberRepository.save(member);
-
-      return updatedMember;
+      return member;
     } else {
       const newMember = new Member();
 
