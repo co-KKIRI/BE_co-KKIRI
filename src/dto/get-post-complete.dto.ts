@@ -32,6 +32,7 @@ export class GetCompletePostedList {
   commentCount!: number;
   isScraped!: boolean;
   postStatus!: string;
+  isReviewed!: boolean;
 
   constructor(
     postId: number,
@@ -47,6 +48,7 @@ export class GetCompletePostedList {
     postCommentsNum: number,
     isScraped: boolean,
     postStatus: string,
+    isReviewed: boolean,
   ) {
     this.postId = postId;
     this.type = type;
@@ -61,6 +63,7 @@ export class GetCompletePostedList {
     this.commentCount = postCommentsNum;
     this.isScraped = isScraped;
     this.postStatus = postStatus;
+    this.isReviewed = isReviewed;
   }
 
   static from(tuple: GetAllCompletePostListTuple) {
@@ -77,7 +80,8 @@ export class GetCompletePostedList {
       tuple.viewCount,
       tuple.commentCount,
       tuple.isScraped,
-      tuple.postStatus
+      tuple.postStatus,
+      tuple.isReviewed
     );
   }
 }
