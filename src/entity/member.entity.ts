@@ -81,4 +81,12 @@ export class Member {
     this.externalId = null;
     this.deletedAt = deletedAt;
   }
+
+  review(addScore: number) {
+    const score = this.gauge + parseFloat(addScore.toFixed(1));
+
+    if (score > 100) this.gauge = 100;
+    else if (score < 0) this.gauge = 0;
+    else this.gauge = score;
+  }
 }

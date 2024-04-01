@@ -7,11 +7,18 @@ import { GetAppliedPostMember } from '../dto/get-post-apply.dto';
 import { TeamMemberQueryRepository } from '../repository/team-member.query-repository';
 import { PostStatus, TeamMemberStatus } from '../entity/common/Enums';
 import { PaginationRequest } from '../common/pagination/pagination-request';
+import { MemberReview } from '../entity/member-review.entity';
+import { Member } from '../entity/member.entity';
+import { TeamMember } from '../entity/team-member.entity';
+import { ReviewScoreCalculator } from '../calculator/ReviewScoreCalculator';
 
 @Injectable()
 export class PostManagementService {
   constructor(
     @InjectRepository(Post) private readonly postRepository: Repository<Post>,
+    @InjectRepository(MemberReview) private readonly memberReviewRepository: Repository<MemberReview>,
+    @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
+    @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
   ) {}
 
@@ -69,6 +76,8 @@ export class PostManagementService {
 
     if (post.status) post.setStatus(PostStatus.DONE);
     await this.postRepository.save(post);
+
+    await this.review(postId);
   }
 
   private async getPost(postId: number): Promise<Post> {
@@ -82,6 +91,22 @@ export class PostManagementService {
   private checkLeaderMember(post: Post, memberId: number): void {
     if (post.memberId !== memberId) {
       throw new ForbiddenException('권한이 없습니다.');
+    }
+  }
+
+  private async review(postId: number) {
+    const memberReviewList = await this.memberReviewRepository.findBy({ postId: postId });
+    const teamMemberList = await this.teamMemberRepository.findBy({ postId: postId });
+
+    for (const teamMember of teamMemberList) {
+      const member = await this.memberRepository.findOneBy({ id: teamMember.memberId });
+      if (member === null) {
+        continue;
+      }
+
+      const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList);
+      member.review(reviewScoreCalculator.calculateMyScore(member.id));
+      await this.memberRepository.save(member);
     }
   }
 }
