@@ -3,7 +3,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { TeamMember } from '../entity/team-member.entity';
 import { DataSource } from 'typeorm';
 import { plainToInstance } from 'class-transformer';
-import { TeamMemberStatus } from '../entity/common/Enums';
+import { TeamInviteType, TeamMemberStatus } from '../entity/common/Enums';
 import { Member } from '../entity/member.entity';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { PostReview } from '../entity/post-review.entity';
@@ -16,8 +16,9 @@ export class TeamMemberQueryRepository {
     postId: number,
     status: TeamMemberStatus,
     paginationRequest: PaginationRequest,
+    inviteType?: TeamInviteType,
   ): Promise<GetAllTeamMembersTuple[]> {
-    const teamMembers = await this.getBaseQuery(postId, status)
+    const teamMembers = await this.getBaseQuery(postId, status, inviteType)
       .select([
         'team_member.id as teamMemberId',
         'team_member.memberId as memberId',
@@ -33,12 +34,16 @@ export class TeamMemberQueryRepository {
     return plainToInstance(GetAllTeamMembersTuple, teamMembers);
   }
 
-  async getAllTeamMembersTotalCount(postId: number, status: TeamMemberStatus): Promise<number> {
-    return await this.getBaseQuery(postId, status).getCount();
+  async getAllTeamMembersTotalCount(
+    postId: number,
+    status: TeamMemberStatus,
+    inviteType?: TeamInviteType,
+  ): Promise<number> {
+    return await this.getBaseQuery(postId, status, inviteType).getCount();
   }
 
-  private getBaseQuery(postId: number, status: TeamMemberStatus) {
-    return this.dataSource
+  private getBaseQuery(postId: number, status: TeamMemberStatus, inviteType?: TeamInviteType) {
+    const query = this.dataSource
       .createQueryBuilder()
       .from(TeamMember, 'team_member')
       .innerJoin(Member, 'member', 'team_member.memberId = member.id')
@@ -49,6 +54,12 @@ export class TeamMemberQueryRepository {
       )
       .where('team_member.postId = :postId', { postId })
       .andWhere('team_member.status = :status', { status });
+
+    if (inviteType) {
+      query.andWhere('team_member.inviteType = :inviteType', { inviteType });
+    }
+
+    return query;
   }
 
   async getReviewMember(postId: number, memberId: number): Promise<GetReviewMemberTuple[]> {
