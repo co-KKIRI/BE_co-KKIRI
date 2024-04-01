@@ -29,6 +29,8 @@ export class PostCompleteListResponse {
   isScraped!: boolean;
   @ApiProperty()
   postStatus!: string;
+  @ApiProperty()
+  isReviewed!: boolean;
 
   constructor(
     postId: number,
@@ -44,6 +46,7 @@ export class PostCompleteListResponse {
     commentCount: number,
     isScraped: boolean,
     postStatus: string,
+    isReviewed: boolean,
   ) {
     this.postId = postId;
     this.type = type;
@@ -58,6 +61,7 @@ export class PostCompleteListResponse {
     this.commentCount = commentCount;
     this.isScraped = isScraped;
     this.postStatus = postStatus;
+    this.isReviewed = isReviewed;
   }
 
   static from(getCompletePostLists: GetCompletePostedList[]) {
@@ -76,7 +80,8 @@ export class PostCompleteListResponse {
           getCompletePostLists.viewCount,
           getCompletePostLists.commentCount,
           getCompletePostLists.isScraped,
-          getCompletePostLists.postStatus
+          getCompletePostLists.postStatus,
+          getCompletePostLists.isReviewed
         )
     )
   }

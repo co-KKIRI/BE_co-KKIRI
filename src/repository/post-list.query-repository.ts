@@ -6,6 +6,7 @@ import { PaginationRequest } from "src/common/pagination/pagination-request";
 import { Comment } from "src/entity/comment.entity";
 import { PostListSortBy, PostListType, PostStatus, TeamInviteType, TeamMemberStatus, Type } from "src/entity/common/Enums";
 import { Member } from "src/entity/member.entity";
+import { PostReview } from "src/entity/post-review.entity";
 import { PostScrap } from "src/entity/post-scrap.entity";
 import { PostView } from "src/entity/post-view.entity";
 import { Post } from "src/entity/post.entity";
@@ -396,6 +397,7 @@ export class PostListQueryRepository {
       .innerJoin(Member, 'member', 'post.member_id = member.id')
       .leftJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .leftJoin(PostReview, 'post_review', 'post_review.post_id = post.id AND post_review.member_id = :memberId')
       .where('(post.status = :endStatus OR post.status = :doneStatus)', { endStatus: PostStatus.PROGRESS_END, doneStatus: PostStatus.DONE })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
@@ -414,7 +416,8 @@ export class PostListQueryRepository {
         'post.viewCount as viewCount',
         'post.commentCount as commentCount',
         'CASE WHEN post_scrap.id IS NOT NULL THEN true ELSE false END as isScraped',
-        'post.status as postStatus'
+        'post.status as postStatus',
+        'CASE WHEN post_review.id IS NOT NULL THEN true ELSE false END as isReviewed'
       ])
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
@@ -434,6 +437,7 @@ export class PostListQueryRepository {
       .innerJoin(Member, 'member', 'post.member_id = member.id')
       .leftJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
+      .leftJoin(PostReview, 'post_review', 'post_review.post_id = post.id AND post_review.member_id = :memberId')
       .where('(post.status = :endStatus OR post.status = :doneStatus)', { endStatus: PostStatus.PROGRESS_END, doneStatus: PostStatus.DONE })
       .andWhere('(post.member_id = :memberId', { memberId })
       .orWhere('(team_member.member_id = :memberId AND team_member.status = :teamMemberStatus))', { memberId, teamMemberStatus: TeamMemberStatus.ACCEPT })
@@ -541,4 +545,6 @@ export class GetAllCompletePostListTuple {
   @Transform(({ value }) => value === 1)
   isScraped!: boolean;
   postStatus!: string;
+  @Transform(({ value }) => value === 1)
+  isReviewed!: boolean;
 }
