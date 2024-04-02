@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Member } from 'src/entity/member.entity';
 import { SocialLoginDto } from 'src/dto/socialLoginDto';
@@ -27,7 +27,8 @@ export class MemberService {
   }
 
   async getMember(memberId: number, currentMemberId: number) {
-    const member = await this.memberRepository.findOneBy({ id: memberId });
+    const member = await this.memberRepository.findOneBy({ id: memberId, deletedAt: IsNull() });
+    
     if (!member) {
       throw new NotFoundException('해당 유저를 찾을 수 없습니다.');
     }

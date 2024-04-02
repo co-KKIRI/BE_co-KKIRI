@@ -48,7 +48,7 @@ export class MemberDto {
       member.profileImageUrl,
       member.career,
       member.position,
-      0,
+      member.gauge,
       member.link,
       member.introduce,
       member.id === currentMemberId,
