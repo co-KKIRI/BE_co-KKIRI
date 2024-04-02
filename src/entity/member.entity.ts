@@ -83,7 +83,7 @@ export class Member {
   }
 
   review(addScore: number) {
-    const score = this.gauge + parseFloat(addScore.toFixed(1));
+    const score = this.gauge + addScore;
 
     if (score > 100) this.gauge = 100;
     else if (score < 0) this.gauge = 0;

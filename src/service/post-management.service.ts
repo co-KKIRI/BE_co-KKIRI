@@ -10,7 +10,7 @@ import { PaginationRequest } from '../common/pagination/pagination-request';
 import { MemberReview } from '../entity/member-review.entity';
 import { Member } from '../entity/member.entity';
 import { TeamMember } from '../entity/team-member.entity';
-import { ReviewScoreCalculator } from '../calculator/ReviewScoreCalculator';
+import { ReviewScoreCalculator } from '../calculator/review-score.calculator';
 
 @Injectable()
 export class PostManagementService {
