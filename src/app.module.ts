@@ -63,6 +63,7 @@ import { MemberReview } from './entity/member-review.entity';
 import { MemberReviewComment } from './entity/member-review-comment-entity';
 import { ReviewController } from './controller/review.controller';
 import { ReviewService } from './service/review.service';
+import { reviewQueryRepository } from './repository/review.query-repository';
 
 @Module({
   imports: [
@@ -136,6 +137,7 @@ import { ReviewService } from './service/review.service';
     TeamInviteQueryRepository,
     MemberSearchQueryRepository,
     ScoutQueryRepository,
+    reviewQueryRepository,
 
     // Strategy
     GoogleStrategy,
@@ -150,4 +152,4 @@ import { ReviewService } from './service/review.service';
     Logger,
   ],
 })
-export class AppModule {}
+export class AppModule { }
