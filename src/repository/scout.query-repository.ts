@@ -32,7 +32,7 @@ export class ScoutQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .where('post.memberId = :memberId', { memberId })
-      .where('post.status = :status', { status: PostStatus.READY });
+      .andWhere('post.status = :status', { status: PostStatus.READY });
   }
 
   async isExistTeamInviteMember(postId: number, sendMemberId: number, receiveMemberId: number): Promise<boolean> {
