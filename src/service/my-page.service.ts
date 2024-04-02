@@ -22,6 +22,7 @@ export class MyPageService {
     const myPageInfo = await this.mypageQueryRepository.getMyPageInfo(id);
 
     return new GetMyPageInfoResponse(
+      myPageInfo.gauge,
       myPageInfo.nickname,
       myPageInfo.profileImageUrl,
       myPageInfo.position,

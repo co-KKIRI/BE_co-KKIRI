@@ -27,6 +27,7 @@ export class MyPageQueryRepository {
         'member.introduce as introduce',
         'member.stack as stack',
         'member.link as link',
+        'member.gauge as gauge',
       ])
       .getRawOne();
 
@@ -128,6 +129,7 @@ export class GetMyPageInfoTuple {
   introduce?: string;
   stack?: string;
   link?: string;
+  gauge: number;
 }
 
 export class GetMyPageScrapTuple {

@@ -6,8 +6,10 @@ export class GetMyPageInfoResponse {
   introduce?: string;
   stack?: string[];
   link?: string;
+  gauge: number;
 
   constructor(
+    gauge: number,
     nickname?: string,
     profileImageUrl?: string,
     position?: string,
@@ -23,5 +25,6 @@ export class GetMyPageInfoResponse {
     this.introduce = introduce;
     this.stack = stack;
     this.link = link;
+    this.gauge = gauge;
   }
 }
