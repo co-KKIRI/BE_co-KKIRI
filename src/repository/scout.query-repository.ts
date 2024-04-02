@@ -10,7 +10,7 @@ import { PostStatus } from '../entity/common/Enums';
 
 @Injectable()
 export class ScoutQueryRepository {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
   async getScoutPostList(paginationRequest: PaginationRequest, memberId: number): Promise<ScoutPostTuple[]> {
     const postList = await this.baseQuery(memberId)
@@ -32,7 +32,8 @@ export class ScoutQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .where('post.memberId = :memberId', { memberId })
-      .andWhere('post.status = :status', { status: PostStatus.READY });
+      .andWhere('post.status = :status', { status: PostStatus.READY })
+      .andWhere('post.deletedAt IS NULL');
   }
 
   async isExistTeamInviteMember(postId: number, sendMemberId: number, receiveMemberId: number): Promise<boolean> {
