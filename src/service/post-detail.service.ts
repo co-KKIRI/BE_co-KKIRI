@@ -277,13 +277,14 @@ export class PostDetailService {
     if (post.deletedAt !== null) {
       throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
-    if (post.status !== PostStatus.READY) {
-      return PostApplyStatus.RECRUIT_CLOSED;
-    }
 
     if (memberId === post?.memberId) {
       return PostApplyStatus.OWNER
     };
+
+    if (post.status !== PostStatus.READY) {
+      return PostApplyStatus.RECRUIT_CLOSED;
+    }
 
     const teamMember = await this.teamMemberRepository.findOneBy({ postId, memberId });
     if (
