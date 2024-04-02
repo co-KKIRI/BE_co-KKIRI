@@ -38,6 +38,9 @@ export class Member {
   @Column({ name: 'external_id', length: 100, nullable: true, type: 'varchar' })
   externalId: string | null;
 
+  @Column({ name: 'gauge', type: 'float', nullable: false, default: 0 })
+  gauge: number;
+
   @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt?: Date;
 
@@ -77,5 +80,13 @@ export class Member {
   setDelete(deletedAt: Date) {
     this.externalId = null;
     this.deletedAt = deletedAt;
+  }
+
+  review(addScore: number) {
+    const score = this.gauge + addScore;
+
+    if (score > 100) this.gauge = 100;
+    else if (score < 0) this.gauge = 0;
+    else this.gauge = score;
   }
 }

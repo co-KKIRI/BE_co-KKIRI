@@ -42,6 +42,6 @@ export enum PostListSortBy {
 }
 
 export enum ReviewType {
-  COMPLIMENT = 'COMPLIMENT',
-  IMPROVEMENT = 'IMPROVEMENT',
+  COMPLIMENT = 'COMPLIMENT', // 칭찬
+  IMPROVEMENT = 'IMPROVEMENT', // 아쉬움
 }
