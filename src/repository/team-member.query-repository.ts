@@ -10,7 +10,7 @@ import { PostReview } from '../entity/post-review.entity';
 
 @Injectable()
 export class TeamMemberQueryRepository {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
   async getAllTeamMembers(
     postId: number,
@@ -53,7 +53,8 @@ export class TeamMemberQueryRepository {
         'team_member.memberId = post_review.memberId AND team_member.postId = post_review.postId',
       )
       .where('team_member.postId = :postId', { postId })
-      .andWhere('team_member.status = :status', { status });
+      .andWhere('team_member.status = :status', { status })
+      .andWhere('member.deletedAt is NULL');
 
     if (inviteType) {
       query.andWhere('team_member.inviteType = :inviteType', { inviteType });
