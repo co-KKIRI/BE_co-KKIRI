@@ -69,7 +69,14 @@ export class PostDetailService {
     if (post.deletedAt !== null) {
       throw new GoneException('해당 포스트는 삭제되었습니다.');
     }
+    const isDeletedLeader = await this.memberRepository.findOneBy({ id: memberId });
 
+    if (isDeletedLeader === null) {
+      throw new NotFoundException('해당 멤버를 찾을 수 없습니다.');
+    }
+    if (!isDeletedLeader.deletedAt) {
+      throw new GoneException('해당 글 작성자가 존재하지 않습니다.');
+    }
     const isAlreadyTeamMember = await this.teamMemberRepository.findOneBy({
       postId: postId, memberId: memberId
     });
