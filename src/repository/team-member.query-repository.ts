@@ -76,6 +76,7 @@ export class TeamMemberQueryRepository {
         'team_member.memberId as memberId',
         'member.nickname as nickname',
         'member.profileImageUrl as profileImageUrl',
+        'member.position as position'
       ])
       .getRawMany();
 
@@ -96,4 +97,5 @@ export class GetReviewMemberTuple {
   memberId!: number;
   nickname?: string;
   profileImageUrl?: string;
+  position?: string;
 }
