@@ -1,7 +1,7 @@
 import { ReviewType } from "src/entity/common/Enums";
 import { PostReviewTuple } from "src/repository/review.query-repository";
 
-export class GetReviewRequest {
+export class GetReviewDto {
   reviewInfo!: GetReviewList[]
   constructor(reviewInfo: GetReviewList[]) {
     this.reviewInfo = reviewInfo;

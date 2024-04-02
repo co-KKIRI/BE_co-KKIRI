@@ -1,6 +1,6 @@
 import { MemberReviewCommentTuple } from "src/repository/review.query-repository";
 
-export class GetReviewCommentRequest {
+export class GetReviewCommentDto {
   reviewInfo!: GetReviewCommentList[]
   constructor(reviewInfo: GetReviewCommentList[]) {
     this.reviewInfo = reviewInfo;

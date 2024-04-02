@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { GetReviewCommentList } from 'src/dto/request/review/get-review-comment.request';
-import { GetReviewList, GetReviewRequest } from 'src/dto/request/review/get-review.request';
+import { GetReviewCommentList } from 'src/dto/get-review-comment.request';
+import { GetReviewList } from 'src/dto/get-review.dto';
 import { PostReviewRequest } from 'src/dto/request/review/post-review.requset';
 import { GetReviewMemberResponse } from 'src/dto/response/review/get-review-member.response';
 import { MemberReviewComment } from 'src/entity/member-review-comment-entity';
@@ -11,7 +11,7 @@ import { Post } from 'src/entity/post.entity';
 import { TeamMember } from 'src/entity/team-member.entity';
 import { reviewQueryRepository } from 'src/repository/review.query-repository';
 import { TeamMemberQueryRepository } from 'src/repository/team-member.query-repository';
-import { Not, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ReviewService {

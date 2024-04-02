@@ -1,8 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { GetReviewCommentList, GetReviewCommentRequest } from "src/dto/request/review/get-review-comment.request";
-import { GetReviewList, GetReviewRequest } from "src/dto/request/review/get-review.request";
+import { GetReviewList } from "src/dto/get-review.dto";
+import { GetReviewCommentList } from "src/dto/get-review-comment.request";
 import { ReviewType } from "src/entity/common/Enums";
-import { MemberReviewCommentTuple, PostReviewTuple } from "src/repository/review.query-repository";
 
 export class PostReviews {
   @ApiProperty()
@@ -41,7 +40,7 @@ export class GetReviewResponse {
   ) {
     this.postTitle = postTitle;
     this.postReviews = postReviews;
-    this.memberReviews= memberReviews;
+    this.memberReviews = memberReviews;
     this.memberReviewComments = memberReviewComments;
   }
 
