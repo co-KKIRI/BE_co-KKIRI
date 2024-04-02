@@ -7,6 +7,7 @@ import { TeamInviteType, TeamMemberStatus } from '../entity/common/Enums';
 import { Member } from '../entity/member.entity';
 import { PaginationRequest } from '../common/pagination/pagination-request';
 import { PostReview } from '../entity/post-review.entity';
+import { Post } from 'src/entity/post.entity';
 
 @Injectable()
 export class TeamMemberQueryRepository {
@@ -68,19 +69,40 @@ export class TeamMemberQueryRepository {
       .createQueryBuilder()
       .from(TeamMember, 'team_member')
       .innerJoin(Member, 'member', 'team_member.memberId = member.id')
-      .where('team_member.postId = :postId', { postId })
+      .innerJoin(Post, 'post', 'post.id = team_member.postId AND post.id = :postId', { postId })
+      .where('(team_member.postId = :postId', { postId })
       .andWhere('team_member.memberId != :memberId', { memberId })
       .andWhere('team_member.status = :status', { status: TeamMemberStatus.ACCEPT })
-      .andWhere('member.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL)')
       .select([
         'team_member.memberId as memberId',
         'member.nickname as nickname',
         'member.profileImageUrl as profileImageUrl',
-        'member.position as position'
+        'member.position as position',
       ])
       .getRawMany();
 
     return plainToInstance(GetReviewMemberTuple, reviewMemberList);
+  }
+
+  async getReviewLeader(postId: number): Promise<GetReviewMemberTuple> {
+    const reviewLeaderList = await this.dataSource
+      .createQueryBuilder()
+      .from(Post, 'post')
+      .innerJoin(Member, 'member', 'post.memberId = member.id')
+      .innerJoin(TeamMember, 'team_member', 'team_member.postId = post.id')
+      .where('post.id = :postId', { postId })
+      .andWhere('post.deletedAt IS NULL')
+      .andWhere('member.deletedAt IS NULL')
+      .andWhere('team_member.status = :status', { status: TeamMemberStatus.ACCEPT })
+      .select([
+        'DISTINCT post.memberId as memberId',
+        'member.nickname as nickname',
+        'member.profileImageUrl as profileImageUrl',
+        'member.position as position',
+      ])
+      .getRawOne();
+    return plainToInstance(GetReviewMemberTuple, reviewLeaderList)
   }
 }
 

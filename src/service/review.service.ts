@@ -69,7 +69,10 @@ export class ReviewService {
 
   async getReviewMember(postId: number, memberId: number) {
     const teamMember = await this.teamMemberQueryRepository.getReviewMember(postId, memberId);
-
+    const teamLeader = await this.teamMemberQueryRepository.getReviewLeader(postId);
+    if (teamLeader) {
+      teamMember.push(teamLeader);
+    }
     return teamMember.map((member) => GetReviewMemberResponse.from(member));
   }
 
