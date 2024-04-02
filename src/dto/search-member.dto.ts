@@ -35,7 +35,7 @@ export class SearchMemberDto {
       searchMemberTuple.profileImageUrl,
       searchMemberTuple.position,
       searchMemberTuple.career,
-      0,
+      searchMemberTuple.gauge,
     );
   }
 }

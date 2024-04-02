@@ -24,6 +24,7 @@ export class MemberSearchQueryRepository {
         'member.position as position',
         'member.career as career',
         'member.stack as stacks',
+        'member.gauge as gauge'
       ])
       .orderBy('member.updatedAt', request.order)
       .offset(request.getSkip())
@@ -70,4 +71,5 @@ export class SearchedMemberTuple {
   position?: string;
   career?: number;
   stacks?: string;
+  gauge: number;
 }
