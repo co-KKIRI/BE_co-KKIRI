@@ -74,7 +74,7 @@ export class PostDetailService {
     if (isDeletedLeader === null) {
       throw new NotFoundException('해당 멤버를 찾을 수 없습니다.');
     }
-    if (!isDeletedLeader.deletedAt) {
+    if (isDeletedLeader.deletedAt) {
       throw new GoneException('해당 글 작성자가 존재하지 않습니다.');
     }
     const isAlreadyTeamMember = await this.teamMemberRepository.findOneBy({
