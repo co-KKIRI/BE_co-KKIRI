@@ -1,4 +1,4 @@
-import { BadRequestException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Post } from '../entity/post.entity';
 import { Repository } from 'typeorm';
@@ -11,6 +11,7 @@ import { MemberReview } from '../entity/member-review.entity';
 import { Member } from '../entity/member.entity';
 import { TeamMember } from '../entity/team-member.entity';
 import { ReviewScoreCalculator } from '../calculator/review-score.calculator';
+import { PostReview } from 'src/entity/post-review.entity';
 
 @Injectable()
 export class PostManagementService {
@@ -19,18 +20,20 @@ export class PostManagementService {
     @InjectRepository(MemberReview) private readonly memberReviewRepository: Repository<MemberReview>,
     @InjectRepository(Member) private readonly memberRepository: Repository<Member>,
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
+    @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
-  ) {}
+  ) { }
 
   async getPostManagement(postId: number, memberId: number): Promise<GetPostManagementDto> {
     const post = await this.postRepository.findOneBy({ id: postId });
     if (post === null) {
       throw new NotFoundException('해당 게시글을 찾을 수 없습니다.');
     }
+    const review = await this.postReviewRepository.findOneBy({ postId, memberId });
 
     const isLeader = post.memberId == memberId;
-
-    return new GetPostManagementDto({ post, isLeader: isLeader });
+    const isReviewed = review !== null;
+    return new GetPostManagementDto({ post, isLeader: isLeader, isReviewed: isReviewed });
   }
 
   async getPostApply(postId: number, paginationRequest: PaginationRequest) {
