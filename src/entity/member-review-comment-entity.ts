@@ -14,8 +14,8 @@ export class MemberReviewComment {
   @Column({ name: 'reviewee_member_id', nullable: false })
   revieweeMemberId: number;
 
-  @Column({ name: 'content', length: 200 })
-  content: string;
+  @Column({ name: 'comment', length: 200 })
+  comment: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
   createdAt: Date;

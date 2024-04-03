@@ -40,5 +40,5 @@ export type MemberReviewType = {
 
 export type MemberReviewCommentType = {
   revieweeMemberId: number;
-  content: string;
+  comment: string;
 };
