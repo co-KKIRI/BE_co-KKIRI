@@ -75,12 +75,13 @@ export class ReviewService {
       memberId,
       status: TeamMemberStatus.ACCEPT
     })
-    if (!isTeamMember) {
+    const post = await this.postRepository.findOneBy({ id: postId, memberId })
+    if (!isTeamMember && !post) {
       throw new NotFoundException('해당 팀에 속해있지 않습니다.')
     }
     const teamMember = await this.teamMemberQueryRepository.getReviewMember(postId, memberId);
     const teamLeader = await this.teamMemberQueryRepository.getReviewLeader(postId);
-    if (teamLeader) {
+    if (teamLeader && teamLeader.memberId !== memberId) {
       teamMember.push(teamLeader);
     }
     return teamMember.map((member) => GetReviewMemberResponse.from(member));
