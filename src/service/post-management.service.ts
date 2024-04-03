@@ -12,6 +12,7 @@ import { Member } from '../entity/member.entity';
 import { TeamMember } from '../entity/team-member.entity';
 import { ReviewScoreCalculator } from '../calculator/review-score.calculator';
 import { PostReview } from 'src/entity/post-review.entity';
+import { GetInvitedPostMember } from '../dto/get-post-invite.dto';
 
 @Injectable()
 export class PostManagementService {
@@ -22,7 +23,7 @@ export class PostManagementService {
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
-  ) { }
+  ) {}
 
   async getPostManagement(postId: number, memberId: number): Promise<GetPostManagementDto> {
     const post = await this.postRepository.findOneBy({ id: postId });
@@ -43,10 +44,31 @@ export class PostManagementService {
       paginationRequest,
       TeamInviteType.SELF,
     );
-    const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(postId, TeamMemberStatus.READY);
+    const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(
+      postId,
+      TeamMemberStatus.READY,
+      TeamInviteType.SELF,
+    );
 
     const getAppliedPostMembers = teamMembersTuples.map((teamMember) => GetAppliedPostMember.from(teamMember));
     return { getAppliedPostMembers, totalCount };
+  }
+
+  async getPostInvite(postId: number, paginationRequest: PaginationRequest) {
+    const teamMembersTuples = await this.teamMemberQueryRepository.getAllTeamMembers(
+      postId,
+      TeamMemberStatus.READY,
+      paginationRequest,
+      TeamInviteType.OTHERS,
+    );
+    const totalCount = await this.teamMemberQueryRepository.getAllTeamMembersTotalCount(
+      postId,
+      TeamMemberStatus.READY,
+      TeamInviteType.OTHERS,
+    );
+
+    const getInvitedPostMembers = teamMembersTuples.map((teamMember) => GetInvitedPostMember.from(teamMember));
+    return { getInvitedPostMembers, totalCount };
   }
 
   async start(postId: number, memberId: number): Promise<void> {

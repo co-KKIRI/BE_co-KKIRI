@@ -7,6 +7,7 @@ import { PaginationRequest } from '../common/pagination/pagination-request';
 import { PaginationResponse } from '../common/pagination/pagination-response';
 import { ApiPaginatedResponse } from '../common/pagination/pagination.decorator';
 import { RolesGuard } from '../guard/roles.guard';
+import { PostInviteResponse } from '../dto/response/post-invite.response';
 
 @ApiTags('PostManagement')
 @Controller('post')
@@ -35,6 +36,24 @@ export class PostManagementController {
     );
     return PaginationResponse.of({
       data: PostApplyResponse.fromList(getAppliedPostMembers),
+      options: paginationRequest,
+      totalCount,
+    });
+  }
+
+  @ApiOperation({ summary: '스터디 초대자 목록' })
+  @ApiPaginatedResponse(PostApplyResponse)
+  @Get(':postId/invite')
+  async getPostInvite(
+    @Param('postId', ParseIntPipe) postId: number,
+    @Query() paginationRequest: PaginationRequest,
+  ): Promise<PaginationResponse<PostApplyResponse>> {
+    const { getInvitedPostMembers, totalCount } = await this.postManagementService.getPostInvite(
+      postId,
+      paginationRequest,
+    );
+    return PaginationResponse.of({
+      data: PostInviteResponse.fromList(getInvitedPostMembers),
       options: paginationRequest,
       totalCount,
     });
