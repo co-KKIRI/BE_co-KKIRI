@@ -13,6 +13,7 @@ import { TeamMember } from '../entity/team-member.entity';
 import { ReviewScoreCalculator } from '../calculator/review-score.calculator';
 import { PostReview } from 'src/entity/post-review.entity';
 import { GetInvitedPostMember } from '../dto/get-post-invite.dto';
+import { PostCountQueryRepository } from '../repository/post-count.query-repository';
 
 @Injectable()
 export class PostManagementService {
@@ -23,6 +24,7 @@ export class PostManagementService {
     @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
+    private readonly postCountQueryRepository: PostCountQueryRepository,
   ) {}
 
   async getPostManagement(postId: number, memberId: number): Promise<GetPostManagementDto> {
@@ -130,7 +132,8 @@ export class PostManagementService {
         continue;
       }
 
-      const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList);
+      const donePostCount = await this.postCountQueryRepository.getCountDonePostForReview(member.id);
+      const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, donePostCount);
       member.review(reviewScoreCalculator.calculateMyScore(member.id));
       await this.memberRepository.save(member);
     }
