@@ -61,7 +61,7 @@ export class ReviewService {
       memberReviewComment.postId = reviewContent.postId;
       memberReviewComment.reviewerMemberId = reviewerId;
       memberReviewComment.revieweeMemberId = r.revieweeMemberId;
-      memberReviewComment.content = r.content;
+      memberReviewComment.comment = r.comment;
 
       return memberReviewComment;
     });

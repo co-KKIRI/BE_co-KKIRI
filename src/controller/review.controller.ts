@@ -20,7 +20,7 @@ export class ReviewController {
 
   @ApiOperation({ summary: '리뷰 추가' })
   @Post('/create')
-  async postReview(@Req() req, @Body('reviewContent') reviewContent: PostReviewRequest) {
+  async postReview(@Req() req, @Body() reviewContent: PostReviewRequest) {
     return this.reviewService.postReview(req.user.id, reviewContent);
   }
 
