@@ -4,6 +4,7 @@ import { GetReviewCommentList } from 'src/dto/get-review-comment.request';
 import { GetReviewList } from 'src/dto/get-review.dto';
 import { PostReviewRequest } from 'src/dto/request/review/post-review.requset';
 import { GetReviewMemberResponse } from 'src/dto/response/review/get-review-member.response';
+import { TeamMemberStatus } from 'src/entity/common/Enums';
 import { MemberReviewComment } from 'src/entity/member-review-comment-entity';
 import { MemberReview } from 'src/entity/member-review.entity';
 import { PostReview } from 'src/entity/post-review.entity';
@@ -21,6 +22,7 @@ export class ReviewService {
     @InjectRepository(MemberReview) private readonly memberReviewRepository: Repository<MemberReview>,
     @InjectRepository(MemberReviewComment)
     private readonly memberReviewCommentRepository: Repository<MemberReviewComment>,
+    @InjectRepository(TeamMember) private readonly teamMemberRepository: Repository<TeamMember>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
     private readonly reviewQueryRepository: reviewQueryRepository,
   ) { }
@@ -68,6 +70,14 @@ export class ReviewService {
   }
 
   async getReviewMember(postId: number, memberId: number) {
+    const isTeamMember = await this.teamMemberRepository.findOneBy({
+      postId,
+      memberId,
+      status: TeamMemberStatus.ACCEPT
+    })
+    if (!isTeamMember) {
+      throw new NotFoundException('해당 팀에 속해있지 않습니다.')
+    }
     const teamMember = await this.teamMemberQueryRepository.getReviewMember(postId, memberId);
     const teamLeader = await this.teamMemberQueryRepository.getReviewLeader(postId);
     if (teamLeader) {

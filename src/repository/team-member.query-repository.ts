@@ -90,13 +90,11 @@ export class TeamMemberQueryRepository {
       .createQueryBuilder()
       .from(Post, 'post')
       .innerJoin(Member, 'member', 'post.memberId = member.id')
-      .innerJoin(TeamMember, 'team_member', 'team_member.postId = post.id')
       .where('post.id = :postId', { postId })
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
-      .andWhere('team_member.status = :status', { status: TeamMemberStatus.ACCEPT })
       .select([
-        'DISTINCT post.memberId as memberId',
+        'post.memberId as memberId',
         'member.nickname as nickname',
         'member.profileImageUrl as profileImageUrl',
         'member.position as position',
