@@ -4,9 +4,11 @@ import { ReviewType } from '../entity/common/Enums';
 export class ReviewScoreCalculator {
   private memberReviewList: MemberReview[] = [];
   private reviewerMemberCount: number = 0;
+  private donePostCount: number = 0;
 
-  constructor(memberReviewList: MemberReview[]) {
+  constructor(memberReviewList: MemberReview[], donePostCount: number) {
     this.memberReviewList = memberReviewList;
+    this.donePostCount = donePostCount;
     this.countMember();
   }
 
@@ -31,8 +33,15 @@ export class ReviewScoreCalculator {
       })
       .reduce((acc, cur) => acc + cur, 0);
 
-    const newEvaluation = Math.max(0, baseScore) / this.reviewerMemberCount;
-    const weight = 10 / this.reviewerMemberCount;
-    return parseFloat((Math.sqrt(weight * newEvaluation) * 3).toFixed(1));
+    const newEvaluation = Math.abs(baseScore) / this.reviewerMemberCount;
+    const weight = 10 / this.donePostCount;
+
+    const result = parseFloat((Math.sqrt(weight * newEvaluation) * 3).toFixed(1));
+
+    // 부정 리뷰가 많은 경우 음수로 나오도록 처리
+    if (baseScore < 0) {
+      return -result;
+    }
+    return result;
   }
 }
