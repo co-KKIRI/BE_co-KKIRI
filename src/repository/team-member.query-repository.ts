@@ -28,6 +28,7 @@ export class TeamMemberQueryRepository {
         'member.profileImageUrl as profileImageUrl',
         'post_review.id as postReviewId',
       ])
+      .groupBy('team_member.id')
       .limit(paginationRequest.take)
       .offset(paginationRequest.getSkip())
       .orderBy('team_member.updatedAt', paginationRequest.order)
