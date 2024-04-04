@@ -47,4 +47,8 @@ export class TeamMember {
     this.inviteType = inviteType;
     this.teamInviteId = null;
   }
+
+  isApplied(): boolean {
+    return this.status === TeamMemberStatus.READY && this.inviteType === TeamInviteType.SELF;
+  }
 }

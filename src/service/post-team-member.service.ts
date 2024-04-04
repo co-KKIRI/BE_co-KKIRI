@@ -20,7 +20,7 @@ export class PostTeamMemberService {
     @InjectRepository(PostReview) private readonly postReviewRepository: Repository<PostReview>,
     @InjectRepository(TeamInvite) private readonly teamInviteRepository: Repository<TeamInvite>,
     private readonly teamMemberQueryRepository: TeamMemberQueryRepository,
-  ) { }
+  ) {}
 
   async acceptTeamMember(teamMemberId: number): Promise<void> {
     const teamMember = await this.getTeamMember(teamMemberId);
@@ -36,8 +36,8 @@ export class PostTeamMemberService {
 
     this.checkModifiableTeamMember(teamMember);
 
-    teamMember.setStatus(TeamMemberStatus.REJECT);
-    await this.teamMemberRepository.save(teamMember);
+    // 거절 상태로 만들면 나중에 스카웃 초대가 안되서 삭제 처리
+    await this.teamMemberRepository.delete(teamMember.id);
   }
 
   private async getTeamMember(teamMemberId: number): Promise<TeamMember> {

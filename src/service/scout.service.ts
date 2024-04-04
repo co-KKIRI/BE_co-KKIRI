@@ -40,8 +40,11 @@ export class ScoutService {
       throw new BadRequestException('이미 초대한 유저입니다.');
     }
 
-    const isExistTeamMember = await this.teamMemberRepository.existsBy({ postId, memberId: receiveMemberId });
-    if (isExistTeamMember) {
+    const foundTeamMember = await this.teamMemberRepository.findOneBy({ postId, memberId: receiveMemberId });
+    if (foundTeamMember) {
+      if (foundTeamMember.isApplied()) {
+        throw new BadRequestException('현재 신청중인 유저입니다.');
+      }
       throw new BadRequestException('이미 팀 멤버입니다.');
     }
 
