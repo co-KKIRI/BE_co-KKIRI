@@ -14,7 +14,7 @@ export class Post {
   @Column({ length: 45 })
   title: string;
 
-  @Column({ length: 200 })
+  @Column({ type: 'text' })
   content: string;
 
   @Column({ type: 'enum', enum: Type })

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { Transform, plainToInstance } from 'class-transformer';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
-import { ReviewType, TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
+import { PostStatus, ReviewType, TeamInviteType, TeamMemberStatus, Type } from 'src/entity/common/Enums';
 import { Member } from 'src/entity/member.entity';
 import { PostScrap } from 'src/entity/post-scrap.entity';
 import { Post } from 'src/entity/post.entity';
@@ -12,7 +12,7 @@ import { DataSource } from 'typeorm';
 
 @Injectable()
 export class MyPageQueryRepository {
-  constructor(@InjectDataSource() private readonly dataSource: DataSource) {}
+  constructor(@InjectDataSource() private readonly dataSource: DataSource) { }
 
   async getMyPageInfo(id: number) {
     const mypageInfo = await this.dataSource
@@ -94,7 +94,9 @@ export class MyPageQueryRepository {
       .innerJoin(TeamInvite, 'ti', 'tm.team_invite_id = ti.id')
       .where('tm.memberId = :id', { id })
       .andWhere('tm.status = :status', { status: TeamMemberStatus.READY })
-      .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS });
+      .andWhere('tm.invite_type = :inviteType', { inviteType: TeamInviteType.OTHERS })
+      .andWhere('p.status = :postStatus', { postStatus: PostStatus.READY })
+      .andWhere('p.deletedAt IS NULL');
   }
 
   async getMyPageVisibleProfile(id: number): Promise<GetMyPageVisibleProfileTuple> {
