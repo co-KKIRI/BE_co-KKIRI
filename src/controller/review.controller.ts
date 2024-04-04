@@ -43,7 +43,7 @@ export class ReviewController {
   }
 
   @ApiOperation({ summary: '유저가 받은 리뷰 목록' })
-  @Get('/review/list/:memberId')
+  @Get('/list/:memberId')
   async getReviewList(@Param('memberId', ParseIntPipe) memberId: number): Promise<GetMyPageReviewResponse[]> {
     return this.mypageService.getMyPageReviewList(memberId);
   }
