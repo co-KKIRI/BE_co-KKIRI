@@ -41,7 +41,6 @@ export class RecruitedPostInfoDto {
 
   @ApiProperty()
   @IsString()
-  @MaxLength(1000)
   content!: string;
 
   @ApiPropertyOptional()
