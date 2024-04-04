@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { GetReviewCommentList } from 'src/dto/get-review-comment.request';
 import { GetReviewList } from 'src/dto/get-review.dto';
@@ -28,6 +28,10 @@ export class ReviewService {
   ) { }
 
   async postReview(reviewerId: number, reviewContent: PostReviewRequest) {
+    const duplicatedReview = await this.postReviewRepository.findOneBy({ postId: reviewContent.postId, memberId: reviewerId });
+    if (duplicatedReview !== null) {
+      throw new ConflictException('이미 리뷰를 작성한 사용자입니다.');
+    }
     const postReviewList = reviewContent.postReview.map((r) => {
       const postReview = new PostReview();
 
