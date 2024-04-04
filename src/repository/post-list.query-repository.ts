@@ -254,6 +254,7 @@ export class PostListQueryRepository {
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
+      .andWhere('post.status = :status', { status: PostStatus.READY })
       .select([
         'DISTINCT post.id as postId',
         'post.type as type',
