@@ -252,6 +252,7 @@ export class PostListQueryRepository {
       .leftJoin(PostScrap, 'post_scrap', 'post_scrap.post_id = post.id AND post_scrap.member_id = :memberId', { memberId })
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('team_member.status = :teamMemberStatus', { teamMemberStatus: TeamMemberStatus.READY })
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
       .andWhere('post.status = :status', { status: PostStatus.READY })
@@ -288,6 +289,7 @@ export class PostListQueryRepository {
       .innerJoin(TeamMember, 'team_member', 'post.id = team_member.post_id')
       .where('team_member.member_id = :memberId', { memberId })
       .andWhere('team_member.invite_type = :teamInviteType', { teamInviteType: TeamInviteType.SELF })
+      .andWhere('team_member.status = :teamMemberStatus', { teamMemberStatus: TeamMemberStatus.READY })
       .andWhere('post.deletedAt IS NULL')
       .andWhere('member.deletedAt IS NULL')
   }
