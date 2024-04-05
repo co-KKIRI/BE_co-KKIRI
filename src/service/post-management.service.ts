@@ -125,13 +125,27 @@ export class PostManagementService {
   private async review(postId: number) {
     const memberReviewList = await this.memberReviewRepository.findBy({ postId: postId });
     const teamMemberList = await this.teamMemberRepository.findBy({ postId: postId });
+    const memberList: Member[] = [];
+
+    const post = await this.postRepository.findOneBy({ id: postId });
+    if (post === null) {
+      return;
+    }
+
+    const leaderMember = await this.memberRepository.findOneBy({ id: post.memberId });
+    if (leaderMember !== null) {
+      memberList.push(leaderMember);
+    }
 
     for (const teamMember of teamMemberList) {
       const member = await this.memberRepository.findOneBy({ id: teamMember.memberId });
       if (member === null) {
         continue;
       }
+      memberList.push(member);
+    }
 
+    for (const member of memberList) {
       const donePostCount = await this.postCountQueryRepository.getCountDonePostForReview(member.id);
       const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, donePostCount);
       member.review(reviewScoreCalculator.calculateMyScore(member.id));
