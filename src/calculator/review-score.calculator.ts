@@ -4,11 +4,11 @@ import { ReviewType } from '../entity/common/Enums';
 export class ReviewScoreCalculator {
   private memberReviewList: MemberReview[] = [];
   private reviewerMemberCount: number = 0;
-  private donePostCount: number = 0;
+  private donePostCount: number = 1;
 
   constructor(memberReviewList: MemberReview[], donePostCount: number) {
     this.memberReviewList = memberReviewList;
-    this.donePostCount = donePostCount;
+    this.donePostCount = donePostCount + 1;
     this.countMember();
   }
 

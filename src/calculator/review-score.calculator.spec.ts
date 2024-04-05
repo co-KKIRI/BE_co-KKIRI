@@ -15,7 +15,7 @@ describe('ReviewScoreCalculator', () => {
     ];
 
     // When
-    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 1);
+    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 0);
     const score = reviewScoreCalculator.calculateMyScore(myMemberId);
 
     // Then
@@ -32,7 +32,7 @@ describe('ReviewScoreCalculator', () => {
     ];
 
     // When
-    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 2);
+    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 1);
     const score = reviewScoreCalculator.calculateMyScore(myMemberId);
 
     // Then
@@ -56,7 +56,7 @@ describe('ReviewScoreCalculator', () => {
     const memberReviewList = [createMemberReview(1, 2, myMemberId, ReviewType.IMPROVEMENT)];
 
     // When
-    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 1);
+    const reviewScoreCalculator = new ReviewScoreCalculator(memberReviewList, 0);
     const score = reviewScoreCalculator.calculateMyScore(myMemberId);
 
     // Then
