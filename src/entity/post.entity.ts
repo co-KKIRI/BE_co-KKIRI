@@ -116,4 +116,12 @@ export class Post {
   deletePostInfo(deletedAt?: Date) {
     this.deletedAt = deletedAt;
   }
+
+  increaseScrapNum() {
+    this.scrapCount += 1;
+  }
+
+  decreaseScrapNum() {
+    this.scrapCount -= 1;
+  }
 }
