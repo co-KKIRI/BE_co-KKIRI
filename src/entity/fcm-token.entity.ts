@@ -12,27 +12,17 @@ export class FCMToken {
   tokenId: string;
 
   @CreateDateColumn({ type: 'timestamp', name: 'created_at', nullable: false })
-  createdAt: Date;
+  createdAt!: Date;
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at', nullable: false })
-  updatedAt: Date;
+  updatedAt!: Date;
 
-  @Column({ length: 45 })
-  device: string;
+  @Column({ length: 45, nullable: true })
+  device?: string;
 
-  setDeviceInfo(device: string) {
-    this.device = device;
-  }
-  @Column({ length: 45 })
-  os: string;
+  @Column({ length: 45, nullable: true })
+  os?: string;
 
-  setOSInfo(os: string) {
-    this.os = os;
-  }
-  @Column({ length: 45 })
-  browser: string;
-
-  setBrowserInfo(browser: string) {
-    this.browser = browser;
-  }
+  @Column({ length: 45, nullable: true })
+  browser?: string;
 }
