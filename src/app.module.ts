@@ -65,6 +65,10 @@ import { ReviewController } from './controller/review.controller';
 import { ReviewService } from './service/review.service';
 import { reviewQueryRepository } from './repository/review.query-repository';
 import { PostCountQueryRepository } from './repository/post-count.query-repository';
+import { FcmController } from './controller/fcm.controller';
+import { FCMService } from './service/fcm.service';
+import { FCMQueryRepository } from './repository/fcm.query-repository';
+import { FCMToken } from './entity/fcm-token.entity';
 
 @Module({
   imports: [
@@ -85,6 +89,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
       PostReview,
       MemberReview,
       MemberReviewComment,
+      FCMToken,
     ]),
     TestModule,
     PassportModule.register({
@@ -108,6 +113,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     ScoutController,
     MyPostController,
     ReviewController,
+    FcmController,
   ],
   providers: [
     // Service
@@ -128,6 +134,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     PostService,
     ScoutService,
     ReviewService,
+    FCMService,
 
     // QueryRepository
     PostListQueryRepository,
@@ -140,6 +147,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     ScoutQueryRepository,
     reviewQueryRepository,
     PostCountQueryRepository,
+    FCMQueryRepository,
 
     // Strategy
     GoogleStrategy,
