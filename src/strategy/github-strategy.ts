@@ -27,6 +27,8 @@ export class GithubStrategy extends PassportStrategy(Strategy) {
 
     try {
       const member = await this.githubAuthService.validateAndSaveUser(socialLoginInfo);
+      member['accessToken'] = accessToken;
+
       done(null, member, accessToken);
     } catch (err) {
       done(err, false);

@@ -69,6 +69,7 @@ import { ReviewController } from './controller/review.controller';
 import { ReviewService } from './service/review.service';
 import { reviewQueryRepository } from './repository/review.query-repository';
 import { PostCountQueryRepository } from './repository/post-count.query-repository';
+import { UnlinkService } from './service/social-account-unlink.service';
 
 @Module({
   imports: [
@@ -124,6 +125,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     GoogleAuthenticationService,
     GithubAuthenticationService,
     KakaoAuthenticationService,
+    UnlinkService,
     SessionSerializerService,
     PostTeamMemberService,
     MyPageService,

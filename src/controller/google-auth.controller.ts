@@ -7,6 +7,7 @@ import { RolesGuard } from 'src/guard/roles.guard';
 @ApiTags('GoogleAuth')
 @Controller('auth/google')
 export class GoogleAuthenticationController {
+  googleAuthService: any;
   constructor() {}
 
   @ApiOperation({ summary: '구글 로그인 시도' })

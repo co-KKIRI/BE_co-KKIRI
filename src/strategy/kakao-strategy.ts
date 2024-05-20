@@ -16,17 +16,19 @@ export class KakaoStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: string, refreshToken: string, profile: Profile, done: VerifyCallback): Promise<void> {
-    const { id, displayName, username, photos } = profile;
+    const { id, displayName, username, _json } = profile;
 
     const socialLoginInfo: SocialLoginDto = {
       nickname: displayName ?? username,
-      profileImageUrl: photos[0].value ?? '',
+      profileImageUrl: _json.properties.profile_image ?? '',
       socialProvider: SocialProvider.KAKAO,
       externalId: id,
     };
 
     try {
       const member = await this.kakaoAuthService.validateAndSaveUser(socialLoginInfo);
+      member['accessToken'] = accessToken;
+
       done(null, member, accessToken);
     } catch (err) {
       done(err, false);

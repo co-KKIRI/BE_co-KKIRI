@@ -13,7 +13,7 @@ export class KakaoAuthenticationController {
   @UseGuards(KakaoAuthGuard)
   async handleLogin() {}
 
-  @ApiOperation({ summary: '깃허브 로그인 후 처리' })
+  @ApiOperation({ summary: '카카오 로그인 후 처리' })
   @Post('/redirect')
   @UseGuards(KakaoAuthGuard)
   async handleRedirect() {}

@@ -1,4 +1,15 @@
-import { Body, Controller, Delete, Get, Patch, Query, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Query,
+  Req,
+  Res,
+  UseGuards,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { PaginationRequest } from 'src/common/pagination/pagination-request';
@@ -12,6 +23,7 @@ import { GetMyPageScrapResponse } from 'src/dto/response/my-page/get-my-page-scr
 import { GetMyPageVisibleProfileResponse } from 'src/dto/response/my-page/get-my-page-visible-profile.response';
 import { RolesGuard } from 'src/guard/roles.guard';
 import { MyPageService } from 'src/service/my-page.service';
+import { UnlinkService } from 'src/service/social-account-unlink.service';
 
 @ApiTags('MyPage')
 @Controller('my-page')
@@ -20,6 +32,7 @@ export class MyPageController {
   constructor(
     private readonly mypageService: MyPageService,
     private readonly configService: ConfigService,
+    private readonly unlinkService: UnlinkService,
   ) {}
 
   @ApiOperation({ summary: '유저 정보' })
@@ -37,8 +50,10 @@ export class MyPageController {
   @ApiOperation({ summary: '유저 탈퇴' })
   @Delete('/info')
   async deleteMyInfo(@Req() req, @Res() res): Promise<void> {
-    await this.mypageService.deleteMyPageInfo(req.user.id);
+    const { accessToken, socialProvider, id } = req.user;
 
+    await this.unlinkService.unlink(socialProvider, accessToken);
+    await this.mypageService.deleteMyPageInfo(id);
     res.clearCookie(this.configService.get('COOKIE_NAME'), { domain: this.configService.get('SESSION_COOKIE_DOMAIN') });
     res.status(200).send();
   }
