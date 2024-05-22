@@ -35,6 +35,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
 
     try {
       const member = await this.googleAuthService.validateAndSaveUser(socialLoginInfo);
+      member['accessToken'] = accessToken;
+
       done(null, member, accessToken);
     } catch (err) {
       done(err, false);

@@ -15,8 +15,13 @@ export class SessionSerializerService extends PassportSerializer {
     done(null, member);
   }
 
-  async deserializeUser(payload: Member, done: (err: any, user?: any) => void): Promise<any> {
+  async deserializeUser(payload: MemberPayload, done: (err: any, user?: any) => void): Promise<any> {
     const member = await this.memberQueryRepository.getMember(payload.externalId!);
+    if (member) member['accessToken'] = payload.accessToken; // 회원 탈퇴 시 OAuth revoke를 위한 accessToken 저장
     return done(null, member);
   }
+}
+
+interface MemberPayload extends Member {
+  accessToken: string;
 }

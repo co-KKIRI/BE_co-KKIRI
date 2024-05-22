@@ -58,6 +58,10 @@ import { GithubAuthenticationController } from './controller/github-auth.control
 import { GithubAuthenticationService } from './service/github-authentication.service';
 import { GithubAuthGuard } from './guard/github-auth.guard';
 import { GithubStrategy } from './strategy/github-strategy';
+import { KakaoAuthenticationController } from './controller/kakao-auth.controller';
+import { KakaoAuthenticationService } from './service/kakao-authentication.service';
+import { KakaoAuthGuard } from './guard/kakao-auth.guard';
+import { KakaoStrategy } from './strategy/kakao-strategy';
 import { PostReview } from './entity/post-review.entity';
 import { MemberReview } from './entity/member-review.entity';
 import { MemberReviewComment } from './entity/member-review-comment-entity';
@@ -65,6 +69,7 @@ import { ReviewController } from './controller/review.controller';
 import { ReviewService } from './service/review.service';
 import { reviewQueryRepository } from './repository/review.query-repository';
 import { PostCountQueryRepository } from './repository/post-count.query-repository';
+import { UnlinkService } from './service/social-account-unlink.service';
 
 @Module({
   imports: [
@@ -98,6 +103,7 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     MemberController,
     GoogleAuthenticationController,
     GithubAuthenticationController,
+    KakaoAuthenticationController,
     PostManagementController,
     PostTeamMemberController,
     PostDetailController,
@@ -118,6 +124,8 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     PostManagementService,
     GoogleAuthenticationService,
     GithubAuthenticationService,
+    KakaoAuthenticationService,
+    UnlinkService,
     SessionSerializerService,
     PostTeamMemberService,
     MyPageService,
@@ -144,10 +152,12 @@ import { PostCountQueryRepository } from './repository/post-count.query-reposito
     // Strategy
     GoogleStrategy,
     GithubStrategy,
+    KakaoStrategy,
 
     // Guard
     GoogleAuthGuard,
     GithubAuthGuard,
+    KakaoAuthGuard,
     RolesGuard,
 
     // ETC
