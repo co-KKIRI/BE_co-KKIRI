@@ -56,7 +56,7 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.enableCors({
-    origin: ['http://localhost', 'http://127.0.0.1', 'https://dev.co-kkiri.com'],
+    origin: ['http://localhost', 'http://127.0.0.1', 'https://dev.co-kkiri.com', 'https://co-kkiri.netlify.app/'],
     credentials: true,
   });
 
